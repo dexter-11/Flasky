@@ -56,7 +56,7 @@ def dashboard():
     return render_template('dashboard.html', username=session['username'])
 
 
-@app.route('/delete_account', methods=['POST'])
+@app.route('/delete', methods=['POST'])
 def delete_account():
     if 'username' in session:
         del users[session['username']]

@@ -23,7 +23,7 @@
 </head>
 <body>
     <h1>Welcome, {{ username }}!</h1>
-    <form method="POST" action="{{ url_for('delete_account') }}">
+    <form method="POST" action="{{ url_for('delete') }}">
         <input type="submit" value="Delete Account">
     </form>
     <a href="{{ url_for('logout') }}">Logout</a>

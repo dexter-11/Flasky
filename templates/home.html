@@ -5,8 +5,24 @@
     <title>Home</title>
 </head>
 <body>
-    <h1>Welcome to the Flask Authentication App</h1>
-    <a href="{{ url_for('register') }}">Register</a> |
-    <a href="{{ url_for('login') }}">Login</a>
+    <h2>Welcome to the Home Page</h2>
+    {% if 'username' in session %}
+        <a href="/dashboard">Go to Dashboard</a>
+        <a href="/logout">Logout</a>
+    {% else %}
+        <a href="{{ url_for('register') }}">Register</a> |
+        <a href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+
+    <div>
+      <a href="{{ url_for('reset_database') }}">
+        Reset Database
+      </a>
+    </div>
+    <script>
+      if (urlParams.reset_db) {
+        alert('Database has been reseted!')
+      }
+    </script>
 </body>
 </html>

@@ -52,7 +52,8 @@ def delete_user(user_id):
 def home():
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
-    return redirect(url_for('login'))
+    return render_template('home.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -103,6 +104,13 @@ def logout():
     session.pop('username', None)
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
+
+@app.route('/reset_database')
+def reset_database():
+    os.remove('database.db')
+    os.system('touch database.db')
+    init_db()
+    return redirect(url_for('home', reset_db=1))
 
 if __name__ == '__main__':
     init_db()

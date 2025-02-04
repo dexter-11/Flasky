@@ -10,3 +10,7 @@ pip3 install -r requirements.txt
 
 python3 app.py
 ```
+
+Trying to host on https://www.pythonanywhere.com/user/dexter0/
+
+LIVE Link - https://dexter0.pythonanywhere.com/

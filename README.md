@@ -14,3 +14,8 @@ python3 app.py
 Trying to host on https://www.pythonanywhere.com/user/dexter0/
 
 LIVE Link - https://dexter0.pythonanywhere.com/
+
+
+While registering ask Gender and will change using CSRF. <-- MAKE THIS HOME CODE
+Will make branches for different type of code changes.
+POST -> Updating the gender after login

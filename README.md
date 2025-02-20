@@ -20,3 +20,16 @@ LIVE Link - https://dexter0.pythonanywhere.com/
 
 MAKE THIS HOME CODE
 Will make branches for different type of code changes.
+
+- [ ] Then we’ll start tweaking and building on it one by one for different vulnerabilities and its defences.
+CSRF, SOP, XSS, CSP
+Keep SSRF and XXE in another bucket
+https://helloflask.com/en/
+https://github.com/patrickloeber/flask-todo 
+https://github.com/XD-DENG/flask-example?tab=readme-ov-file 
+https://github.com/pallets/flask/tree/main/examples/tutorial/flaskr Blog
+
+https://github.com/we45/Vulnerable-Flask-App  SQLAlchemy
+https://github.com/videvelopers/Vulnerable-Flask-App/blob/main/vulnerable-flask-app-linux.py Only API
+https://github.com/guiadeappsec/vuln-flask-web-app GOOD
+https://dev.to/snyk/how-to-secure-python-flask-applications-2156 

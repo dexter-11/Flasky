@@ -12,7 +12,8 @@ def init_db():
     c.execute('''CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     username TEXT UNIQUE NOT NULL,
-                    password TEXT NOT NULL
+                    password TEXT NOT NULL,
+                    city TEXT NOT NULL
                 )''')
     conn.commit()
     conn.close()
@@ -27,11 +28,11 @@ def authenticate_user(username, password):
     return user
 
 # Add a new user
-def add_user(username, password):
+def add_user(username, password, city):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     try:
-        c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+        c.execute("INSERT INTO users (username, password, city) VALUES (?, ?, ?)", (username, password, city))
         conn.commit()
         return True
     except sqlite3.IntegrityError:
@@ -44,6 +45,14 @@ def delete_user(user_id):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    conn.commit()
+    conn.close()
+
+# Update the city
+def update_city(user_id, city):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("UPDATE users SET city = ? WHERE id = ?", (city, user_id))
     conn.commit()
     conn.close()
 
@@ -64,6 +73,7 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
+            session['city'] = user[3]
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -75,7 +85,8 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if add_user(username, password):
+        city = request.form['city']
+        if add_user(username, password, city):
             flash('Registration successful! Please login.', 'success')
             return redirect(url_for('login'))
         else:
@@ -86,7 +97,17 @@ def register():
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    return render_template('dashboard.html', username=session['username'])
+    return render_template('dashboard.html', username=session['username'], city=session['city'])
+
+@app.route('/update', methods=['POST'])
+def update():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    new_city = request.form['city']
+    update_city(session['user_id'], new_city)
+    session['city'] = new_city
+    flash('City updated successfully!', 'success')
+    return redirect(url_for('dashboard'))
 
 @app.route('/delete', methods=['POST'])
 def delete():

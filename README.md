@@ -21,6 +21,7 @@ LIVE Link - https://dexter0.pythonanywhere.com/
 MAKE THIS HOME CODE
 Will make branches for different type of code changes.
 
+- [ ] On Asus, working on `ubuntu-dev` | On PC, working on `kali-pentest`
 - [ ] Then we’ll start tweaking and building on it one by one for different vulnerabilities and its defences.
 CSRF, SOP, XSS, CSP
 Keep SSRF and XXE in another bucket

@@ -1,2 +1,3 @@
 flasky-venv/
 venv/
+./*/database.db

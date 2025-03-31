@@ -1,8 +1,9 @@
 # Flasky
-Sample Flask application to practice different types of web vulnerabilities by both black-box and white-box testing methodologies.
+Flask application to practice different types of web vulnerabilities by both black-box and white-box testing methodologies.
 
-Note - Tested with Python 3.8.10 & 3.13.1
+> Note - Tested with Python 3.8.10 & 3.13.1
 
+## RUN THE CODE
 ```bash
 git clone https://github.com/dexter-11/Flasky.git
 cd flasky
@@ -13,24 +14,35 @@ pip3 install -r requirements.txt
 python3 app.py
 ```
 
-Trying to host on https://www.pythonanywhere.com/user/dexter0/
-
+Trying to host on https://www.pythonanywhere.com/user/dexter0/ <br>
 LIVE Link - https://dexter0.pythonanywhere.com/
 
+## INDEX
 
-MAKE THIS HOME CODE
-Will make branches for different type of code changes.
+##### 1. CSRF1_host-validation
+data
+##### 2. CSRF1.1_synchronizer-token
+data
+##### 3. CSRF2_contentType-validation
+data
+##### 4. CSRF3_double-submit-cookie
+data
 
-- [ ] On Asus, working on `ubuntu-dev` | On PC, working on `kali-pentest`
-- [ ] Then we’ll start tweaking and building on it one by one for different vulnerabilities and its defences.
+
+## Working notes with @grey.shell
+- [ ] On Asus, working on `ubuntu-dev` / Windows Pycharm | On PC, working on `kali-pentest`
+- [ ] We’ll start tweaking and building on this one by one for different vulnerabilities and its defences.
 CSRF, SOP, XSS, CSP
-Keep SSRF and XXE in another bucket
-https://helloflask.com/en/
-https://github.com/patrickloeber/flask-todo 
-https://github.com/XD-DENG/flask-example?tab=readme-ov-file 
-https://github.com/pallets/flask/tree/main/examples/tutorial/flaskr Blog
+- [ ] Keep SSRF and XXE in another bucket
 
-https://github.com/we45/Vulnerable-Flask-App  SQLAlchemy
-https://github.com/videvelopers/Vulnerable-Flask-App/blob/main/vulnerable-flask-app-linux.py Only API
-https://github.com/guiadeappsec/vuln-flask-web-app GOOD
-https://dev.to/snyk/how-to-secure-python-flask-applications-2156 
+### References
+https://helloflask.com/en/ <br>
+https://github.com/patrickloeber/flask-todo  <br>
+https://github.com/XD-DENG/flask-example?tab=readme-ov-file  <br>
+https://github.com/pallets/flask/tree/main/examples/tutorial/flaskr Blog <br>
+ <br>
+https://github.com/we45/Vulnerable-Flask-App  SQLAlchemy <br>
+https://github.com/videvelopers/Vulnerable-Flask-App/blob/main/vulnerable-flask-app-linux.py Only API <br>
+https://github.com/guiadeappsec/vuln-flask-web-app GOOD <br>
+https://dev.to/snyk/how-to-secure-python-flask-applications-2156  <br>
+https://skf.gitbook.io/asvs-write-ups/csrf/csrf <br>

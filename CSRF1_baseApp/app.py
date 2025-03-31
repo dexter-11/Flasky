@@ -16,6 +16,32 @@ def init_db():
                     password TEXT NOT NULL,
                     city TEXT NOT NULL
                 )''')
+    c.execute('''CREATE TABLE IF NOT EXISTS books (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                author TEXT NOT NULL,
+                year INTEGER NOT NULL
+            )''')
+
+    # Insert dummy books only if the table is empty
+    existing_books = conn.execute("SELECT COUNT(*) FROM books").fetchone()[0]
+    if existing_books == 0:
+        dummy_books = [
+            ("The Great Gatsby", "F. Scott Fitzgerald", 1925),
+            ("To Kill a Mockingbird", "Harper Lee", 1960),
+            ("1984", "George Orwell", 1949),
+            ("Pride and Prejudice", "Jane Austen", 1813),
+            ("The Catcher in the Rye", "J.D. Salinger", 1951),
+            ("Moby-Dick", "Herman Melville", 1851),
+            ("War and Peace", "Leo Tolstoy", 1869),
+            ("The Hobbit", "J.R.R. Tolkien", 1937),
+            ("Crime and Punishment", "Fyodor Dostoevsky", 1866),
+            ("Brave New World", "Aldous Huxley", 1932)
+        ]
+
+        conn.executemany("INSERT INTO books (name, author, year) VALUES (?, ?, ?)", dummy_books)
+
+    #print("Database initialized with users and books tables.")
     conn.commit()
     conn.close()
 
@@ -57,13 +83,14 @@ def update_city(user_id, city):
     conn.commit()
     conn.close()
 
-# Referer header validate with Host header
-def check_referer():
-    referrer = request.headers.get("Referer")
-    host = request.host_url.rstrip('/')
-    if referrer and not re.match(f"^{re.escape(host)}", referrer):
-        flash("Invalid referrer detected!", "danger")
-        return redirect(url_for("home"))
+# Search books
+def search_books(search_term):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    books = c.execute("SELECT * FROM books WHERE name LIKE ?", ('%' + search_term + '%',)).fetchall()
+    conn.commit()
+    conn.close()
+    return books
 
 # Routes
 @app.route('/')
@@ -75,8 +102,6 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if check_referer():
-        return check_referer()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -93,8 +118,6 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if check_referer():
-        return check_referer()
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -112,12 +135,23 @@ def dashboard():
         return redirect(url_for('login'))
     return render_template('dashboard.html', username=session['username'], city=session['city'])
 
+
+@app.route('/search', methods=['GET'])
+def search():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+
+    search_term = request.args.get('search_term', '').strip()
+    books = []
+    if search_term:
+        books = search_books(search_term)
+    return render_template('dashboard.html', username=session['username'], city=session['city'],
+                           search_term=search_term, books=books)
+
 @app.route('/update', methods=['POST'])
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    if check_referer():
-        return check_referer()
     new_city = request.form['city']
     update_city(session['user_id'], new_city)
     session['city'] = new_city
@@ -128,8 +162,6 @@ def update():
 def delete():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    if check_referer():
-        return check_referer()
     delete_user(session['user_id'])
     session.pop('user_id', None)
     session.pop('username', None)

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="../static/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .sidebar {
             height: 100vh;
@@ -30,68 +31,82 @@
             margin-left: 260px;
             padding: 20px;
         }
-        #search-section {
+        .section {
             display: none;
-            margin-top: 20px;
+        }
+        #profile-section {
+            display: block; /* Show profile by default */
         }
     </style>
     <script>
+        $(document).ready(function () {
+            // Function to show the selected section
+            function showSection(sectionId) {
+                $(".section").hide(); // Hide all sections
+                $("#" + sectionId).show(); // Show the selected section
+            }
+
+            // Sidebar link click handlers
+            $("#profile-link").click(function () {
+                showSection("profile-section");
+            });
+
+            $("#search-link").click(function () {
+                showSection("search-section");
+            });
+
+            // AJAX for searching books without reloading
+            $("#search-form").submit(function (event) {
+                event.preventDefault();
+                let searchTerm = $("#search-term").val();
+                if (searchTerm.trim() === "") return;
+
+                $.get("{{ url_for('search') }}", { search_term: searchTerm }, function (data) {
+                    $("#search-results").html(data);
+                });
+            });
+        });
+
+        // Confirm account deletion
         function confirmDeletion(event) {
             if (!confirm("Are you sure you want to delete your account? This action cannot be undone!")) {
                 event.preventDefault();
             }
         }
-
-        function toggleSearchBar() {
-            let searchSection = document.getElementById("search-section");
-            searchSection.style.display = searchSection.style.display === "none" ? "block" : "none";
-        }
     </script>
 </head>
 <body>
     <div class="sidebar">
-        <a href="#">My Profile</a>
-        <form action="{{ url_for('delete') }}" method="POST" style="margin: 0; padding: 0;" onsubmit="confirmDeletion(event)">
+        <a id="profile-link">My Profile</a>
+        <a id="search-link">Search Books</a>
+        <form action="{{ url_for('delete') }}" method="POST" onsubmit="confirmDeletion(event)">
             <button type="submit" class="btn btn-danger w-100 text-start">Delete Account</button>
         </form>
-        <a onclick="toggleSearchBar()">Search Books</a>
         <a href="{{ url_for('logout') }}">Logout</a>
     </div>
 
     <div class="content">
-        <h2>Welcome, {{ username }}!</h2>
-
-        <form action="{{ url_for('update') }}" method="POST" class="form-group">
+        <!-- My Profile Section -->
+        <div id="profile-section" class="section">
+            <h2>Welcome, {{ username }}!</h2>
             <p>Current City: <strong>{{ city }}</strong></p>
-            <label for="city">Update City:</label>
-            <input type="text" class="form-control" id="city" name="city" required>
-            <br>
-            <button type="submit" class="btn btn-primary">Update City</button>
-        </form>
+            <form action="{{ url_for('update') }}" method="POST" class="form-group">
+                <label for="city">Update City:</label>
+                <input type="text" class="form-control" id="city" name="city" required>
+                <br>
+                <button type="submit" class="btn btn-primary">Update City</button>
+            </form>
+        </div>
 
         <!-- Search Books Section -->
-        <div id="search-section">
+        <div id="search-section" class="section">
             <h3>Search Books</h3>
-            <form action="{{ url_for('search') }}" method="GET" class="form-group">
-                <input type="text" class="form-control" name="search_term" placeholder="Enter book name...">
+            <form id="search-form" class="form-group">
+                <input type="text" class="form-control" id="search-term" name="search_term" placeholder="Enter book name..." required>
                 <br>
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
-
-            {% if search_term %}
-                <h4>Search results for "{{ search_term }}"</h4>
-                {% if books %}
-                    <ul class="list-group">
-                        {% for book in books %}
-                            <li class="list-group-item">
-                                <strong>{{ book.name }}</strong> by {{ book.author }} ({{ book.year }})
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% else %}
-                    <p>No books found matching "{{ search_term }}".</p>
-                {% endif %}
-            {% endif %}
+            <div id="search-results"></div>
         </div>
     </div>
 </body>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string
 import sqlite3
 import os
 import re
@@ -145,8 +145,22 @@ def search():
     books = []
     if search_term:
         books = search_books(search_term)
-    return render_template('dashboard.html', username=session['username'], city=session['city'],
-                           search_term=search_term, books=books)
+    return render_template_string('''
+        {% if books %}
+            <h4>Search results for "{{ search_term }}"</h4>
+            <ul class="list-group">
+                {% for book in books %}
+                    <li class="list-group-item">
+                        <strong>{{ book.name }}</strong> by {{ book.author }} ({{ book.year }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No books found matching "{{ search_term }}".</p>
+        {% endif %}
+    ''', books=books, search_term=search_term)
+    #return render_template('dashboard.html', username=session['username'], city=session['city'], search_term=search_term, books=books)
+
 
 @app.route('/update', methods=['POST'])
 def update():

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string
+from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
 import sqlite3
 import os
 import re
@@ -39,7 +39,7 @@ def init_db():
             ("Brave New World", "Aldous Huxley", 1932)
         ]
 
-        conn.executemany("INSERT INTO books (name, author, year) VALUES (?, ?, ?)", dummy_books)
+        c.executemany("INSERT INTO books (name, author, year) VALUES (?, ?, ?)", dummy_books)
 
     #print("Database initialized with users and books tables.")
     conn.commit()
@@ -76,24 +76,35 @@ def delete_user(user_id):
     conn.close()
 
 # Update the city
-def update_city(user_id, city):
+def update_city(city, user_id):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("UPDATE users SET city = ? WHERE id = ?", (city, user_id))
     conn.commit()
     conn.close()
 
+# Update the city
+def fetch_city(user_id):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    city = c.execute("SELECT city FROM users WHERE id = ?", (user_id,)).fetchone()
+    conn.close()
+    return city
+
 # Search books
 def search_books(search_term):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
-    books = c.execute("SELECT * FROM books WHERE name LIKE ?", ('%' + search_term + '%',)).fetchall()
+    books = c.execute(
+            "SELECT * FROM books WHERE name LIKE ? OR author LIKE ?",
+            (f'%{search_term}%', f'%{search_term}%')
+        ).fetchall()
     conn.commit()
     conn.close()
     return books
 
 # Routes
-@app.route('/')
+@app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
     if 'user_id' in session:
         return redirect(url_for('dashboard'))
@@ -109,7 +120,6 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
-            session['city'] = user[3]
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -129,37 +139,26 @@ def register():
             flash('Username already exists', 'error')
     return render_template('register.html')
 
-@app.route('/dashboard')
+@app.route('/dashboard', methods=['GET','POST'])
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    return render_template('dashboard.html', username=session['username'], city=session['city'])
+    city = fetch_city(session['user_id'])[0]
+    return render_template('dashboard.html', username=session['username'], city=city)
 
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET','POST'])
 def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    search_term = request.args.get('search_term', '').strip()
+    search_term = request.form['search']
     books = []
     if search_term:
         books = search_books(search_term)
-    return render_template_string('''
-        {% if books %}
-            <h4>Search results for "{{ search_term }}"</h4>
-            <ul class="list-group">
-                {% for book in books %}
-                    <li class="list-group-item">
-                        <strong>{{ book.name }}</strong> by {{ book.author }} ({{ book.year }})
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No books found matching "{{ search_term }}".</p>
-        {% endif %}
-    ''', books=books, search_term=search_term)
-    #return render_template('dashboard.html', username=session['username'], city=session['city'], search_term=search_term, books=books)
+    city = fetch_city(session['user_id'])[0]
+    return render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term)
+    # https://github.com/greyshell/sqli_lab/blob/main/flask_app/app.py#L213
 
 
 @app.route('/update', methods=['POST'])
@@ -167,20 +166,16 @@ def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     new_city = request.form['city']
-    update_city(session['user_id'], new_city)
-    session['city'] = new_city
-    flash('City updated successfully!', 'success')
+    update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
 
-@app.route('/delete', methods=['POST'])
+@app.route('/delete', methods=['PUT'])
 def delete():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return jsonify({"error": "Unauthorized"}), 401
     delete_user(session['user_id'])
-    session.pop('user_id', None)
-    session.pop('username', None)
-    flash('Your account has been deleted.', 'success')
-    return redirect(url_for('login'))
+    session.clear()
+    return jsonify({"message": "Account deleted successfully"}), 200
 
 @app.route('/logout')
 def logout():

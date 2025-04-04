@@ -1,3 +1,4 @@
 flasky-venv/
 venv/
 ./*/database.db
+.python-version

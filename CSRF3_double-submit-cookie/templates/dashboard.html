@@ -52,6 +52,7 @@
                 <div class="mb-3">
                     <label for="city" class="form-label">Update City</label>
                     <input type="text" name="city" id="city" class="form-control" placeholder="Enter new city" required>
+                    <input type="hidden" name="csrf_token" id="csrfToken">
                 </div>
                 <button type="submit" class="btn btn-primary">Update City</button>
             </form>
@@ -63,6 +64,7 @@
             <form method="POST" action="{{ url_for('search') }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Enter book name or author" required>
+                    <!--no CSRF token-->
                     <button type="submit" class="btn btn-success">Search</button>
                 </div>
             </form>
@@ -117,6 +119,25 @@
         {% if show_section %}
             showSection('{{ show_section }}');
         {% endif %}
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrf_token='))
+                              ?.split('=')[1];
+            if (csrfToken) {
+                const csrfInput = document.getElementById('csrfToken');
+                if (csrfInput) csrfInput.value = csrfToken;
+
+                const form = document.querySelector("form");
+                if (form) {
+                    form.addEventListener("submit", function (e) {
+                        const xhr = new XMLHttpRequest();
+                        xhr.open(form.method, form.action);
+                        xhr.setRequestHeader("X-CSRF", csrfToken);
+                    }, { once: true });
+                }
+            }
+        });
     </script>
 </body>
 </html>

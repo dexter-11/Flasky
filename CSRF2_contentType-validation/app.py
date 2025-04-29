@@ -103,7 +103,16 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Routes
+# Content Type Header validation
+def check_content_type():
+    allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data"]
+    content_type = request.headers.get("Content-Type", "")
+    if not any(t in content_type for t in allowed_types):
+        flash("Invalid Content-Type header!", "danger")
+        return redirect(url_for("home"))
+
+
+## Routes
 @app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
     if 'user_id' in session:
@@ -114,6 +123,8 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        if check_content_type():
+            return check_content_type()
         username = request.form['username']
         password = request.form['password']
         user = authenticate_user(username, password)
@@ -129,6 +140,8 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        if check_content_type():
+            return check_content_type()
         username = request.form['username']
         password = request.form['password']
         city = request.form['city']
@@ -152,6 +165,8 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
+    if check_content_type():
+        return check_content_type()
     search_term = request.form['search']
     books = []
     if search_term:
@@ -165,6 +180,8 @@ def search():
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+    if check_content_type():
+        return check_content_type()
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -173,6 +190,8 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
+    if check_content_type():
+        return check_content_type()
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200

@@ -45,6 +45,7 @@ def init_db():
     conn.commit()
     conn.close()
 
+
 # User authentication
 def authenticate_user(username, password):
     conn = sqlite3.connect('database.db')
@@ -103,7 +104,18 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Routes
+# Host Validation
+def check_referer():
+    referrer = request.headers.get("Referer")
+    host = request.headers.get("Host")
+    # Escape host to safely use in regex (in case of dots etc.)
+    #pattern = f"^https?://{re.escape(host)}"
+    if referrer and not re.match(f"^{re.escape(host)}", referrer):
+        flash("Invalid referrer detected!", "danger")
+        return redirect(url_for("home"))
+
+
+## Routes
 @app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
     if 'user_id' in session:
@@ -143,6 +155,8 @@ def register():
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+    if check_referer():
+        return check_referer()
     city = fetch_city(session['user_id'])[0]
     return render_template('dashboard.html', username=session['username'], city=city)
 
@@ -152,6 +166,8 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
+    if check_referer():
+        return check_referer()
     search_term = request.form['search']
     books = []
     if search_term:
@@ -165,6 +181,8 @@ def search():
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+    if check_referer():
+        return check_referer()
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -173,6 +191,8 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
+    if check_referer():
+        return check_referer()
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200

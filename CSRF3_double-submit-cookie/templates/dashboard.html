@@ -52,7 +52,7 @@
                 <div class="mb-3">
                     <label for="city" class="form-label">Update City</label>
                     <input type="text" name="city" id="city" class="form-control" placeholder="Enter new city" required>
-                    <input type="hidden" name="csrf_token" id="csrfToken">
+                    <!--CSRF token added from JS-->
                 </div>
                 <button type="submit" class="btn btn-primary">Update City</button>
             </form>
@@ -64,7 +64,7 @@
             <form method="POST" action="{{ url_for('search') }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Enter book name or author" required>
-                    <!--no CSRF token-->
+                    <!--CSRF token added from JS-->
                     <button type="submit" class="btn btn-success">Search</button>
                 </div>
             </form>
@@ -103,6 +103,7 @@
                     headers: {
                         "X-Requested-With": "XMLHttpRequest",
                         "Content-Type": "application/json"
+                        // No CSRF token
                     }
                 }).then(response => {
                     if (response.ok) {
@@ -121,23 +122,28 @@
         {% endif %}
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrf_token='))
-                              ?.split('=')[1];
-            if (csrfToken) {
-                const csrfInput = document.getElementById('csrfToken');
-                if (csrfInput) csrfInput.value = csrfToken;
+      // Add CSRF token from cookie into all POST requests
+      document.addEventListener("DOMContentLoaded", function () {
+        const csrf = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('csrf_token='))
+          ?.split('=')[1];
 
-                const form = document.querySelector("form");
-                if (form) {
-                    form.addEventListener("submit", function (e) {
-                        const xhr = new XMLHttpRequest();
-                        xhr.open(form.method, form.action);
-                        xhr.setRequestHeader("X-CSRF", csrfToken);
-                    }, { once: true });
-                }
+        // Attach token to form on submit
+        const forms = document.querySelectorAll("form");
+        forms.forEach(form => {
+          form.addEventListener("submit", (e) => {
+            // Add hidden input for CSRF if not present
+            if (!form.querySelector("input[name='csrf']")) {
+              const input = document.createElement("input");
+              input.type = "hidden";
+              input.name = "csrf";
+              input.value = csrf;
+              form.appendChild(input);
             }
+          });
         });
+      });
     </script>
 </body>
 </html>

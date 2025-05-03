@@ -107,12 +107,20 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Validate CSRF
-def is_valid_csrf():
-    token_cookie = request.cookies.get('csrf_token')
-    token_form = request.form.get('csrf_token')
-    token_header = request.headers.get('X-CSRF-Header')
-    return token_cookie and token_form and token_header and token_cookie == token_form == token_header
+# Validate CSRF token from Cookie and POST param
+def validate_CSRF():
+    csrf_cookie = request.cookies.get("csrf_token")
+    csrf_form = request.form.get("csrf") or request.headers.get("X-CSRF")
+    if csrf_cookie == csrf_form:
+        return True
+    else:
+        response = make_response("""
+                <script>
+                    alert("CSRF Token Mismatch!");
+                    window.location.href = "/";
+                </script>
+            """)
+        return response
 
 
 # Routes
@@ -126,28 +134,20 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        # Validate CSRF token
-        token_cookie = request.cookies.get('csrf_token')
-        token_form = request.form.get('csrf_token')
-        token_header = request.headers.get('X-CSRF-Header')
-        if not (token_cookie and token_form and token_header and token_cookie == token_form == token_header):
-            flash("Invalid CSRF token!", "danger")
-            return redirect(url_for('login'))
-
         username = request.form['username']
         password = request.form['password']
         user = authenticate_user(username, password)
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
+
+            # Set CSRF cookie
+            response = make_response(redirect(url_for('dashboard')))
+            response.set_cookie('csrf_token', generate_csrf_token())
+            return response
         else:
             flash('Invalid username or password', 'error')
-    # Set CSRF cookie in response
-    resp = make_response(render_template('login.html'))
-    resp.set_cookie('csrf_token', generate_csrf_token())
-    return resp
+    return render_template('login.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -175,9 +175,9 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    if not is_valid_csrf():
-        flash("Invalid CSRF token!", "danger")
-        return redirect(url_for('dashboard'))
+    validate_csrf = validate_CSRF()
+    if validate_csrf is not True:
+        return validate_csrf
     search_term = request.form['search']
     books = []
     if search_term:
@@ -193,9 +193,10 @@ def search():
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    if not is_valid_csrf():
-        flash("Invalid CSRF token!", "danger")
-        return redirect(url_for('dashboard'))
+
+    validate_csrf = validate_CSRF()
+    if validate_csrf is not True:
+        return validate_csrf
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -204,9 +205,7 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
-    if not is_valid_csrf():
-        flash("Invalid CSRF token!", "danger")
-        return redirect(url_for('dashboard'))
+
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200

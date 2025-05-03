@@ -19,13 +19,28 @@ LIVE Link - https://dexter0.pythonanywhere.com/
 
 ## INDEX
 
-##### 1. CSRF1_host-validation
-data
+##### 0. CSRF_baseApp
+- Base app with registration, login, update, search, delete & logout functions.
+- Search is vulnerable to basic XSS.
+- No CSRF / CORS implementations here.
+##### 1. CSRF1.0_host-validation
+- Host header validating with Referer header
 ##### 2. CSRF1.1_synchronizer-token
-data
+- TBD
 ##### 3. CSRF2_contentType-validation
+- Content Type header being validated
+  - `allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data", "application/json"]`
+##### 4. CSRF3.0_double-submit-cookie-viaPOSTparam
+- CSRF token assigned on Login.
+- Javascript auto appends same CSRF token to a form submission.
+- Implemented in update, search functions
+##### 5. CSRF3.1_double-submit-cookie-viaHeader
+- CSRF token assigned on Login.
+- Javascript auto appends same CSRF token to `X-CSRF-Header` on form submission.
+- Implemented in update, search functions
+##### 6. CSRF3.2_
 data
-##### 4. CSRF3_double-submit-cookie
+##### 7. CSRF4
 data
 
 

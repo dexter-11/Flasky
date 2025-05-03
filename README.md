@@ -39,9 +39,9 @@ LIVE Link - https://dexter0.pythonanywhere.com/
 - Javascript auto appends same CSRF token to `X-CSRF-Header` on form submission.
 - Implemented in update, search functions
 ##### 6. CSRF3.2_
-data
+- TBD
 ##### 7. CSRF4
-data
+- TBD
 
 
 ## Working notes with @grey.shell

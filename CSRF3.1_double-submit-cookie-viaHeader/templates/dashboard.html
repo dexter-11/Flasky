@@ -52,7 +52,6 @@
                 <div class="mb-3">
                     <label for="city" class="form-label">Update City</label>
                     <input type="text" name="city" id="city" class="form-control" placeholder="Enter new city" required>
-                    <!--CSRF token added from JS-->
                 </div>
                 <button type="submit" class="btn btn-primary">Update City</button>
             </form>
@@ -64,7 +63,6 @@
             <form method="POST" action="{{ url_for('search') }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Enter book name or author" required>
-                    <!--CSRF token added from JS-->
                     <button type="submit" class="btn btn-success">Search</button>
                 </div>
             </form>
@@ -132,16 +130,27 @@
         // Attach token to form on submit
         const forms = document.querySelectorAll("form");
         forms.forEach(form => {
-          form.addEventListener("submit", (e) => {
-            // Add hidden input for CSRF if not present
-            if (!form.querySelector("input[name='csrf']")) {
-              const input = document.createElement("input");
-              input.type = "hidden";
-              input.name = "csrf";
-              input.value = csrf;
-              form.appendChild(input);
-            }
-          });
+            form.addEventListener("submit", function (e) {
+                e.preventDefault(); // Prevent default form submit
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                  method: form.method,
+                  body: formData,
+                  headers: {
+                    'X-CSRF-Header': csrf
+                  }
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.text();
+                    }
+                })
+                .catch(err => alert("Error: " + err));
+            });
         });
       });
     </script>

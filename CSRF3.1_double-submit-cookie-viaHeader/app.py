@@ -110,7 +110,7 @@ def search_books(search_term):
 # Validate CSRF token from Cookie and POST param
 def validate_CSRF():
     csrf_cookie = request.cookies.get("csrf_token")
-    csrf_form = request.form.get("csrf") or request.headers.get("X-CSRF")
+    csrf_form = request.headers.get("X-CSRF-Header")
     if csrf_cookie == csrf_form:
         return True
     else:

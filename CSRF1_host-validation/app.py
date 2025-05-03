@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, make_response, jsonify
 import sqlite3
 import os
 import re
@@ -110,9 +110,16 @@ def check_referer():
     host = request.headers.get("Host")
     # Escape host to safely use in regex (in case of dots etc.)
     #pattern = f"^https?://{re.escape(host)}"
-    if referrer and not re.match(f"^{re.escape(host)}", referrer):
-        flash("Invalid referrer detected!", "danger")
-        return redirect(url_for("home"))
+    if referrer and re.match(f"^.*{re.escape(host)}.*$", referrer):
+        return True
+    else:
+        response = make_response("""
+                <script>
+                    alert("Invalid referrer detected!");
+                    window.location.href = "/";
+                </script>
+            """)
+        return response
 
 
 ## Routes
@@ -155,8 +162,6 @@ def register():
 def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    if check_referer():
-        return check_referer()
     city = fetch_city(session['user_id'])[0]
     return render_template('dashboard.html', username=session['username'], city=city)
 
@@ -166,8 +171,9 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    if check_referer():
-        return check_referer()
+    referer_check = check_referer()
+    if referer_check is not True:
+        return referer_check
     search_term = request.form['search']
     books = []
     if search_term:
@@ -181,8 +187,10 @@ def search():
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    if check_referer():
-        return check_referer()
+
+    referer_check = check_referer()
+    if referer_check is not True:
+        return referer_check
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -191,8 +199,10 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
-    if check_referer():
-        return check_referer()
+
+    referer_check = check_referer()
+    if referer_check is not True:
+        return referer_check
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200

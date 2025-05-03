@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, make_response, jsonify
 import sqlite3
 import os
 import re
@@ -104,12 +104,19 @@ def search_books(search_term):
     return books
 
 # Content Type Header validation
-def check_content_type():
-    allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data"]
+def check_contentType():
+    allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data", "application/json"]
     content_type = request.headers.get("Content-Type", "")
-    if not any(t in content_type for t in allowed_types):
-        flash("Invalid Content-Type header!", "danger")
-        return redirect(url_for("home"))
+    if any(t in content_type for t in allowed_types):
+        return True
+    else:
+        response = make_response("""
+                <script>
+                    alert("Invalid Content-Type header!");
+                    window.location.href = "/";
+                </script>
+            """)
+        return response
 
 
 ## Routes
@@ -123,8 +130,6 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        if check_content_type():
-            return check_content_type()
         username = request.form['username']
         password = request.form['password']
         user = authenticate_user(username, password)
@@ -140,8 +145,6 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        if check_content_type():
-            return check_content_type()
         username = request.form['username']
         password = request.form['password']
         city = request.form['city']
@@ -165,8 +168,9 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    if check_content_type():
-        return check_content_type()
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
     search_term = request.form['search']
     books = []
     if search_term:
@@ -180,8 +184,9 @@ def search():
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    if check_content_type():
-        return check_content_type()
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -190,8 +195,9 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
-    if check_content_type():
-        return check_content_type()
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200

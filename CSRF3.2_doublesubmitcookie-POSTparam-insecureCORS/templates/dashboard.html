@@ -52,7 +52,6 @@
                 <div class="mb-3">
                     <label for="city" class="form-label">Update City</label>
                     <input type="text" name="city" id="city" class="form-control" placeholder="Enter new city" required>
-                    <input type="hidden" name="csrf" value="{{ csrf }}">
                 </div>
                 <button type="submit" class="btn btn-primary">Update City</button>
             </form>
@@ -64,7 +63,6 @@
             <form method="POST" action="{{ url_for('search') }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Enter book name or author" required>
-                    <input type="hidden" name="csrf" value="{{ csrf }}">
                     <button type="submit" class="btn btn-success">Search</button>
                 </div>
             </form>
@@ -102,8 +100,7 @@
                     method: "PUT",
                     headers: {
                         "X-Requested-With": "XMLHttpRequest",
-                        "Content-Type": "application/json",
-                        'X-CSRF-Header': "{{ csrf }}"
+                        "Content-Type": "application/json"
                     }
                 }).then(response => {
                     if (response.ok) {

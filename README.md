@@ -26,7 +26,12 @@ LIVE Link - https://dexter0.pythonanywhere.com/
 ##### 1. CSRF1.0_host-validation
 - Host header validating with Referer header
 ##### 2. CSRF1.1_synchronizer-token
-- TBD
+- Token stored in session
+  - Token not being discarded separately right now on Logout.
+- Same token attached with POST/PUT requests in form/header.
+- Validated on submission
+- Implemented in update, search, delete functions
+
 ##### 3. CSRF2_contentType-validation
 - Content Type header being validated
   - `allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data", "application/json"]`
@@ -38,8 +43,14 @@ LIVE Link - https://dexter0.pythonanywhere.com/
 - CSRF token assigned on Login.
 - Javascript auto appends same CSRF token to `X-CSRF-Header` on form submission.
 - Implemented in update, search functions
-##### 6. CSRF3.2_
-- TBD
+##### 6. CSRF3.2_doublesubmitcookie-POSTparam-insecureCORS (In-progress)
+- Same as CSRF3.0 setup
+- Insecure CORS
+  - `ACAO: *`
+  - `ACAM: PUT, POST, OPTIONS`
+  - `ACAH: X-CSRF-Header`
+  - `ACAC: true`
+  - `ACMA: 240`
 ##### 7. CSRF4
 - TBD
 

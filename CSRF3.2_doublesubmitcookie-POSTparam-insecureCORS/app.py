@@ -1,7 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response, render_template_string, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
 import sqlite3
 import os
-import secrets
 import re
 
 app = Flask(__name__)
@@ -45,9 +44,6 @@ def init_db():
     #print("Database initialized with users and books tables.")
     conn.commit()
     conn.close()
-
-def generate_csrf_token():
-    return secrets.token_hex(16)
 
 # User authentication
 def authenticate_user(username, password):
@@ -107,20 +103,6 @@ def search_books(search_term):
     conn.close()
     return books
 
-def validate_CSRF():
-    form_CSRFtoken = request.form.get('csrf') or request.headers.get('X-CSRF-Header')
-    session_CSRFtoken = session.get('csrf_token')
-    if form_CSRFtoken == session_CSRFtoken:
-        return True
-    else:
-        response = make_response("""
-                <script>
-                    alert("CSRF Token Mismatch!");
-                    window.location.href = "/";
-                </script>
-            """)
-        return response
-
 # Routes
 @app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
@@ -138,7 +120,6 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
-            session['csrf_token'] = generate_csrf_token()
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -163,7 +144,7 @@ def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     city = fetch_city(session['user_id'])[0]
-    return render_template('dashboard.html', username=session['username'], city=city, csrf=session['csrf_token'])
+    return render_template('dashboard.html', username=session['username'], city=city)
 
 
 @app.route('/search', methods=['GET','POST'])
@@ -171,25 +152,19 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    validate_csrf = validate_CSRF()
-    if validate_csrf is not True:
-        return validate_csrf
     search_term = request.form['search']
     books = []
     if search_term:
         books = search_books(search_term)
     city = fetch_city(session['user_id'])[0]
-    return render_template('dashboard.html', username=session['username'], csrf=session['csrf_token'], city=city, books=books, show_section='search', search_term=search_term)
+    return render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term)
+    # https://github.com/greyshell/sqli_lab/blob/main/flask_app/app.py#L213
 
 
 @app.route('/update', methods=['POST'])
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
-    validate_csrf = validate_CSRF()
-    if validate_csrf is not True:
-        return validate_csrf
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -198,10 +173,6 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
-
-    validate_csrf = validate_CSRF()
-    if validate_csrf is not True:
-        return validate_csrf
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200

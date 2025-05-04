@@ -101,6 +101,7 @@
                     headers: {
                         "X-Requested-With": "XMLHttpRequest",
                         "Content-Type": "application/json"
+                        // No CSRF token
                     }
                 }).then(response => {
                     if (response.ok) {
@@ -117,6 +118,41 @@
         {% if show_section %}
             showSection('{{ show_section }}');
         {% endif %}
+    </script>
+    <script>
+      // Add CSRF token from cookie into all POST requests
+      document.addEventListener("DOMContentLoaded", function () {
+        const csrf = document.cookie
+          .split('; ')
+          .find(row => row.startsWith('csrf_token='))
+          ?.split('=')[1];
+
+        // Attach token to form on submit
+        const forms = document.querySelectorAll("form");
+        forms.forEach(form => {
+            form.addEventListener("submit", function (e) {
+                e.preventDefault(); // Prevent default form submit
+
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                  method: form.method,
+                  body: formData,
+                  headers: {
+                    'X-CSRF-Header': csrf
+                  }
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        return response.text();
+                    }
+                })
+                .catch(err => alert("Error: " + err));
+            });
+        });
+      });
     </script>
 </body>
 </html>

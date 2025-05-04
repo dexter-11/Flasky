@@ -27,6 +27,7 @@
             <input type="text" class="form-control" id="username" name="username" required>
             <label for="password">Password:</label>
             <input type="password" class="form-control" id="password" name="password" required>
+            <input type="hidden" name="csrf_token" id="csrfToken">
             <br>
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
@@ -34,4 +35,23 @@
         <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
     </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrf_token='))
+                          ?.split('=')[1];
+        if (csrfToken) {
+            const csrfInput = document.getElementById('csrfToken');
+            if (csrfInput) csrfInput.value = csrfToken;
+
+            const form = document.querySelector("form");
+            if (form) {
+                form.addEventListener("submit", function (e) {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open(form.method, form.action);
+                    xhr.setRequestHeader("X-CSRF", csrfToken);
+                }, { once: true });
+            }
+        }
+    });
+</script>
 </html>

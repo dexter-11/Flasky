@@ -43,8 +43,8 @@ LIVE Link - https://dexter0.pythonanywhere.com/
 - CSRF token assigned on Login.
 - Javascript auto appends same CSRF token to `X-CSRF-Header` on form submission.
 - Implemented in update, search functions
-##### 6. CSRF3.2_doublesubmitcookie-POSTparam-insecureCORS (In-progress)
-- Same as CSRF3.0 setup
+##### 6. CSRF3.2_doublesubmitcookie-viaHeader-insecureCORS (In-progress)
+- Same as CSRF3.1 setup
 - Insecure CORS
   - `ACAO: *`
   - `ACAM: PUT, POST, OPTIONS`

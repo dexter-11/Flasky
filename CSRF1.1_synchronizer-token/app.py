@@ -138,7 +138,7 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
-            session['csrf_token16523'] = "123"
+            session['csrf_token'] = "1234567890"
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -163,7 +163,7 @@ def dashboard():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     city = fetch_city(session['user_id'])[0]
-    return render_template('dashboard.html', username=session['username'], city=city, csrf=session['csrf_token16523'])
+    return render_template('dashboard.html', username=session['username'], city=city, csrf=session['csrf_token'])
 
 
 @app.route('/search', methods=['GET','POST'])
@@ -179,7 +179,7 @@ def search():
     if search_term:
         books = search_books(search_term)
     city = fetch_city(session['user_id'])[0]
-    return render_template('dashboard.html', username=session['username'], csrf=session['csrf_token16523'], city=city, books=books, show_section='search', search_term=search_term)
+    return render_template('dashboard.html', username=session['username'], csrf=session['csrf_token'], city=city, books=books, show_section='search', search_term=search_term)
 
 
 @app.route('/update', methods=['POST'])

@@ -1,8 +1,7 @@
 from flask import Flask, make_response, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
 import sqlite3
 import os
-import secrets
-import re
+import random
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
@@ -46,8 +45,11 @@ def init_db():
     conn.commit()
     conn.close()
 
+
 def generate_csrf_token():
-    return secrets.token_hex(16)
+    tokens = ["09876","12345","qwerty","abcdef","abc123"]
+    random_token = random.choice(tokens)
+    return random_token
 
 # User authentication
 def authenticate_user(username, password):

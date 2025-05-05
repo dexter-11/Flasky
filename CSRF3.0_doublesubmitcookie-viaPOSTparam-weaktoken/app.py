@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, make_response, jsonify
+from flask import Flask, make_response, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
 import sqlite3
 import os
-import re
+import random
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
@@ -45,6 +45,10 @@ def init_db():
     conn.commit()
     conn.close()
 
+def generate_csrf_token():
+    tokens = ["09876","12345","qwerty","abcdef","abc123"]
+    random_token = random.choice(tokens)
+    return random_token
 
 # User authentication
 def authenticate_user(username, password):
@@ -104,30 +108,23 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Host Validation
-def check_referer():
-    referrer = request.headers.get("Referer")
-    origin = request.headers.get("Origin")
-    # Whoever tries to do CSRF (POST request using Javascript), Origin header comes up
-    if origin:
-        host = origin
-    else:
-        host = request.headers.get("Host")
-    # Escape host to safely use in regex (in case of dots etc.)
-    #pattern = f"^https?://{re.escape(host)}"
-    if referrer and re.match(f"^.*{re.escape(host)}.*$", referrer):
+# Validate CSRF token from Cookie and POST param
+def validate_CSRF():
+    csrf_cookie = request.cookies.get("csrf_token")
+    csrf_form = request.form.get("csrf")
+    if csrf_cookie == csrf_form:
         return True
     else:
         response = make_response("""
                 <script>
-                    alert("Invalid referrer detected!");
+                    alert("CSRF Token Mismatch!");
                     window.location.href = "/";
                 </script>
             """)
         return response
 
 
-## Routes
+# Routes
 @app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
     if 'user_id' in session:
@@ -144,8 +141,11 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
+
+            # Set CSRF cookie
+            response = make_response(redirect(url_for('dashboard')))
+            response.set_cookie('csrf_token', generate_csrf_token())
+            return response
         else:
             flash('Invalid username or password', 'error')
     return render_template('login.html')
@@ -176,16 +176,18 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
+    validate_csrf = validate_CSRF()
+    if validate_csrf is not True:
+        return validate_csrf
     search_term = request.form['search']
     books = []
     if search_term:
         books = search_books(search_term)
     city = fetch_city(session['user_id'])[0]
-    return render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term)
-    # https://github.com/greyshell/sqli_lab/blob/main/flask_app/app.py#L213
+    # Set CSRF cookie in response
+    resp = make_response(render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term))
+    resp.set_cookie('csrf_token', generate_csrf_token())
+    return resp
 
 
 @app.route('/update', methods=['POST'])
@@ -193,9 +195,9 @@ def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
+    validate_csrf = validate_CSRF()
+    if validate_csrf is not True:
+        return validate_csrf
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -205,9 +207,6 @@ def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
 
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200

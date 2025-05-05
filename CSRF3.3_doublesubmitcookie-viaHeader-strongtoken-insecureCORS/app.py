@@ -2,10 +2,18 @@ from flask import Flask, make_response, render_template, request, redirect, url_
 import sqlite3
 import os
 import secrets
-import re
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
+CORS(app,
+     origins=["*"],
+     methods=["POST", "PUT", "DELETE", "OPTIONS"],
+     allow_headers=["Content-Type", "X-CSRF-Header"],  #forbidden headers - ContentType
+     supports_credentials=True,
+     max_age=240
+)
+
 
 # Database initialization
 def init_db():
@@ -110,7 +118,7 @@ def search_books(search_term):
 # Validate CSRF token from Cookie and POST param
 def validate_CSRF():
     csrf_cookie = request.cookies.get("csrf_token")
-    csrf_form = request.form.get("csrf")
+    csrf_form = request.headers.get("X-CSRF-Header")
     if csrf_cookie == csrf_form:
         return True
     else:

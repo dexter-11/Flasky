@@ -9,7 +9,7 @@ app.secret_key = os.urandom(24)  # Secret key for session management
 CORS(app,
      origins=["*"],
      methods=["POST", "PUT", "DELETE", "OPTIONS"],
-     allow_headers=["Content-Type", "X-CSRF-Header", "Authorization"],
+     allow_headers=["Content-Type", "X-CSRF-Header"],  #forbidden headers - ContentType
      supports_credentials=True,
      max_age=240
 )
@@ -117,7 +117,7 @@ def search_books(search_term):
 # Validate CSRF token from Cookie and POST param
 def validate_CSRF():
     csrf_cookie = request.cookies.get("csrf_token")
-    csrf_form = request.headers.get("X-CSRF-Header")
+    csrf_form = request.form.get("csrf")
     if csrf_cookie == csrf_form:
         return True
     else:

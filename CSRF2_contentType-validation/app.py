@@ -105,7 +105,7 @@ def search_books(search_term):
 
 # Content Type Header validation
 def check_contentType():
-    allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data", "application/json"]
+    allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data", "application/json", "text/html"]
     content_type = request.headers.get("Content-Type", "")
     if any(t in content_type for t in allowed_types):
         return True

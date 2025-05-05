@@ -59,7 +59,7 @@ LIVE Link - https://dexter0.pythonanywhere.com/
   - `ACAH: X-CSRF-Header`
   - `ACAC: true`
   - `ACMA: 240`
-##### 7. CSRF4
+##### 7. CSRF4_doublesubmitcookie-viaHeader-StrongMitigation (In-progress)
 - TBD
 
 

@@ -6,6 +6,7 @@ import re
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
+app.config['SESSION_COOKIE_HTTPONLY'] = True
 
 # Database initialization
 def init_db():
@@ -138,7 +139,7 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
-            session['csrf_token'] = "1234567890"
+            session['csrf_token'] = generate_csrf_token()
             flash('Login successful!', 'success')
             return redirect(url_for('dashboard'))
         else:
@@ -171,9 +172,6 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    validate_csrf = validate_CSRF()
-    if validate_csrf is not True:
-        return validate_csrf
     search_term = request.form['search']
     books = []
     if search_term:
@@ -223,3 +221,12 @@ def reset_database():
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
+
+
+#Change Search to GET request - TODO (Then we can simulate phishing the victim)
+
+# By default Flask performs Output encoding
+# For doing XSS, add `|safe` in HTML
+
+#XSS is bypassing all needs for Lax / SameOrigin bypass for CSRF
+#Also in XSS context, it doesn't matter if we have httponly set in cookie, We can still perform actions on behalf of victim, doesn't decrease impact

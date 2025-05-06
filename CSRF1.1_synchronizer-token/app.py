@@ -167,12 +167,12 @@ def dashboard():
     return render_template('dashboard.html', username=session['username'], city=city, csrf=session['csrf_token'])
 
 
-@app.route('/search', methods=['GET','POST'])
+@app.route('/search', methods=['GET'])
 def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    search_term = request.form['search']
+    search_term = request.args.get('search', '')
     books = []
     if search_term:
         books = search_books(search_term)
@@ -223,7 +223,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
-#Change Search to GET request - TODO (Then we can simulate phishing the victim)
+#Change Search to GET request - DONE (Then we can simulate phishing the victim)
 
 # By default Flask performs Output encoding
 # For doing XSS, add `|safe` in HTML

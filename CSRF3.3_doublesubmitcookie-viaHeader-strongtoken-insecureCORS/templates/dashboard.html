@@ -60,7 +60,7 @@
         <!-- Search Books Section -->
         <div id="search" class="section">
             <h3>Search Books</h3>
-            <form method="POST" action="{{ url_for('search') }}" class="mb-3">
+            <form method="GET" action="{{ url_for('search') }}" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Enter book name or author" required>
                     <button type="submit" class="btn btn-success">Search</button>

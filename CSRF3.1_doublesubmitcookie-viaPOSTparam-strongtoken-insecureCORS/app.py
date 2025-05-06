@@ -177,15 +177,12 @@ def dashboard():
     return render_template('dashboard.html', username=session['username'], city=city)
 
 
-@app.route('/search', methods=['GET','POST'])
+@app.route('/search', methods=['GET'])
 def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    validate_csrf = validate_CSRF()
-    if validate_csrf is not True:
-        return validate_csrf
-    search_term = request.form['search']
+    search_term = request.args.get('search', '')
     books = []
     if search_term:
         books = search_books(search_term)

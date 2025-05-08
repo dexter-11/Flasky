@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, make_response, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
 import sqlite3
 import os
-import re
+import json
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
@@ -46,7 +46,6 @@ def init_db():
     #print("Database initialized with users and books tables.")
     conn.commit()
     conn.close()
-
 
 # User authentication
 def authenticate_user(username, password):
@@ -106,26 +105,7 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Host Validation
-def check_referer():
-    host = "https://" + request.headers.get("Host")
-    origin = request.headers.get("Origin")
-    #host = request.headers.get("Host")
-    #origin = request.headers.get("Origin").split("://")[1]
-    # matching protocol+host --> Still vulnerable
-    if origin and host == origin:
-        return True
-    else:
-        response = make_response("""
-                <script>
-                    alert("Origin did not match! Cross-origin request detected.");
-                    window.location.href = "/";
-                </script>
-            """)
-        return response
-
-
-## Routes
+# Routes
 @app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
     if 'user_id' in session:
@@ -174,26 +154,24 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
     search_term = request.form['search']
     books = []
     if search_term:
         books = search_books(search_term)
     city = fetch_city(session['user_id'])[0]
     return render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term)
+    # https://github.com/greyshell/sqli_lab/blob/main/flask_app/app.py#L213
 
 
 @app.route('/update', methods=['POST'])
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
-    new_city = request.form['city']
+    data = json.loads(request.data)     #request.get_json() is triggering Flask's built-in request validation
+    #we manually decoded the POST body as JSON
+    if not data or 'city' not in data:
+        return jsonify({"error": "Invalid request"}), 400
+    new_city = data['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
 
@@ -201,10 +179,6 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
-
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200
@@ -216,7 +190,6 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
-
 @app.route('/reset_database')
 def reset_database():
     os.remove('database.db')
@@ -224,6 +197,12 @@ def reset_database():
     init_db()
     return redirect(url_for('home', reset_db=1))
 
+@app.after_request
+def add_no_cache_headers(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 if __name__ == '__main__':
     init_db()

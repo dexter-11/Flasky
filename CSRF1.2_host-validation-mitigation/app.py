@@ -5,6 +5,8 @@ import re
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
 
 # Database initialization
 def init_db():
@@ -44,6 +46,7 @@ def init_db():
     #print("Database initialized with users and books tables.")
     conn.commit()
     conn.close()
+
 
 # User authentication
 def authenticate_user(username, password):
@@ -103,16 +106,24 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Content Type Header validation
-def check_contentType():
-    allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data", "application/json", "text/html"]
-    content_type = request.headers.get("Content-Type", "")
-    if any(t in content_type for t in allowed_types):
+# Host Validation
+def check_referer():
+    host = request.headers.get("Host").split(":")[0]    #removing the port from host
+    #origin = request.headers.get("Origin")
+    # Whoever tries to do CSRF (POST request using Javascript), Origin header comes up
+    #if origin:
+    #    check_host = origin
+    #else:
+    #In this case, Origin headers is always coming up so discarded above logic.
+    referer = request.headers.get("Referer")
+    # Escape host to safely use in regex (in case of dots etc.)
+    #pattern = f"^https?://{re.escape(host)}"
+    if referer and re.match(f"^.*{re.escape(host)}.*$", referer):
         return True
     else:
         response = make_response("""
                 <script>
-                    alert("Invalid Content-Type header!");
+                    alert("Invalid referrer detected!");
                     window.location.href = "/";
                 </script>
             """)
@@ -168,25 +179,25 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    check_content_type = check_contentType()
-    if check_content_type is not True:
-        return check_content_type
+    referer_check = check_referer()
+    if referer_check is not True:
+        return referer_check
     search_term = request.form['search']
     books = []
     if search_term:
         books = search_books(search_term)
     city = fetch_city(session['user_id'])[0]
     return render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term)
-    # https://github.com/greyshell/sqli_lab/blob/main/flask_app/app.py#L213
 
 
 @app.route('/update', methods=['POST'])
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-    check_content_type = check_contentType()
-    if check_content_type is not True:
-        return check_content_type
+
+    referer_check = check_referer()
+    if referer_check is not True:
+        return referer_check
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -195,9 +206,10 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
-    check_content_type = check_contentType()
-    if check_content_type is not True:
-        return check_content_type
+
+    referer_check = check_referer()
+    if referer_check is not True:
+        return referer_check
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200
@@ -216,6 +228,40 @@ def reset_database():
     init_db()
     return redirect(url_for('home', reset_db=1))
 
+# @app.after_request
+# def set_referrer_policy(response):
+#     response.headers['Referrer-Policy'] = 'unsafe-url'
+#     return response
+
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
+    #Needed to add since when we tried exploiting from Cloud, due to this being a Cross-Origin request, the cookie was dropped.
+    # To set SameSite=None for session cookies in your Flask app, you can configure it using Flask’s SESSION_COOKIE_SAMESITE setting in app.config.
+    # You also must set SESSION_COOKIE_SECURE = True when using SameSite=None, otherwise browsers will block the cookie.
+
+
+# We can generate a Referer header by Clicking a link or Submitting a form or Script-based navigation or embedded content.
+# <a href="https://target.com/page">Go</a>
+# window.location.href = "https://target.com/page";
+# <img src="https://target.com/track.png">
+# https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Cross-Site%20Request%20Forgery
+
+# Here to bypass the regex, our filename or directory or a subdomain should match the hostname. TO VERIFY!
+
+# referer header is not showing filename or directory, just the host
+# That's expected behavior in many modern browsers due to privacy-focused defaults for the Referer header. If you're seeing only the origin (like http://127.0.0.1:5000) instead of the full URL (like http://127.0.0.1:5000/dashboard), it’s because the browser is intentionally stripping the path and query parameters.
+# 🔍 Why this happens:
+# Most browsers now default to: `Referrer-Policy: strict-origin-when-cross-origin`
+# Under this policy:
+# - Same-origin requests → send the full URL.
+# - Cross-origin requests → send only the origin.
+# But even for same-origin requests, if HTTPS is not used or the policy is explicitly set to something stricter, only the origin may be sent.
+
+
+#Browser drops the Referer full URL.
+#You're correct — and this behavior is influenced by browser security models, not just the server-side headers.
+#Even if you explicitly set a permissive Referrer-Policy like no-referrer-when-downgrade or unsafe-url from your Flask server, the browser ultimately decides what to send in the Referer header,
+
+# Only vulnerable on the subdomain context, if we're able to match the regex.
+# Mitigation - Origin check with host - strong regex

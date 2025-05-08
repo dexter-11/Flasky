@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="referrer" content="unsafe-url">
     <title>Dashboard</title>
     <link href="../static/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -48,14 +47,9 @@
         <!-- My Profile Section -->
         <div id="profile" class="section active">
             <h3>Welcome, {{ username }}!</h3>
-            <p><strong>City:</strong> {{ city }}</p>
-            <form action="{{ url_for('update') }}" method="POST" class="mt-3">
-                <div class="mb-3">
-                    <label for="city" class="form-label">Update City</label>
-                    <input type="text" name="city" id="city" class="form-control" placeholder="Enter new city" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Update City</button>
-            </form>
+            <p><strong>City:</strong> <span id="cityDisplay">{{ city }}</span></p>
+            <p><input type="text" id="city" class="form-control" placeholder="Enter new city" required></p>
+            <button onclick="updateCity()" class="btn btn-primary">Update City</button>
         </div>
 
         <!-- Search Books Section -->
@@ -65,11 +59,33 @@
                 <div class="input-group">
                     <input type="text" name="search" class="form-control" placeholder="Enter book name or author" required>
                     <button type="submit" class="btn btn-success">Search</button>
+                    <script>
+                    //Update city
+                    function updateCity() {
+                        const newCity = document.getElementById("city").value;
+
+                        fetch("{{ url_for('update') }}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            credentials: "include",
+                            body: JSON.stringify({ city: newCity })
+                        })
+                        .then(() => {
+                          document.getElementById("cityDisplay").textContent = city;
+                          window.location.href = '/dashboard';
+                        })
+                        .catch(error => {
+                            console.error("Error updating city:", error);
+                        });
+                    }
+                    </script>
                 </div>
             </form>
 
             {% if search_term %}
-                <p class="mt-3">Search results for <strong>{{ search_term }}</strong>:</p>
+                <p class="mt-3">Search results for <strong>{{ search_term | safe }}</strong>:</p>
                 {% if books %}
                     <ul class="list-group">
                         {% for book in books %}
@@ -118,8 +134,7 @@
         {% if show_section %}
             showSection('{{ show_section }}');
         {% endif %}
+
     </script>
 </body>
 </html>
-
-

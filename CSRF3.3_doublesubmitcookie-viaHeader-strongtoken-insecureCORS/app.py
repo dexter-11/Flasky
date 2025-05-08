@@ -6,10 +6,12 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
 CORS(app,
      origins=["*"],
      methods=["POST", "PUT", "DELETE", "OPTIONS"],
-     allow_headers=["Content-Type", "X-CSRF-Header"],  #forbidden headers - ContentType
+     allow_headers=["Content-Type", "X-CSRF-Header"],  #forbidden headers -
      supports_credentials=True,
      max_age=240
 )
@@ -231,4 +233,4 @@ def reset_database():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)

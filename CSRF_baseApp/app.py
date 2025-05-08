@@ -5,6 +5,8 @@ import re
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
 
 # Database initialization
 def init_db():
@@ -193,4 +195,4 @@ def reset_database():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)

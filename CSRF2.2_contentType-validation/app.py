@@ -47,7 +47,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-
 # User authentication
 def authenticate_user(username, password):
     conn = sqlite3.connect('database.db')
@@ -106,19 +105,16 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Host Validation
-def check_referer():
-    host = "https://" + request.headers.get("Host")
-    origin = request.headers.get("Origin")
-    #host = request.headers.get("Host")
-    #origin = request.headers.get("Origin").split("://")[1]
-    # matching protocol+host --> Still vulnerable
-    if origin and host == origin:
+# Content Type Header validation
+def check_contentType():
+    allowed_types = ["application/x-www-form-urlencoded", "multipart/form-data", "application/json", "text/html"]
+    content_type = request.headers.get("Content-Type", "")
+    if any(t in content_type for t in allowed_types):
         return True
     else:
         response = make_response("""
                 <script>
-                    alert("Origin did not match! Cross-origin request detected.");
+                    alert("Invalid Content-Type header!");
                     window.location.href = "/";
                 </script>
             """)
@@ -174,25 +170,25 @@ def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
     search_term = request.form['search']
     books = []
     if search_term:
         books = search_books(search_term)
     city = fetch_city(session['user_id'])[0]
     return render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term)
+    # https://github.com/greyshell/sqli_lab/blob/main/flask_app/app.py#L213
 
 
 @app.route('/update', methods=['POST'])
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
-
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -201,10 +197,9 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
-
-    referer_check = check_referer()
-    if referer_check is not True:
-        return referer_check
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200
@@ -216,14 +211,12 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
 
-
 @app.route('/reset_database')
 def reset_database():
     os.remove('database.db')
     os.system('touch database.db')
     init_db()
     return redirect(url_for('home', reset_db=1))
-
 
 if __name__ == '__main__':
     init_db()

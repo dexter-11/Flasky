@@ -225,4 +225,4 @@ if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
 
-#
+# Get token directly from XSS

@@ -229,3 +229,7 @@ if __name__ == '__main__':
 
 #Subdomain exploitation
 #We should have control of an app that can set cookie of our choice.
+
+#Setting cookie works fine on support.local.host
+#Session persistence issue on flasky.local.host. It barely stays logged in.
+#Also after visiting subdomain, didnt find the cookie on main domain.

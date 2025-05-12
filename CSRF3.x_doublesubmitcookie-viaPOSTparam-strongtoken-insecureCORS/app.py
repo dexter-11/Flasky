@@ -8,13 +8,17 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
-CORS(app,
-     origins=["*"],
-     methods=["POST", "PUT", "DELETE", "OPTIONS"],
-     allow_headers=["Content-Type", "X-CSRF-Header"],  #forbidden headers -
-     supports_credentials=True,
-     max_age=240
-)
+CORS(app, supports_credentials=True, resources={
+    r"/*": {
+        #"origins": "*",
+        #"methods": ["POST", "PUT", "DELETE", "OPTIONS"],
+        #"allow_headers": ["Authorization"],
+        "max_age": 240
+    }
+})
+# if we give no CORS setting, it's by default ALLOW ALL. Allows anything. Reflects headers, methods, origins etc.
+# But Credential is by default FALSE. Hence still secure since Cookies wont go.
+
 
 # Database initialization
 def init_db():
@@ -152,7 +156,7 @@ def login():
 
             # Set CSRF cookie
             response = make_response(redirect(url_for('dashboard')))
-            response.set_cookie('csrf_token', generate_csrf_token())
+            response.set_cookie('csrf_token', generate_csrf_token(), samesite='None', secure=True, httponly=False)
             return response
         else:
             flash('Invalid username or password', 'error')
@@ -191,7 +195,6 @@ def search():
     city = fetch_city(session['user_id'])[0]
     # Set CSRF cookie in response
     resp = make_response(render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term))
-    resp.set_cookie('csrf_token', generate_csrf_token())
     return resp
 
 

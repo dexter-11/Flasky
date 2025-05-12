@@ -1,12 +1,24 @@
-from flask import Flask, make_response, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, make_response, jsonify
 import sqlite3
 import os
-import random
+from flask_cors import CORS
+import json
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
+CORS(app, supports_credentials=True, resources={
+    r"/*": {
+        #"origins": "*",
+        #"methods": ["POST", "PUT", "DELETE", "OPTIONS"],
+        #"allow_headers": ["Authorization"],
+        "max_age": 240
+    }
+})
+# if we give no CORS setting, it's by default ALLOW ALL. Allows anything. Reflects headers, methods, origins etc.
+# But Credential is by default FALSE. Hence still secure since Cookies wont go.
+
 
 # Database initialization
 def init_db():
@@ -46,11 +58,6 @@ def init_db():
     #print("Database initialized with users and books tables.")
     conn.commit()
     conn.close()
-
-def generate_csrf_token():
-    tokens = ["09876","12345","qwerty","abcdef","abc123"]
-    random_token = random.choice(tokens)
-    return random_token
 
 # User authentication
 def authenticate_user(username, password):
@@ -110,23 +117,23 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Validate CSRF token from Cookie and POST param
-def validate_CSRF():
-    csrf_cookie = request.cookies.get("csrf_token")
-    csrf_form = request.form.get("csrf")
-    if csrf_cookie == csrf_form:
+# Content Type Header validation
+def check_contentType():
+    allowed_types = ["application/json"]
+    content_type = request.headers.get("Content-Type", "")
+    if any(t in content_type for t in allowed_types):
         return True
     else:
         response = make_response("""
                 <script>
-                    alert("CSRF Token Mismatch!");
+                    alert("Invalid Content-Type header!");
                     window.location.href = "/";
                 </script>
             """)
         return response
 
 
-# Routes
+## Routes
 @app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
     if 'user_id' in session:
@@ -143,11 +150,8 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
-
-            # Set CSRF cookie
-            response = make_response(redirect(url_for('dashboard')))
-            response.set_cookie('csrf_token', generate_csrf_token(), samesite='None', secure=True, httponly=False)
-            return response
+            flash('Login successful!', 'success')
+            return redirect(url_for('dashboard'))
         else:
             flash('Invalid username or password', 'error')
     return render_template('login.html')
@@ -173,19 +177,21 @@ def dashboard():
     return render_template('dashboard.html', username=session['username'], city=city)
 
 
-@app.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET','POST'])
 def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    search_term = request.args.get('search', '')
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
+    search_term = request.form['search']
     books = []
     if search_term:
         books = search_books(search_term)
     city = fetch_city(session['user_id'])[0]
-    # Set CSRF cookie in response
-    resp = make_response(render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term))
-    return resp
+    return render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term)
+    # https://github.com/greyshell/sqli_lab/blob/main/flask_app/app.py#L213
 
 
 @app.route('/update', methods=['POST'])
@@ -193,10 +199,14 @@ def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    validate_csrf = validate_CSRF()
-    if validate_csrf is not True:
-        return validate_csrf
-    new_city = request.form['city']
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
+    #data = json.loads(request.data)
+    data = request.get_json()
+    if not data or 'city' not in data:
+        return jsonify({"error": "Invalid request"}), 400
+    new_city = data['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
 
@@ -204,7 +214,9 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
-
+    check_content_type = check_contentType()
+    if check_content_type is not True:
+        return check_content_type
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200
@@ -226,8 +238,3 @@ def reset_database():
 if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
-
-# Had to set SameSite = None for the csrf_token cookie as well, otherwise default Lax
-#Burp Sequencer - check entropy of tokens. Can get to know if they're reused
-#Can save tokens, and use in POST-worker.html file for brute-forcing.
-#Can also create a wordlist using `crunch` seeing the Sequencer analysis that it is between 5-6 chars and a whitelist

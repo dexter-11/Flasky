@@ -1,12 +1,26 @@
-from flask import Flask, make_response, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
+from flask import Flask, make_response, render_template, request, redirect, url_for, session, flash, \
+    jsonify, current_app
 import sqlite3
 import os
-import random
+import secrets
+#from flask_cors import CORS
+import hmac
+import hashlib
+import requests
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
+RECAPTCHA_SECRET = '6LdLZjcrAAAAANLRAmZBdM6K_nGPYJeELPWKT9QR'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
+# CORS(app,
+#      origins=["*"],
+#      methods=["POST", "PUT", "DELETE", "OPTIONS"],
+#      allow_headers=["Content-Type", "X-CSRF-Header"],
+#      supports_credentials=True,
+#      max_age=240
+# )
+
 
 # Database initialization
 def init_db():
@@ -47,10 +61,34 @@ def init_db():
     conn.commit()
     conn.close()
 
-def generate_csrf_token():
-    tokens = ["09876","12345","qwerty","abcdef","abc123"]
-    random_token = random.choice(tokens)
-    return random_token
+def generate_csrf_token(signed_session):
+    token = secrets.token_urlsafe(16)
+    message = f"{len(signed_session)}!{signed_session}!{len(token)}!{token}"
+    digest = hmac.new(app.secret_key, message.encode(), hashlib.sha256).hexdigest()
+    csrf_token = f"{digest}.{token}"
+    return csrf_token
+
+def verify_csrf_token(csrf_token, signed_session):
+    digest, random_token = csrf_token.split(".")
+    reconstruct_message = f"{len(signed_session)}!{signed_session}!{len(random_token)}!{random_token}"
+    reconstruct_digest = hmac.new(app.secret_key, reconstruct_message.encode(), hashlib.sha256).hexdigest()
+    if hmac.compare_digest(digest, reconstruct_digest):
+        return True
+    else:
+        return False
+    # # Insecure XOR comparison
+    # if len(digest) != len(reconstruct_digest):
+    #     return False
+    #
+    # result = 0
+    # for a, b in zip(digest, reconstruct_digest):
+    #     result |= ord(a) ^ ord(b)
+    #
+    # if result == 0:
+    #     return True
+    # else:
+    #     return False
+
 
 # User authentication
 def authenticate_user(username, password):
@@ -110,12 +148,22 @@ def search_books(search_term):
     conn.close()
     return books
 
-# Validate CSRF token from Cookie and POST param
+# Validate CSRF token from Cookie and Header
 def validate_CSRF():
-    csrf_cookie = request.cookies.get("csrf_token")
-    csrf_form = request.form.get("csrf")
-    if csrf_cookie == csrf_form:
-        return True
+    csrf_cookie = request.cookies.get("__Host-csrf_token")
+    csrf_form = request.headers.get("X-CSRF-Header")
+    signed_session = request.cookies.get("session")
+    if csrf_cookie == csrf_form :
+        if verify_csrf_token(csrf_cookie, signed_session):
+            return True
+        else:
+            response = make_response("""
+                            <script>
+                                alert("reCAPTCHA validation failure!");
+                                window.location.href = "/";
+                            </script>
+                        """)
+            return response
     else:
         response = make_response("""
                 <script>
@@ -125,6 +173,34 @@ def validate_CSRF():
             """)
         return response
 
+# Validate reCAPTCHA token
+def validate_reCAPTCHA():
+    recaptcha_token = request.form.get('g-recaptcha-response')
+    if recaptcha_token:
+        # Verify the token with Google
+        response = requests.post('https://www.google.com/recaptcha/api/siteverify', data={
+            'secret': RECAPTCHA_SECRET,
+            'response': recaptcha_token
+        })
+        result = response.json()
+        if result.get('success'):
+            return True
+        else:
+            response = make_response("""
+                            <script>
+                                alert("reCAPTCHA validation failure!");
+                                window.location.href = "/";
+                            </script>
+                        """)
+            return response
+    else:
+        response = make_response("""
+                <script>
+                    alert("reCAPTCHA validation failure!");
+                    window.location.href = "/";
+                </script>
+            """)
+        return response
 
 # Routes
 @app.route('/', methods=['GET', 'PUT', 'POST'])
@@ -144,9 +220,22 @@ def login():
             session['user_id'] = user[0]
             session['username'] = user[1]
 
+            # Get a serializer to sign the session cookie. The Session cookie is not available from requests yet!
+            serializer = current_app.session_interface.get_signing_serializer(current_app)
+            if not serializer:
+                raise RuntimeError("Could not get session serializer")
+            signed_session = serializer.dumps(dict(session))
+
             # Set CSRF cookie
             response = make_response(redirect(url_for('dashboard')))
-            response.set_cookie('csrf_token', generate_csrf_token(), samesite='None', secure=True, httponly=False)
+            # Set CSRF cookie with __Host- prefix
+            response.set_cookie(
+                "__Host-csrf_token",
+                generate_csrf_token(signed_session),
+                secure=True,
+                samesite="Strict",
+                path="/"
+            )
             return response
         else:
             flash('Invalid username or password', 'error')
@@ -196,9 +285,15 @@ def update():
     validate_csrf = validate_CSRF()
     if validate_csrf is not True:
         return validate_csrf
-    new_city = request.form['city']
+
+    validate_recaptcha = validate_reCAPTCHA()
+    if validate_recaptcha is not True:
+        return validate_recaptcha
+
+    new_city = request.form.get('city')
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
+
 
 @app.route('/delete', methods=['PUT'])
 def delete():
@@ -227,7 +322,4 @@ if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
 
-# Had to set SameSite = None for the csrf_token cookie as well, otherwise default Lax
-#Burp Sequencer - check entropy of tokens. Can get to know if they're reused
-#Can save tokens, and use in POST-worker.html file for brute-forcing.
-#Can also create a wordlist using `crunch` seeing the Sequencer analysis that it is between 5-6 chars and a whitelist
+# Works only on LOCALHOST & FLASKY.LOCAL.HOST domains because of Captcha registration.

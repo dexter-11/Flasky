@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #faece9;
+            padding-top: 30px;
+            border-right: 1px solid #dee2e6;
+        }
+        .sidebar button {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 10px;
+        }
+        .main-content {
+            flex: 1;
+            padding: 30px;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar p-3">
+        <h4>Menu</h4>
+        <button class="btn btn-outline-primary" onclick="showSection('profile')">My Profile</button>
+        <button class="btn btn-outline-danger" id="delete-account-btn">Delete Account</button>
+        <button class="btn btn-outline-success" onclick="showSection('search')">Search Books</button>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-secondary">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- My Profile Section -->
+        <div id="profile" class="section active">
+            <h3>Welcome, {{ username }}!</h3>
+            <p><strong>City:</strong> {{ city }}</p>
+            <form action="{{ url_for('update') }}" method="POST" class="mt-3">
+                <div class="mb-3">
+                    <label for="city" class="form-label">Update City</label>
+                    <input type="text" name="city" id="city" class="form-control" placeholder="Enter new city" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update City</button>
+            </form>
+        </div>
+
+        <!-- Search Books Section -->
+        <div id="search" class="section">
+            <h3>Search Books</h3>
+            <form method="POST" action="{{ url_for('search') }}" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="search" class="form-control" placeholder="Enter book name or author" required>
+                    <button type="submit" class="btn btn-success">Search</button>
+                </div>
+            </form>
+
+            {% if search_term %}
+                <p class="mt-3">Search results for <strong>{{ search_term | safe }}</strong>:</p>
+                {% if books %}
+                    <ul class="list-group">
+                        {% for book in books %}
+                            <li class="list-group-item">
+                                {{ book[1] or 'Unknown Title' }} by {{ book[2] or 'Unknown Author' }} ({{ book[3] or 'Unknown Year' }})
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No books found.</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
+        }
+
+        // Delete account with PUT request
+        document.getElementById("delete-account-btn").addEventListener("click", function () {
+            if (confirm("Are you sure you want to delete your account? This action cannot be undone!")) {
+                fetch("{{ url_for('delete') }}", {
+                    method: "PUT",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Content-Type": "application/json"
+                    }
+                }).then(response => {
+                    if (response.ok) {
+                        alert("Your account has been deleted.");
+                        window.location.href = "{{ url_for('home') }}";
+                    } else {
+                        alert("Failed to delete account. Please try again.");
+                    }
+                });
+            }
+        });
+
+        // Show the correct section based on server state (optional)
+        {% if show_section %}
+            showSection('{{ show_section }}');
+        {% endif %}
+    </script>
+</body>
+</html>

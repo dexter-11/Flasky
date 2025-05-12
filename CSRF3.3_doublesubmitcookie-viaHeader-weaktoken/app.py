@@ -49,7 +49,7 @@ def init_db():
 
 
 def generate_csrf_token():
-    tokens = ["09876","12345","qwerty","abcdef","abc123"]
+    tokens = ["09876", "12345", "qwerty", "abcdef", "abc123"]
     random_token = random.choice(tokens)
     return random_token
 
@@ -147,7 +147,7 @@ def login():
 
             # Set CSRF cookie
             response = make_response(redirect(url_for('dashboard')))
-            response.set_cookie('csrf_token', generate_csrf_token())
+            response.set_cookie('csrf_token', generate_csrf_token(), samesite='None', secure=True, httponly=False)
             return response
         else:
             flash('Invalid username or password', 'error')
@@ -186,7 +186,6 @@ def search():
     city = fetch_city(session['user_id'])[0]
     # Set CSRF cookie in response
     resp = make_response(render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term))
-    resp.set_cookie('csrf_token', generate_csrf_token())
     return resp
 
 
@@ -228,3 +227,5 @@ def reset_database():
 if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
+
+

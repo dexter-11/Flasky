@@ -1,12 +1,23 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
+from flask import Flask, make_response, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
 import sqlite3
 import os
-import re
+import secrets
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
-app.config['SESSION_COOKIE_SAMESITE'] = 'Strict'
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
+CORS(app, supports_credentials=True, resources={
+    r"/*": {
+        "origins": "*",
+        #"methods": ["POST", "PUT", "DELETE", "OPTIONS"],
+        #"allow_headers": ["Authorization"],
+        "max_age": 240
+    }
+})
+# if we give no CORS setting, it's by default ALLOW ALL. Allows anything. Reflects headers, methods, origins etc.
+# But Credential is by default FALSE. Hence still secure since Cookies wont go.
 
 # Database initialization
 def init_db():
@@ -46,6 +57,10 @@ def init_db():
     #print("Database initialized with users and books tables.")
     conn.commit()
     conn.close()
+
+
+def generate_csrf_token():
+    return secrets.token_hex(16)
 
 # User authentication
 def authenticate_user(username, password):
@@ -105,6 +120,22 @@ def search_books(search_term):
     conn.close()
     return books
 
+# Validate CSRF token from Cookie and POST param
+def validate_CSRF():
+    csrf_cookie = request.cookies.get("csrf_token")
+    csrf_form = request.headers.get("X-CSRF-Header")
+    if csrf_cookie == csrf_form:
+        return True
+    else:
+        response = make_response("""
+                <script>
+                    alert("CSRF Token Mismatch!");
+                    window.location.href = "/";
+                </script>
+            """)
+        return response
+
+
 # Routes
 @app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
@@ -122,8 +153,11 @@ def login():
         if user:
             session['user_id'] = user[0]
             session['username'] = user[1]
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
+
+            # Set CSRF cookie
+            response = make_response(redirect(url_for('dashboard')))
+            response.set_cookie('csrf_token', generate_csrf_token(), samesite='None', secure=True, httponly=False)
+            return response
         else:
             flash('Invalid username or password', 'error')
     return render_template('login.html')
@@ -149,23 +183,29 @@ def dashboard():
     return render_template('dashboard.html', username=session['username'], city=city)
 
 
-@app.route('/search', methods=['GET','POST'])
+@app.route('/search', methods=['GET'])
 def search():
     if 'username' not in session:
         return redirect(url_for('login'))
 
-    search_term = request.form['search']
+    search_term = request.args.get('search', '')
     books = []
     if search_term:
         books = search_books(search_term)
     city = fetch_city(session['user_id'])[0]
-    return render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term)
+    # Set CSRF cookie in response
+    resp = make_response(render_template('dashboard.html', username=session['username'], city=city, books=books, show_section='search', search_term=search_term))
+    return resp
 
 
 @app.route('/update', methods=['POST'])
 def update():
     if 'user_id' not in session:
         return redirect(url_for('login'))
+
+    validate_csrf = validate_CSRF()
+    if validate_csrf is not True:
+        return validate_csrf
     new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
@@ -174,6 +214,7 @@ def update():
 def delete():
     if 'user_id' not in session:
         return jsonify({"error": "Unauthorized"}), 401
+
     delete_user(session['user_id'])
     session.clear()
     return jsonify({"message": "Account deleted successfully"}), 200
@@ -196,12 +237,3 @@ if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
 
-# Here no CORS or CSRF is implemented.
-# SameSite --> TLDR+1 & Schema
-# No concept of Same-Origin or SOP here!
-
-# My CSRF payload should be hosted on subomain on same port 443 and it'll satisfy the SameSite setting.
-
-# What about if the payload is hosted on same domain name but on different port and https only.
-#CSRF on Chrome (lax bypass) - All cookies by-default Lax > Blocks cookies on CSRF-prone POST requests but will allow GET requests >
-# force override it by creating GET method using _method=POST param in URL > craft exploit and serve

@@ -76,7 +76,7 @@ def verify_csrf_token(csrf_token, signed_session):
         return True
     else:
         return False
-    # # Insecure XOR comparison
+    # # Insecure XOR comparison - Check?
     # if len(digest) != len(reconstruct_digest):
     #     return False
     #
@@ -175,7 +175,7 @@ def validate_CSRF():
 
 # Validate reCAPTCHA token
 def validate_reCAPTCHA():
-    recaptcha_token = request.form.get('g-recaptcha-response')
+    recaptcha_token = request.form['g-recaptcha-response']
     if recaptcha_token:
         # Verify the token with Google
         response = requests.post('https://www.google.com/recaptcha/api/siteverify', data={
@@ -284,13 +284,13 @@ def update():
 
     validate_csrf = validate_CSRF()
     if validate_csrf is not True:
-        return validate_csrf
+       return validate_csrf
 
     validate_recaptcha = validate_reCAPTCHA()
     if validate_recaptcha is not True:
         return validate_recaptcha
 
-    new_city = request.form.get('city')
+    new_city = request.form['city']
     update_city(new_city, session['user_id'])
     return redirect(url_for('dashboard'))
 
@@ -322,4 +322,7 @@ if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
 
+
 # Works only on LOCALHOST & FLASKY.LOCAL.HOST domains because of Captcha registration.
+
+#Even if I turn off CSRF Token verification, ReCAPTCHA is not allowing the CSRF to happen because of g_captcha_response param.

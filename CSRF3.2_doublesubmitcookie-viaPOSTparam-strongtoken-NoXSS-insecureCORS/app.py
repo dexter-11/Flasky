@@ -2,11 +2,23 @@ from flask import Flask, make_response, render_template, request, redirect, url_
 import sqlite3
 import os
 import secrets
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
+CORS(app, supports_credentials=True, resources={
+    r"/*": {
+        "origins": "*",
+        #"methods": ["POST", "PUT", "DELETE", "OPTIONS"],
+        #"allow_headers": ["Authorization"],
+        "max_age": 240
+    }
+})
+# if we give no CORS setting, it's by default ALLOW ALL. Allows anything. Reflects headers, methods, origins etc.
+# But Credential is by default FALSE. Hence still secure since Cookies wont go.
+
 
 # Database initialization
 def init_db():
@@ -46,7 +58,6 @@ def init_db():
     #print("Database initialized with users and books tables.")
     conn.commit()
     conn.close()
-
 
 def generate_csrf_token():
     return secrets.token_hex(16)
@@ -112,7 +123,7 @@ def search_books(search_term):
 # Validate CSRF token from Cookie and POST param
 def validate_CSRF():
     csrf_cookie = request.cookies.get("csrf_token")
-    csrf_form = request.headers.get("X-CSRF-Header")
+    csrf_form = request.form.get("csrf")
     if csrf_cookie == csrf_form:
         return True
     else:
@@ -227,9 +238,48 @@ if __name__ == '__main__':
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
 
 
-#Subdomain exploitation
-#We should have control of an app that can set cookie of our choice.
+# With XSS, CSRF will be possible anyways, doesnt matter HTTPPoly or Secure cookie settings
+#
+# No XSS, Inecure CORS - CSRF might not be possible (?)
+#
+# We were not setting HTTPOnly setting in cookie because of below reason.
+#
+# NOTE - Tradeoff of not setting HTTPOnly cookie setting is that we are not showing the csrf token anywhere in the response and pulling it from Javascript everywhere for doublesubmitcookie pattern.
+# If we set HTTPOnly setting, we need to add as hidden param on response page, then pull from there
 
-#Setting cookie works fine on support.local.host
-#Session persistence issue on flasky.local.host. It barely stays logged in.
-#Also after visiting subdomain, didnt find the cookie on main domain.
+
+# Subdomain exploitation is the ONLY way.
+# CRLF injection - able to set our own cookie and X-Csrf-Header ?
+    #The server must reflect user input directly into response headers without sanitization.
+    #\r\nSet-Cookie: csrf_token=malicious; Path=/; Domain=victim.com
+
+
+
+# GPT said this which wont work since this is cross origin attack - document.cookie will fetch attackers cookie, not victims
+# <html>
+#   <body>
+#     <script>
+#       function submitRequest() {
+#         var xhr = new XMLHttpRequest();
+#         xhr.open("POST", "https://127.0.0.1:5000/update", true);
+#         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+#         xhr.withCredentials = true;
+#
+#         // Extract CSRF token from cookie correctly and safely
+#         const cookies = document.cookie.split('; ').reduce((acc, pair) => {
+#           const [key, value] = pair.split('=');
+#           acc[key] = value;
+#           return acc;
+#         }, {});
+#
+#         if (cookies['csrf_token']) {
+#           xhr.setRequestHeader("X-CSRF-Header", cookies['csrf_token']);
+#         }
+#
+#         xhr.send("city=ExploitedCity");
+#       }
+#
+#       submitRequest();
+#     </script>
+#   </body>
+# </html>

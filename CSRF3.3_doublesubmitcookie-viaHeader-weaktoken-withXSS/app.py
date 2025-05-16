@@ -1,31 +1,12 @@
 from flask import Flask, make_response, render_template, request, redirect, url_for, session, flash, render_template_string, jsonify
 import sqlite3
 import os
-import secrets
-from flask_cors import CORS
+import random
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
-# CORS(app,
-#      origins=["*"],
-#      methods=["POST", "PUT", "DELETE", "OPTIONS"],
-#      allow_headers=["Content-Type", "X-CSRF-Header"],  #forbidden headers -
-#      supports_credentials=True,
-#      max_age=240
-# )
-CORS(app, supports_credentials=True, resources={
-    r"/*": {
-        #"origins": "*",
-        #"methods": ["POST", "PUT", "DELETE", "OPTIONS"],
-        #"allow_headers": ["Authorization"],
-        "max_age": 240
-    }
-})
-# if we give no CORS setting, it's by default ALLOW ALL. Allows anything. Reflects headers, methods, origins etc.
-# But Credential is by default FALSE. Hence still secure since Cookies wont go.
-
 
 # Database initialization
 def init_db():
@@ -66,8 +47,11 @@ def init_db():
     conn.commit()
     conn.close()
 
+
 def generate_csrf_token():
-    return secrets.token_hex(16)
+    tokens = ["09876", "12345", "qwerty", "abcdef", "abc123"]
+    random_token = random.choice(tokens)
+    return random_token
 
 # User authentication
 def authenticate_user(username, password):
@@ -243,3 +227,10 @@ def reset_database():
 if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
+
+
+#Token strength doesn't matter
+#Without insecure CORS settings, we cant add the Header.
+
+# With XSS, exploits/csrf-xss.js
+#pull token from cookie and add to header with new City value. Did from cloud, worked!

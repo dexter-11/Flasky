@@ -48,7 +48,7 @@
         <div id="profile" class="section active">
             <h3>Welcome, {{ username }}!</h3>
             <p><strong>City:</strong> {{ city }}</p>
-            <form action="{{ url_for('update') }}" method="POST" class="mt-3">
+            <form id="city-update-form" action="{{ url_for('update') }}" method="POST" class="mt-3" enctype="application/x-www-form-urlencoded">
                 <div class="mb-3">
                     <label for="city" class="form-label">Update City</label>
                     <input type="text" name="city" id="city" class="form-control" placeholder="Enter new city" required>
@@ -128,30 +128,36 @@
           ?.split('=')[1];
 
         // Attach token to form on submit
-        const forms = document.querySelectorAll("form");
-        forms.forEach(form => {
-            form.addEventListener("submit", function (e) {
-                e.preventDefault(); // Prevent default form submit
+        const form = document.getElementById("city-update-form");
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent default form submit
 
-                const formData = new FormData(form);
+            const formData = new FormData(form);
+            const params = new URLSearchParams();
 
-                fetch(form.action, {
-                  method: form.method,
-                  body: formData,
-                  headers: {
-                    'X-CSRF-Header': csrf
-                  }
-                })
-                .then(response => {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    } else {
-                        return response.text();
-                    }
-                })
-                .catch(err => alert("Error: " + err));
-            });
-        });
+            for (const [key, value] of formData.entries()) {
+              params.append(key, value);
+            }
+
+            fetch(form.action, {
+              method: form.method,
+              body: params.toString(),
+              headers: {
+                'X-CSRF-Header': csrf,
+                "Content-Type": "application/x-www-form-urlencoded"
+              }
+            })
+            .then(response => {
+              if (response.redirected) {
+                window.location.href = response.url;
+              } else {
+                return response.text();
+              }
+            })
+            .catch(err => alert("Error: " + err));
+          });
+        }
       });
     </script>
 </body>

@@ -10,7 +10,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
 CORS(app, supports_credentials=True, resources={
     r"/*": {
-        #"origins": "*",
+        "origins": "*",
         #"methods": ["POST", "PUT", "DELETE", "OPTIONS"],
         #"allow_headers": ["Authorization"],
         "max_age": 240
@@ -18,7 +18,6 @@ CORS(app, supports_credentials=True, resources={
 })
 # if we give no CORS setting, it's by default ALLOW ALL. Allows anything. Reflects headers, methods, origins etc.
 # But Credential is by default FALSE. Hence still secure since Cookies wont go.
-
 
 # Database initialization
 def init_db():
@@ -58,6 +57,7 @@ def init_db():
     #print("Database initialized with users and books tables.")
     conn.commit()
     conn.close()
+
 
 def generate_csrf_token():
     return secrets.token_hex(16)
@@ -123,7 +123,7 @@ def search_books(search_term):
 # Validate CSRF token from Cookie and POST param
 def validate_CSRF():
     csrf_cookie = request.cookies.get("csrf_token")
-    csrf_form = request.form.get("csrf")
+    csrf_form = request.headers.get("X-CSRF-Header")
     if csrf_cookie == csrf_form:
         return True
     else:
@@ -236,3 +236,23 @@ def reset_database():
 if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
+
+
+#Token strength doesn't matter
+#Without insecure CORS settings, we cant add the Header.
+
+#SIDE NOTE
+#https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Expose-Headers
+#if ACEH is set, csrf attack (Javascript) can not only change but read the header as well.
+
+# Without XSS, even if the CORS is very insecure
+# Here CSRF attack is not possible since we're unale to fetch the CSRF token from anywhere.
+#We need it somewhere in the DOM. If any GET request is happening where the csrf_token is visible in response header or the HTML page.
+#Cannot set Cookie since its Forbidden Header
+
+# No XSS, Inecure CORS - CSRF might not be possible (?)
+
+# Subdomain exploitation is the ONLY way.
+# CRLF injection - able to set our own cookie and X-Csrf-Header ?
+    #The server must reflect user input directly into response headers without sanitization.
+    #\r\nSet-Cookie: csrf_token=malicious; Path=/; Domain=victim.com

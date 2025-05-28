@@ -1,0 +1,5 @@
+Policy.boughtbymany.com
+Policy-lifecycle-manager.policies.io
+App.policies.io
+Admin-api.us.policies.io
+admin-api.policies.io

@@ -1,0 +1,35 @@
+lab@bb-dexCloud:~$ ls -la go/bin/
+total 715608
+drwxrwx--- 2 lab lab      4096 May 11 21:19 .
+drwxrwx--- 4 lab lab      4096 Apr 10 20:56 ..
+-rwxrwx--- 1 lab lab   2369159 Apr 11 23:00 anew
+-rwxrwx--- 1 lab lab   8815467 Apr 29 15:08 assetfinder
+-rwxrwx--- 1 lab lab 237939564 Apr 10 20:56 aws-enumerator
+-rwxrwx--- 1 lab lab  36671195 Apr 28 21:14 dnsx
+-rwxrwx--- 1 lab lab   9855034 May 11 21:19 gap
+-rwxrwx--- 1 lab lab  13085171 Apr 12 10:18 gau
+-rwxr-xr-x 1 lab lab  37011640 Apr 18 20:39 golangci-lint
+-rwxr-xr-x 1 lab lab  31321395 Apr 18 19:49 gosec
+-rwxrwx--- 1 lab lab  20462141 May 11 08:18 gospider
+-rwxrwx--- 1 lab lab  13358931 Apr 28 21:17 gungnir
+-rwxrwx--- 1 lab lab  53449368 Apr 28 21:15 httpx
+-rwxrwx--- 1 lab lab  49864440 Apr 11 23:14 katana
+-rwxrwx--- 1 lab lab  26251274 Apr 11 23:02 notify
+-rwxrwx--- 1 lab lab 124441368 Apr 11 23:28 nuclei
+-rwxrwx--- 1 lab lab   7707925 Apr 18 20:04 safesql
+-rwxrwx--- 1 lab lab  18362942 Apr 11 23:01 smap
+-rwxrwx--- 1 lab lab  41769448 Apr 28 21:13 subfinder
+lab@bb-dexCloud:~$ ls -la tools/
+total 4272
+drwxrwx---  8 lab lab    4096 May 11 21:17 .
+drwxrwx--- 20 lab lab    4096 May 28 07:53 ..
+drwxrwx--- 11 lab lab    4096 Apr 10 20:18 cloudfox
+drwxrwx---  6 lab lab    4096 May 11 21:18 GoogleMapsApiScanner
+drwxrwx---  5 lab lab    4096 Apr 11 23:17 magicRecon
+-rwxrwx---  1 lab lab 3104768 Jan 17  2023 pspy64
+-rwxrwx---  1 lab lab 1233888 Jan 17  2023 pspy64s
+drwxrwx---  3 lab lab    4096 Apr 12 08:41 resolvers
+drwxrwx---  8 lab lab    4096 Apr 10 20:40 ScoutSuite
+drwxrwx--- 14 lab lab    4096 May  9 22:29 SecLists
+lab@bb-dexCloud:~$ ls
+backups  BugBounty  flasky  go  grafana_configs  htdocs  logs  nuclei-templates  reports  snap  tmp  tools

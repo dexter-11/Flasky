@@ -1,0 +1,36 @@
+#!/bin/bash
+baseDir="/home/lab/BugBounty/recon"
+
+#1.Traverse dirs - 
+#   .ignoredirs shouldn't be traversed
+#   roots.txt contain wildcards (required file even if empty)
+#   domains.txt contain domains/subdomains (required file even if empty)
+#   resolveddomains contain IP resolved domains/subdomains (may not exist)
+#   ips.txt contain server hosts (required file even if empty)
+#   livewebservers.txt contain web hosts (may not exist)
+
+#2. Subfinder + dnsx <-- root.txt : get all domains/subdomains --> resolveddomains.txt
+#2a. Gungnir <-- root.txt : check CT logs for newly issued SSL/TLS certificates + check if already exists --> resolveddomains.txt
+## Instead of checking if exists, can also simply do a `sort|uniq` after appending output.
+
+#3. dnsx <-- domains.txt : resolve and check if already exists --> resolveddomains.txt
+
+#REMOVE ALL DOMAINS FROM outofscope.txt
+
+#4. httpx <-- resolveddomains.txt : Check them on port 80,443,8080,8443,9000,9080 --> livewebservers.txt
+##(https://github.com/danielmiessler/SecLists/blob/master/Discovery/Infrastructure/common-http-ports.txt)
+
+#5. smap <-- resolveddomains.txt + ips.txt : shodan nmap --> openports.txt
+
+#Error Handling IMP after this step
+
+#6. dirsearch -u https://bbt.com -e php,html,js,json,txt,xml,zip,sql,asp,aspx,jsp,action,conf,con fig,bak,log, old,inc -x 400,403,404 -t 50 --recursion "404"
+#7. Also need to crawl the website for all possible URLs and get JS files.
+#8. Separate out all JS files with the name "chunk" for jsmap
+## https://www.linkedin.com/pulse/abusing-api-key-leakage-frontend-frameworks-2025-edition-medeiros-wljkc/
+## https://www.linkedin.com/pulse/js-map-file-mistake-gave-me-source-code-access-3000-sergio-medeiros-khyof/
+#9. JSMon - https://www.linkedin.com/feed/update/urn:li:activity:7321901002163470336/
+
+
+# Also keep some script modules ready to run on Custom URLs like my grafana stack local/cloud. 
+#This I can just initiate anytime with a simple URL and it does certain scanning.

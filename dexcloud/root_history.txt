@@ -1,0 +1,128 @@
+init 0
+exit
+apt install golang-go -y
+apt install gccgo-go -y
+ls -la
+mkdir tools
+cd tools
+ls -la
+ls /home
+cd ..
+rmdir tools/
+cd /home/lab/
+ls -la
+/bin/bash -p
+/bin/bash -i
+/bin/bash
+sudo usermod -aG sudo lab
+su lab
+ls /usr/local/go
+echo $PATH
+ls /usr/*/go
+ls /usr/share/go
+ls /usr/share/go/*
+which go
+rm -rf /usr/share/go
+rm -rf /usr/share/go-1.22
+go-14 version
+rm /usr/bin/go
+rm /usr/bin/go-14 
+gofmt
+gofmt -h
+sudo apt install go-1.23
+sudo apt install golang-1.23
+sudo snap install go  --classic
+go version
+cd tools/cloudfox/
+su lab
+touch /etc/sudoers.d/lab-user
+echo lab ALL=(ALL) NOPASSWD:ALL
+echo "lab ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/lab-user
+su lab
+exit
+ls -la
+su lab
+exit
+ls
+su lab 
+su lab 
+su lab 
+exit
+su lab 
+cd 
+exit
+su lab 
+ls
+ls -la 
+cat /etc/crontab 
+exit
+cd
+ls /etc/nginx/sites-available/
+systemctl status nginx
+
+systemctl status nginx
+nano /etc/nginx/sites-enabled/default.conf 
+exit
+ls -la
+ls
+cd /etc/nginx/
+ls
+cd sites-available/
+ls -la
+d ..
+cd ..
+cd conf.d/
+ls
+ls -la
+cd ../sites-enabled/
+ls -la
+cat default.conf 
+exit
+nano /etc/nginx/sites-enabled/www.hacdex.com.conf 
+nginx -t
+systemctl  reload nginx.service 
+npm run
+nano /etc/nginx/sites-enabled/www.hacdex.com.conf 
+sudo npm install -g pm2
+npm run build
+nano /etc/nginx/sites-enabled/www.hacdex.com.conf 
+nginx -t
+systemctl  reload nginx.service 
+cd /etc/nginx/
+ls -la
+cd
+ls conf.d
+cd -
+ls conf.d/
+ls sites-available/
+ls sites-enabled/
+ls -la
+nano sites-enabled/profile.hacdex.com.conf 
+nginx -t
+nano sites-enabled/profile.hacdex.com.conf 
+nginx -t
+systemctl reload nginx.conf 
+systemctl reload nginx
+nano sites-enabled/profile.hacdex.com.conf 
+nginx -t
+systemctl reload nginx
+exit
+sudo /etc/nginx/sites-enabled/www.hacdex.com.conf 
+sudo nano /etc/nginx/sites-enabled/www.hacdex.com.conf 
+ls
+cd /home/lab/
+cd flasky/
+ls -la
+cd CSRF3.6
+cd CSRF3.6_doublesubmitcookie-viaPOSTparam-strongtoken-noXSS-subdomainexploit/
+ls -la
+cd support-app/
+ls -la
+python3 app.py 
+nano app.py 
+python3 app.py 
+ 
+cd
+nano .bash_history 
+cat .bash_history 
+exit

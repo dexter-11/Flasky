@@ -1,0 +1,36 @@
+Starting Nmap 9.99 ( https://nmap.org ) at 2025-04-12 08:07 UTC
+Nmap scan report for rise-api.stg.inspectorio.com (104.18.10.44)
+Host is up.
+rDNS record for 104.18.10.44: click.mailer.clubhouseonline-e3.com
+
+PORT     STATE SERVICE         VERSION
+80/tcp   open  http            ASP.NET
+443/tcp  open  https?          
+2052/tcp open  clearvisn?      
+2053/tcp open  lot105-ds-upd?  
+2082/tcp open  infowave?       
+2083/tcp open  radsec?         
+2086/tcp open  gnunet?         
+2087/tcp open  eli?            
+2096/tcp open  nbx-dir?        
+8080/tcp open  http-alt?       
+8443/tcp open  pcsync-https?   
+8880/tcp open  cddbp-alt?      
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+Nmap scan report for api.stg.inspectorio.com (104.18.10.44)
+Nmap scan report for rise.stg.inspectorio.com (104.18.11.44)
+rDNS record for 104.18.11.44: click.mailer.clubhouseonline-e3.com
+2095/tcp open  nbx-ser?        
+Nmap scan report for docuflow.stg.inspectorio.com (104.18.11.44)
+Nmap scan report for app.stg.inspectorio.com (104.18.11.44)
+Nmap scan report for id.stg.inspectorio.com (104.18.11.44)
+Nmap done: 6 IP addresses (6 hosts up) scanned in 0.39 seconds
+Starting Nmap 9.99 ( https://nmap.org ) at 2025-04-13 10:35 UTC
+rDNS record for 104.18.11.44: shopwynnrewards.com
+80/tcp   open  http?           
+Nmap scan report for api.stg.inspectorio.com (104.18.11.44)
+Nmap scan report for docuflow.stg.inspectorio.com (104.18.10.44)
+rDNS record for 104.18.10.44: clubhouseonline-e3.com
+Nmap scan report for app.stg.inspectorio.com (104.18.10.44)
+Nmap scan report for id.stg.inspectorio.com (104.18.10.44)
+Nmap done: 6 IP addresses (6 hosts up) scanned in 8.81 seconds

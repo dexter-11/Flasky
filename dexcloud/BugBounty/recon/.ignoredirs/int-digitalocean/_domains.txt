@@ -1,0 +1,8 @@
+digitaloceantest.com
+digitaloceanstatus.com
+digitaloceanpartners.com
+digitaloceanmirrors.com
+www.digitalocean.com
+marketplace.digitalocean.com
+snapshooter.com
+api.digitalocean.com

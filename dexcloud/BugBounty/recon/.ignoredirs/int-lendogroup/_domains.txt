@@ -1,0 +1,7 @@
+admin.stage.lendo.se
+api.stage.lendo.se
+pre-admin.lendo.no
+inbox.stage.lendo.se
+pre.lendo.no
+lendo.no
+stage.lendo.se

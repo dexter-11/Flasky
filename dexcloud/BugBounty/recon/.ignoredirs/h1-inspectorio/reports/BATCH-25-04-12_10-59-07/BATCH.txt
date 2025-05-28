@@ -1,0 +1,5 @@
+# Dirsearch started Sat Apr 12 11:01:10 2025 as: /usr/lib/python3/dist-packages/dirsearch/dirsearch.py -l domains.txt --full-url --random-agent
+
+403    19B   http://rise-api.stg.inspectorio.com/metrics.json
+403    19B   http://rise-api.stg.inspectorio.com/metrics
+403    19B   http://rise-api.stg.inspectorio.com/metrics/

@@ -1,0 +1,20 @@
+nohup: ignoring input
+Lifecycle scripts included in v4:
+  start
+    npm run develop
+
+available via `npm run-script`:
+  build
+    gatsby build
+  develop
+    gatsby develop
+  format
+    prettier --write "**/*.{js,jsx,json,md}"
+  serve
+    gatsby serve
+  clean
+    gatsby clean
+  prepare
+    husky install
+  lint-staged
+    lint-staged

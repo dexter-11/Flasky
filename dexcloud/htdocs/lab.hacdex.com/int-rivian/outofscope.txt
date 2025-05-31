@@ -1,8 +1,0 @@
-assets.rivian.com
-careers.rivian.com
-demovehicles.rivian.com
-feedback.rivian.com
-internalshop.rivian.com
-media.rivian.com
-stories.rivian.com
-view.e.rivian.com

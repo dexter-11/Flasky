@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fetched Content</title>
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <style>
+        iframe {
+            width: 100%;
+            height: 80vh;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h3 class="mb-4">Rendered View from: <span class="text-primary">{{ url }}</span></h3>
+        <div class="mb-4">
+            <!-- Render the HTML inside an iframe for better isolation -->
+            <iframe srcdoc="{{ content | safe }}"></iframe>
+        </div>
+        <a href="/" class="btn btn-secondary">← Go Back</a>
+    </div>
+</body>
+</html>

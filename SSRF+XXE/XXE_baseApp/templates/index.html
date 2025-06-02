@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Products</title>
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h2>🛍 Products</h2>
+        <div class="list-group">
+            <button class="list-group-item list-group-item-action" onclick="sendXML('100')">Television</button>
+            <button class="list-group-item list-group-item-action" onclick="sendXML('101')">Refrigerator</button>
+            <button class="list-group-item list-group-item-action" onclick="sendCustomXXE()">🔥 Send XXE Payload</button>
+        </div>
+    </div>
+
+    <form id="xmlForm" method="post" action="/product-detail" style="display:none;">
+        <textarea name="xml" id="xmlInput"></textarea>
+    </form>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

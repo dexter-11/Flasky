@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Detail</title>
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <h3>📦 Product Details</h3>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Name:</strong> {{ name }}</li>
+            <li class="list-group-item"><strong>Code:</strong> {{ code }}</li>
+            <li class="list-group-item"><strong>Tags:</strong> {{ tags }}</li>
+            <li class="list-group-item"><strong>Description:</strong><br>{{ description }}</li>
+        </ul>
+        <a href="/" class="btn btn-secondary mt-4">← Back</a>
+    </div>
+</body>
+</html>

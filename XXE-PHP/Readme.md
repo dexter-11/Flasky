@@ -24,7 +24,7 @@ sudo nano /etc/nginx/sites-available/flasky-php
 #    listen 80;
 #    server_name localhost;
 #
-#    root /var/www/xxe-php-app;
+#    root /var/www/flasky-php;
 #    index index.php;
 #
 #    location / {

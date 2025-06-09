@@ -1,4 +1,4 @@
-# Flasky
+# Flasky (Python version)
 Flask application to practice different types of web vulnerabilities by both black-box and white-box testing methodologies.
 
 > Note - Tested with Python 3.8.10 & 3.13.1

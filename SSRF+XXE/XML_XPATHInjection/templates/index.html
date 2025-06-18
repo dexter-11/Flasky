@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XPath Injection Challenge</title>
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title mb-4">🔐 XPath Injection — Escalation Challenge</h3>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label>Username:</label>
+                        <input name="username" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>Password:</label>
+                        <input name="password" type="password" class="form-control" required>
+                    </div>
+                    <button class="btn btn-primary">Login</button>
+                </form>
+
+                {% if msg %}
+                    <div class="mt-4 alert alert-info">{{ msg }}</div>
+                {% endif %}
+
+                {% if is_admin %}
+                    <div class="alert alert-success mt-3">
+                        🛡️ Admin Access Granted! Flag: <code>FLAG{xpath_admin_escalation}</code>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XML Tag Injection Lab</title>
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .card { margin-top: 30px; }
+        pre { background: #f1f1f1; padding: 15px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title mb-4">🔐 XML Tag Injection — Privilege Escalation Demo</h3>
+            <form method="POST" class="mb-4">
+                <div class="input-group">
+                    <input type="text" name="name" class="form-control" placeholder="Enter your name or inject XML tags" required>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </form>
+
+            {% if parsed_name %}
+                <h4>Welcome, {{ parsed_name }}</h4>
+                {% if is_admin %}
+                    <div class="alert alert-success mt-3">
+                        ✅ Admin Access Granted! You can view sensitive data.
+                    </div>
+                {% else %}
+                    <div class="alert alert-secondary mt-3">
+                        👤 User privileges only.
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {% if xml_output %}
+                <h5 class="mt-4">Generated XML:</h5>
+                <pre>{{ xml_output }}</pre>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

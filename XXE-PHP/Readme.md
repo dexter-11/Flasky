@@ -23,7 +23,7 @@ sudo nginx -t
 sudo systemctl reload nginx
 sudo systemctl restart php*-fpm
 ```
-
+Nginx config file
 ```conf
 server {
     listen 80;

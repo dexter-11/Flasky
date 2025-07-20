@@ -16,32 +16,35 @@ cd /var/www/flasky-php
 
 sudo chown -R www-data:www-data /var/www/flasky-php
 
-sudo nano /etc/nginx/sites-available/flasky-php
-#server {
-#    listen 80;
-#    server_name localhost;
-#
-#    root /var/www/flasky-php;
-#    index index.php;
-#
-#    location / {
-#        try_files $uri $uri/ =404;
-#    }
-#
-#    location ~ \.php$ {
-#        include snippets/fastcgi-php.conf;
-#        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
-#    }
-#
-#    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-#        try_files $uri =404;
-#    }
-#}
+sudo cp ./flasky-php /etc/nginx/sites-available/flasky-php  #nginx conf file
 
 sudo ln -s /etc/nginx/sites-available/flasky-php /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl reload nginx
 sudo systemctl restart php*-fpm
+```
+
+```conf
+server {
+    listen 80;
+    server_name localhost;
+
+    root /var/www/flasky-php;
+    index index.php;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        try_files $uri =404;
+    }
+}
 ```
 
 ### 2. XXE in PHP app

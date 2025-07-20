@@ -1,0 +1,10 @@
+[2025-07-20 19:11:18] IP: 127.0.0.1
+File: None
+Raw: ZmFrZWRhdGE=
+Base64_Decoded: fakedata
+
+[2025-07-20 19:32:52] IP: 127.0.0.1
+File: None
+Raw: VGhpcyBkYXRhIGlzIGV4ZmlsdHJhdGVkIGZyb20gL3Zhci93d3cvaHRtbC8gb24gdGhlIGFwcCBzZXJ2ZXIuCkdHZXoK
+Base64_Decoded: This data is exfiltrated from /var/www/html/ on the app server.
+GGez

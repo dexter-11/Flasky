@@ -1,7 +1,11 @@
-# description: logs base64 encoded data from a request
-# test the app:
+# Description: logs base64 encoded data from a request and decodes as well
+# pip3 install flask flask_socketio --break-system-packages
+# python3 http-request-logger-v2.py
+
+# test:
 # send the data via curl: DATA="fakedata" && ENCODED=$(echo -n "$DATA" | base64) && curl "http://127.0.0.1:5050?data=$ENCODED"
 # check http://127.0.0.1:5050/ to get the raw data from the request
+
 # By https://github.com/greyshell
 
 from flask import Flask, request, render_template_string

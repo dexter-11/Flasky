@@ -2,7 +2,7 @@
 # Flasky (PHP version)
 
 ### 1. Setup environment (LEMP stack - Nginx, PHP)
-```bash
+```sh
 sudo apt update
 sudo apt install nginx php php-fpm php-xml -y
 
@@ -24,7 +24,7 @@ sudo systemctl reload nginx
 sudo systemctl restart php*-fpm
 ```
 Nginx config file
-```conf
+```php
 server {
     listen 80;
     server_name localhost;

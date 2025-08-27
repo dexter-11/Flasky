@@ -1,0 +1,19 @@
+<!-- login.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Login</h2>
+<form method="post" class="row">
+  <div style="flex:1">
+    <label>Username</label>
+    <input name="username" autocomplete="off" />
+  </div>
+  <div style="flex:1">
+    <label>Password</label>
+    <input name="password" type="password" />
+  </div>
+  <div style="flex-basis:100%"></div>
+  <button>Sign in</button>
+</form>
+{% if error %}<div class="danger">{{ error }}</div>{% endif %}
+<p class="muted">Try <code>admin</code> / <code>password</code>.</p>
+{% endblock %}

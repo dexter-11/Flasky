@@ -16,7 +16,7 @@
     <div class="feedback">
       <div class="muted">by {{ fb.author }}</div>
       <div>{{ fb.content | safe }}</div>
-      <form method="post" style="margin-top:8px">
+      <form method="post">
         <input type="hidden" name="delete_id" value="{{ fb.id }}">
         <button>Delete</button>
       </form>

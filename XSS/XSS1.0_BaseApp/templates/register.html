@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>Register</h2>
-<form method="post" class="row">
-  <div style="flex:1">
+<form method="post">
+  <div style="margin-bottom:14px">
     <label>Username</label>
     <input name="username" autocomplete="off" />
   </div>
-  <div style="flex:1">
+  <div style="margin-bottom:14px">
     <label>Password</label>
     <input name="password" type="password" />
   </div>
-  <div style="flex-basis:100%"></div>
   <button>Create Account</button>
 </form>
 {% if error %}<div class="danger">{{ error }}</div>{% endif %}

@@ -1,7 +1,7 @@
 <!-- search.html -->
 {% extends 'base.html' %}
 {% block content %}
-<h2>Book Search (Reflected XSS)</h2>
+<h2>Book Search (⚠️ Server-side Reflected XSS)</h2>
 <form method="get">
   <label>Query</label>
   <input name="q" value="{{ request.args.get('q','') }}" placeholder="Try: <img src=x onerror=alert(1)>" />
@@ -26,6 +26,4 @@
     <p>No results for <em>{{ q | safe }}</em>.</p>
   {% endif %}
 {% endif %}
-
-<p class="muted">Tip: Try injecting HTML/JS via the search box to observe reflected XSS behavior.</p>
 {% endblock %}

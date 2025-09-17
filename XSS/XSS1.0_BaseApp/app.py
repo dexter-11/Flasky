@@ -111,9 +111,6 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# this also gets stored in DB, but if fetched and appended by Javascript, not directly. Look into this.
-# Think of attack scenarios while creating
-#move behind auth
 @app.route("/feedback", methods=["GET","POST"])
 def feedback():
     if not session.get("username"):
@@ -187,11 +184,14 @@ def quote():
         return redirect(url_for("login"))
     return render_template("quote.html")
 
+# this also gets stored in DB, but if fetched and appended by Javascript, not directly. Look into this.
+# Think of attack scenarios while creating
 @app.route("/notes")
 def notes():
     if not session.get("user_id"):
         return redirect(url_for("login"))
     return render_template("notes.html")
+
 
 @app.route("/reset", methods=["POST"])
 def reset():

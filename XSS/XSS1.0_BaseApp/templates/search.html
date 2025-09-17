@@ -1,7 +1,7 @@
 <!-- search.html -->
 {% extends 'base.html' %}
 {% block content %}
-<h2>Book Search (⚠️ Server-side Reflected XSS)</h2>
+<h2>Book Search via GET (⚠️ Server-side Reflected XSS)</h2>
 <form method="get">
   <label>Query</label>
   <input name="q" value="{{ request.args.get('q','') }}" />

@@ -1,7 +1,7 @@
 <!-- search.html -->
 {% extends 'base.html' %}
 {% block content %}
-<h2>Book Search (⚠️ Server-side Reflected XSS)</h2>
+<h2>Book Search via POST (⚠️ Server-side Reflected XSS)</h2>
 <form method="post" action="{{ url_for('search-form') }}">
   <label>Query</label>
   <input name="q" placeholder="Search for a book...">

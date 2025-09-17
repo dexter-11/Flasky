@@ -2,9 +2,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>Book Search (⚠️ Server-side Reflected XSS)</h2>
-<form method="get">
+<form method="post" action="{{ url_for('search-form') }}">
   <label>Query</label>
-  <input name="q" value="{{ request.args.get('q','') }}" />
+  <input name="q" placeholder="Search for a book...">
   <button>Search</button>
 </form>
 <div class="spacer"></div>

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Posts (⚠️ Client-side Stored XSS via DB - DOM-based)</h2>
+
+<article class="card" style="padding:12px; margin-bottom:12px;">
+  <h3>Sample post</h3>
+  <p>This is a sample post. Leave a comment below.</p>
+</article>
+
+<section class="card add-comment" style="padding:12px; margin-bottom:12px;">
+  <h4>Leave a comment</h4>
+  <!-- Keep only comment & name. postId passed as hidden field -->
+  <form id="commentForm" action="/post/comment" method="POST" enctype="application/x-www-form-urlencoded">
+    <input type="hidden" name="postId" value="{{ post_id }}">
+    <div style="margin-bottom:8px">
+      <label>Name</label><br>
+      <input name="name" id="name" required style="width:320px;" />
+    </div>
+    <div style="margin-bottom:8px">
+      <label>Comment</label><br>
+      <textarea name="comment" id="comment" rows="6" required style="width:320px;"></textarea>
+    </div>
+    <button type="submit" class="button">Post Comment</button>
+  </form>
+</section>
+
+<div class="spacer"></div>
+
+<section id="user-comments" class="card" style="padding:12px;">
+  <h4>Comments</h4>
+  <!-- loadComments will append content here -->
+</section>
+
+<!-- include your vulnerable client script -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const postId = "{{ post_id }}";
+  // Load existing comments from the server (stored -> fetched -> rendered)
+  loadComments('/comments?post_id=' + encodeURIComponent(postId));
+
+  // Wire the form submission to post to /post/comment (traditional POST)
+  // We leave the form's action as-is (server will redirect back to /post)
+  // Additionally intercept the submit to show instant comment reload without a full page load:
+  document.getElementById('commentForm').addEventListener('submit', function(e) {
+    // Let the native form submission run (server will redirect), but also post via fetch to update immediately
+    e.preventDefault();
+
+    const form = e.target;
+    const data = new URLSearchParams();
+    data.append('postId', form.postId.value);
+    data.append('name', form.name.value);
+    data.append('comment', form.comment.value);
+
+    fetch('/post/comment', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: data.toString()
+    }).then(resp => {
+      if (resp.redirected) {
+        // If server redirects, follow the redirect (browser already handled if using native submit).
+        window.location = resp.url;
+      } else {
+        // Clear comment area and reload comments from server
+        form.reset();
+        const userComments = document.getElementById('user-comments');
+        userComments.innerHTML = '<h4>Comments</h4>';
+        loadComments('/comments?post_id=' + encodeURIComponent(postId));
+      }
+    }).catch(err => {
+      console.error('Failed to post comment', err);
+      alert('Failed to post comment');
+    });
+  });
+});
+</script>
+{% endblock %}

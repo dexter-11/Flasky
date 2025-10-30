@@ -10,9 +10,10 @@ Login:
 
 Uses template files under ./templates directory.
 """
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import sqlite3
 import os
+import time
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
@@ -45,6 +46,15 @@ def init_db():
                 author TEXT NOT NULL,
                 year INTEGER NOT NULL
             )''')
+    cur.execute('''
+          CREATE TABLE IF NOT EXISTS comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            post_id TEXT,
+            author TEXT,
+            body TEXT,
+            created_at INTEGER
+          )
+          ''')
     cur.execute("CREATE TABLE IF NOT EXISTS feedbacks (id INTEGER PRIMARY KEY AUTOINCREMENT, author TEXT, content TEXT)")
     cur.execute("INSERT INTO users (username, password) VALUES (?,?)", ("admin", "password"))
 
@@ -180,21 +190,87 @@ def quote():
         return redirect(url_for("login"))
     return render_template("quote.html")
 
-# ✅ DOM-XSS Via URL fragment
+# ✅ Reflected DOM-XSS Via URL fragment
 @app.route("/color")
 def color():
     if not session.get("user_id"):
         return redirect(url_for("login"))
     return render_template("color.html")
 
-# this also gets stored in DB, but if fetched and appended by Javascript, not directly. Look into this.
-# Think of attack scenarios while creating
+
+
 # https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-stored
 @app.route("/notes")
 def notes():
     if not session.get("user_id"):
         return redirect(url_for("login"))
     return render_template("notes.html")
+
+
+## ✅ Stored DOM-XSS --> XSS not triggering - PENDING!
+#    This gets stored in DB, but fetched and appended by Javascript.
+@app.route('/comments', methods=['GET'])
+def get_comments():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    # GET /comments?post_id=demo
+    post_id = request.args.get('post_id', 'demo')
+    conn = get_db()
+    cur = conn.execute(
+        "SELECT id, post_id, author, body, created_at FROM comments WHERE post_id=? ORDER BY id ASC",
+        (post_id,)
+    )
+    rows = cur.fetchall()
+    conn.close()
+
+    comments = []
+    for r in rows:
+        comments.append({
+            "id": r["id"],
+            "post_id": r["post_id"],
+            "author": r["author"],
+            "body": r["body"],
+            # store timestamp in milliseconds so JS new Date(...) works as expected
+            "date": r["created_at"]
+        })
+    return jsonify(comments)
+
+@app.route('/post/comment', methods=['POST'])
+def post_comment():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    # Accept form data from the simple post form (content & name)
+    post_id = request.form.get('postId', request.form.get('post_id', 'demo'))
+    author = request.form.get('name', '')
+    body = request.form.get('comment', '')
+
+    # timestamp in milliseconds
+    ts = int(time.time() * 1000)
+
+    conn = get_db()
+    conn.execute(
+        "INSERT INTO comments (post_id, author, body, created_at) VALUES (?,?,?,?)",
+        (post_id, author, body, ts)
+    )
+    conn.commit()
+    conn.close()
+
+    # After posting we redirect back to the post page (so the browser does a GET)
+    # Use the same URL where the post UI lives - here we use /post
+    return redirect(url_for('post', post_id=post_id))
+
+@app.route('/post')
+def post():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    # post_id can be passed in querystring or default to 'demo'
+    post_id = request.args.get('post_id', request.args.get('postId', 'demo'))
+    return render_template('post.html', post_id=post_id)
+
+
 
 @app.route("/reset", methods=["POST"])
 def reset():
@@ -217,6 +293,8 @@ if __name__ == '__main__':
 
 
 #DOM XSS in GET and POST methods? Think of use cases.
+
+# Mention attack scenarios for each case.
 
 ##Keep outside auth below:
     #Login page XSS when username is incorrect - give error with reflected XSS

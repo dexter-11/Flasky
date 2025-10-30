@@ -3,6 +3,7 @@ Flask XSS Practice App (intentionally vulnerable)
 -------------------------------------------------
 Run locally ONLY. Do not deploy. This app contains stored and reflected XSS sinks
 for learning purposes.
+PortSwigger Academy - https://portswigger.net/web-security/all-labs#cross-site-scripting
 
 Then open: http://127.0.0.1:5000/
 Login:
@@ -135,31 +136,22 @@ def feedback():
     conn.close()
     return render_template("feedback.html", items=rows, username=session['username'])
 
-#Two separate cases - GET and POST
-@app.route('/search', methods=['GET'])
+# ✅ Two cases - GET and POST
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
-    search_term = request.args.get("q")
-    books, q_provided = None, False
-    if search_term is not None:
-        q_provided = True
-        conn = get_db()
-        books = conn.execute(
-            "SELECT * FROM books WHERE name LIKE ? OR author LIKE ?",
-            (f'%{search_term}%', f'%{search_term}%')
-        ).fetchall()
-        conn.commit()
-        conn.close()
-    return render_template("search.html", username=session['username'], results=books, q=search_term, q_provided=q_provided)
+    search_term = None
+    method_used = None
 
-@app.route('/search-form', methods=['POST'])
-def search():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
+    if request.method == "POST":
+        search_term = request.form.get("q_post")
+        method_used = "POST"
+    elif request.method == "GET":
+        search_term = request.args.get("q_get")
+        method_used = "GET"
 
-    search_term = request.form.get("q")
     books, q_provided = None, False
     if search_term:
         q_provided = True
@@ -170,28 +162,39 @@ def search():
         ).fetchall()
         conn.commit()
         conn.close()
-    return render_template("search-form.html", username=session['username'], results=books, q=search_term, q_provided=q_provided)
 
-#URL se uthake DOM pe jana hai something like #abc or location
-#2 scenarios - GET and POST
-# https://github.com/deepmarketer666/DOM-XSS
-#PortSwigger Academy - https://portswigger.net/web-security/all-labs#cross-site-scripting
-# https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-reflected
-# https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-stored
+    return render_template(
+        "search.html",
+        username=session['username'],
+        results=books,
+        q=search_term,
+        q_provided=q_provided,
+        method_used=method_used
+    )
+
+# ✅ https://github.com/deepmarketer666/DOM-XSS
+# ✅ https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-reflected
 @app.route("/quote")
 def quote():
     if not session.get("user_id"):
         return redirect(url_for("login"))
     return render_template("quote.html")
 
+# ✅ DOM-XSS Via URL fragment
+@app.route("/color")
+def color():
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    return render_template("color.html")
+
 # this also gets stored in DB, but if fetched and appended by Javascript, not directly. Look into this.
 # Think of attack scenarios while creating
+# https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-stored
 @app.route("/notes")
 def notes():
     if not session.get("user_id"):
         return redirect(url_for("login"))
     return render_template("notes.html")
-
 
 @app.route("/reset", methods=["POST"])
 def reset():
@@ -213,7 +216,9 @@ if __name__ == '__main__':
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)
 
 
+#DOM XSS in GET and POST methods? Think of use cases.
+
 ##Keep outside auth below:
-#Login page XSS when username is incorrect - give error with reflected XSS
-#Server side Reflected XSS
-#we need to see if it redirects or actually triggers XSS if payload sent to a user who is already logged in.
+    #Login page XSS when username is incorrect - give error with reflected XSS
+    #Server side Reflected XSS
+    #we need to see if it redirects or actually triggers XSS if payload sent to a user who is already logged in.

@@ -6,8 +6,9 @@
 <ol>
   <li><a href="{{ url_for('feedback') }}">Post Feedback</a> — server-side stored XSS</li>
   <li><a href="{{ url_for('search') }}">Search Books</a> — server-side reflected XSS</li>
-  <li><a href="{{ url_for('quote') }}">Quote For You</a> — client-side reflected XSS (Unauth)</li>
-  <li><a href="{{ url_for('notes') }}">Sticky Note</a> — client-side stored XSS (Unauth)</li>
+  <li><a href="{{ url_for('quote') }}">Quote For You</a> — client-side reflected XSS</li>
+  <li><a href="{{ url_for('color') }}">Color Selector</a> — client-side reflected XSS 2</li>
+  <li><a href="{{ url_for('notes') }}">Sticky Note</a> — client-side stored XSS</li>
 </ol>
 <form method="post" action="{{ url_for('reset') }}">
   <button>Reset App</button>

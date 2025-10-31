@@ -209,66 +209,43 @@ def notes():
 
 ## ✅ Stored DOM-XSS
 #    This gets stored in DB, but fetched and appended by Javascript.
+# compact /comments GET, /post/comment POST and /post GET routes
 @app.route('/comments', methods=['GET'])
 def get_comments():
     if not session.get("user_id"):
         return redirect(url_for("login"))
-
-    # GET /comments?post_id=demo
     post_id = request.args.get('post_id', 'demo')
     conn = get_db()
-    cur = conn.execute(
+    rows = conn.execute(
         "SELECT id, post_id, author, body, created_at FROM comments WHERE post_id=? ORDER BY id ASC",
         (post_id,)
-    )
-    rows = cur.fetchall()
+    ).fetchall()
     conn.close()
-
-    comments = []
-    for r in rows:
-        comments.append({
-            "id": r["id"],
-            "post_id": r["post_id"],
-            "author": r["author"],
-            "body": r["body"],
-            # store timestamp in milliseconds so JS new Date(...) works as expected.
-            "date": r["created_at"]
-        })
+    comments = [{"id": r["id"], "post_id": r["post_id"], "author": r["author"],
+                 "body": r["body"], "date": r["created_at"]} for r in rows]
     return jsonify(comments)
 
 @app.route('/post/comment', methods=['POST'])
 def post_comment():
     if not session.get("user_id"):
         return redirect(url_for("login"))
-
-    # Accept form data from the simple post form (content & name)
-    post_id = request.form.get('postId', request.form.get('post_id', 'demo'))
+    post_id = request.form.get('postId', 'demo')
     author = request.form.get('name', '')
     body = request.form.get('comment', '')
-
-    # timestamp in milliseconds
     ts = int(time.time() * 1000)
-
     conn = get_db()
-    conn.execute(
-        "INSERT INTO comments (post_id, author, body, created_at) VALUES (?,?,?,?)",
-        (post_id, author, body, ts)
-    )
-    conn.commit()
-    conn.close()
-
-    # After posting we redirect back to the post page (so the browser does a GET)
-    # Use the same URL where the post UI lives - here we use /post
+    conn.execute("INSERT INTO comments (post_id, author, body, created_at) VALUES (?,?,?,?)",
+                 (post_id, author, body, ts))
+    conn.commit(); conn.close()
     return redirect(url_for('post', post_id=post_id))
 
 @app.route('/post')
 def post():
     if not session.get("user_id"):
         return redirect(url_for("login"))
-
-    # post_id can be passed in querystring or default to 'demo'
     post_id = request.args.get('post_id', request.args.get('postId', 'demo'))
     return render_template('post.html', post_id=post_id)
+
 
 
 

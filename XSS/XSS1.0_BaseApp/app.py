@@ -207,7 +207,7 @@ def notes():
     return render_template("notes.html")
 
 
-## ✅ Stored DOM-XSS --> XSS not triggering - PENDING!
+## ✅ Stored DOM-XSS
 #    This gets stored in DB, but fetched and appended by Javascript.
 @app.route('/comments', methods=['GET'])
 def get_comments():
@@ -231,7 +231,7 @@ def get_comments():
             "post_id": r["post_id"],
             "author": r["author"],
             "body": r["body"],
-            # store timestamp in milliseconds so JS new Date(...) works as expected
+            # store timestamp in milliseconds so JS new Date(...) works as expected.
             "date": r["created_at"]
         })
     return jsonify(comments)

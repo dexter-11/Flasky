@@ -6,15 +6,9 @@ function loadComments(postCommentPath) {
             displayComments(comments);
         }
     };
-    // Expect full URL including query string: e.g. "/comments?post_id=demo"
+
     xhr.open("GET", postCommentPath);
     xhr.send();
-
-    function escapeHTML(html) {
-        if (!html && html !== "") return html;
-        // intentionally weak escaping (only replaces first < and >)
-        return html.replace('<', '&lt;').replace('>', '&gt;');
-    }
 
     function displayComments(comments) {
         let userComments = document.getElementById("user-comments");
@@ -27,15 +21,9 @@ function loadComments(postCommentPath) {
 
             let firstPElement = document.createElement("p");
 
-            let avatarImgElement = document.createElement("img");
-            avatarImgElement.setAttribute("class", "avatar");
-            // avatar wasn't used in this minimal form; keep default if missing
-            avatarImgElement.setAttribute("src", comment.avatar ? escapeHTML(comment.avatar) : "/static/images/avatarDefault.svg");
-
             if (comment.author) {
-                // NOTE: original logic created <a> when website existed; here we just append author text
-                let newInnerHtml = firstPElement.innerHTML + escapeHTML(comment.author)
-                firstPElement.innerHTML = newInnerHtml
+                let newInnerHtml = firstPElement.innerHTML + comment.author;
+                firstPElement.innerHTML = newInnerHtml;
             }
 
             if (comment.date) {
@@ -55,14 +43,11 @@ function loadComments(postCommentPath) {
                 firstPElement.innerHTML = newInnerHtml
             }
 
-            firstPElement.appendChild(avatarImgElement);
-
             commentSection.appendChild(firstPElement);
 
             if (comment.body) {
                 let commentBodyPElement = document.createElement("p");
-                // Vulnerable sink: innerHTML used with weak escaping
-                commentBodyPElement.innerHTML = escapeHTML(comment.body);
+                commentBodyPElement.innerHTML = comment.body;
 
                 commentSection.appendChild(commentBodyPElement);
             }

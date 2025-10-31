@@ -101,6 +101,9 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if session.get("username"):
+        return redirect(url_for("home"))
+
     if request.method == "POST":
         u = request.form.get("username", "")
         p = request.form.get("password", "")
@@ -111,10 +114,13 @@ def login():
         if row:
             session['user_id'] = row[0]
             session['username'] = row[1]
-            return redirect(url_for("feedback"))
+            return redirect(url_for("home"))
         else:
-            return render_template("login.html", error="Invalid credentials")
-    return render_template("login.html", error=None)
+            return redirect(url_for("login", error=f"Username {u} is incorrect."))
+    # ✅ Login page XSS when username is incorrect - give error with reflected XSS
+    #       See if it redirects or actually triggers XSS if payload sent to a user who is already logged in - DOESN'T TRIGGER!
+    error = request.args.get("error")
+    return render_template("login.html", error=error)
 
 
 @app.route("/logout")
@@ -209,7 +215,6 @@ def notes():
 
 ## ✅ Stored DOM-XSS
 #    This gets stored in DB, but fetched and appended by Javascript.
-# compact /comments GET, /post/comment POST and /post GET routes
 @app.route('/comments', methods=['GET'])
 def get_comments():
     if not session.get("user_id"):
@@ -247,8 +252,6 @@ def post():
     return render_template('post.html', post_id=post_id)
 
 
-
-
 @app.route("/reset", methods=["POST"])
 def reset():
     if os.path.exists(DB_PATH):
@@ -270,10 +273,4 @@ if __name__ == '__main__':
 
 
 #DOM XSS in GET and POST methods? Think of use cases.
-
 # Mention attack scenarios for each case.
-
-##Keep outside auth below:
-    #Login page XSS when username is incorrect - give error with reflected XSS
-    #Server side Reflected XSS
-    #we need to see if it redirects or actually triggers XSS if payload sent to a user who is already logged in.

@@ -10,16 +10,24 @@ Login:
 
 Uses template files under ./templates directory.
 """
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, make_response, current_app
 import sqlite3
 import os
-import time
+import secrets
+import hmac
+import hashlib
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
-#app.config['SESSION_COOKIE_SECURE'] = True       # Only send over HTTPS
-#app.config['SESSION_COOKIE_HTTPONLY'] = True     # JavaScript cannot access cookie
-#app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'    # None, Strict
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True
+#CORS(app,
+#      origins=["*"],
+#      methods=["POST", "PUT", "DELETE", "OPTIONS"],
+#      allow_headers=["Content-Type", "X-CSRF-Header"],
+#      supports_credentials=True,
+#      max_age=240
+# )
 
 DB_PATH = "database.db"
 
@@ -78,6 +86,56 @@ def init_db():
     conn.commit()
     conn.close()
 
+def generate_csrf_token(signed_session):
+    token = secrets.token_urlsafe(16)
+    message = f"{len(signed_session)}!{signed_session}!{len(token)}!{token}"
+    digest = hmac.new(app.secret_key, message.encode(), hashlib.sha256).hexdigest()
+    #print("GEN: digest:", repr(digest))
+    csrf_token = f"{digest}.{token}"
+    return csrf_token
+
+def verify_csrf_token(csrf_token, signed_session):
+    digest, random_token = csrf_token.split(".")
+    reconstruct_message = f"{len(signed_session)}!{signed_session}!{len(random_token)}!{random_token}"
+    reconstruct_digest = hmac.new(app.secret_key, reconstruct_message.encode(), hashlib.sha256).hexdigest()
+    #print("VERIFY: digest:", repr(reconstruct_digest))
+    if hmac.compare_digest(digest, reconstruct_digest):
+        return True
+    else:
+        return False
+
+# Validate CSRF token from Cookie and Header
+def validate_CSRF():
+    csrf_cookie = request.cookies.get("__Host-csrf_token")
+    csrf_form = request.headers.get("X-CSRF-Header")
+    signed_session = request.cookies.get("session")
+
+    # debug prints (temporary)
+    #print("SERVER: __Host-csrf_token cookie:", repr(csrf_cookie))
+    #print("SERVER: X-CSRF-Header header:", repr(csrf_form))
+    #print("SERVER: signed_session from cookie:", repr(signed_session))
+
+    if csrf_cookie == csrf_form :
+        if verify_csrf_token(csrf_cookie, signed_session):
+            return True
+        else:
+            response = make_response("""
+                            <script>
+                                alert("reCAPTCHA validation failure!");
+                                window.location.href = "/";
+                            </script>
+                        """)
+            return response
+    else:
+        response = make_response("""
+                <script>
+                    alert("CSRF Token Mismatch!");
+                    window.location.href = "/";
+                </script>
+            """)
+        return response
+
+
 # ---------- Routes ----------
 @app.route('/', methods=['GET', 'PUT', 'POST'])
 def home():
@@ -114,11 +172,28 @@ def login():
         if row:
             session['user_id'] = row[0]
             session['username'] = row[1]
-            return redirect(url_for("home"))
+
+            # Get a serializer to sign the session cookie. The Session cookie is not available from requests yet!
+            serializer = current_app.session_interface.get_signing_serializer(current_app)
+            if not serializer:
+                raise RuntimeError("Could not get session serializer")
+            signed_session = serializer.dumps(dict(session))
+            #print("Session Gen:", repr(signed_session))
+
+            # Set CSRF cookie
+            response = make_response(redirect(url_for('home')))
+            # Set CSRF cookie with __Host- prefix
+            response.set_cookie(
+                "__Host-csrf_token",
+                generate_csrf_token(signed_session),
+                secure=True,
+                samesite="Strict",
+                path="/"
+            )
+            return response
         else:
             return redirect(url_for("login", error=f"Username {u} is incorrect."))
-    # ✅ Login page XSS when username is incorrect - give error with reflected XSS
-    #       See if it redirects or actually triggers XSS if payload sent to a user who is already logged in - DOESN'T TRIGGER!
+
     error = request.args.get("error")
     return render_template("login.html", error=error)
 
@@ -141,6 +216,10 @@ def search():
     method_used = None
 
     if request.method == "POST":
+        validate_csrf = validate_CSRF()
+        #print(validate_csrf)
+        if validate_csrf is not True:
+            return validate_csrf
         search_term = request.form.get("q_post")
         method_used = "POST"
     elif request.method == "GET":
@@ -204,4 +283,4 @@ if __name__ == '__main__':
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
 ### SCENARIO 1.4 ###
-#   POST https://127.0.0.1:5000/search + Strong CSRF Protection
+#   POST https://127.0.0.1:5000/search + Strong CSRF Protection via Header verification ONLY. No Captcha.

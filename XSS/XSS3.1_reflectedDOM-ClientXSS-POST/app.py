@@ -287,7 +287,6 @@ if __name__ == '__main__':
 #   POST https://127.0.0.1:5000/search
 
 ### SCENARIO 1.4 ###
-# Created separately
 #   POST https://127.0.0.1:5000/search + Strong CSRF Protection
 
 ### SCENARIO 2.0 ###
@@ -298,7 +297,6 @@ if __name__ == '__main__':
 #   https://127.0.0.1:5000/color (in URL element)
 
 ### SCENARIO 3.1 ###
-# Created separately
 #
 
 ### SCENARIO 4.0 ###

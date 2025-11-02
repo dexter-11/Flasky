@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Quote For You (⚠️ Client-side Reflected XSS - DOM-based)</h2>
+<p>Enter your name below. A random quote will be shown for you.</p>
+
+<form id="nameForm">
+  <label>Your Name:</label><br>
+  <input id="nameInput" placeholder="Type your name here">
+  <div class="spacer"></div>
+  <button type="submit">Get Quote</button>
+</form>
+
+<div class="spacer"></div>
+<div id="quoteOutput"></div>
+
+<script>
+  const quotes = [
+    "The journey of a thousand miles begins with one step.",
+    "What we think, we become.",
+    "Happiness depends upon ourselves.",
+    "All limitations are self-imposed.",
+    "Turn your wounds into wisdom."
+  ];
+
+  document.getElementById("nameForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const name = document.getElementById("nameInput").value;
+
+    // Vulnerable: injecting user input unsafely into innerHTML
+    const quote = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById("quoteOutput").innerHTML =
+      `A quote for "${name}": <em>${quote}</em>`;
+  });
+</script>
+{% endblock %}

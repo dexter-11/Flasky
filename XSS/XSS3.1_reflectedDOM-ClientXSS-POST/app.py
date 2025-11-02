@@ -117,8 +117,6 @@ def login():
             return redirect(url_for("home"))
         else:
             return redirect(url_for("login", error=f"Username {u} is incorrect."))
-    # ✅ Login page XSS when username is incorrect - give error with reflected XSS
-    #       See if it redirects or actually triggers XSS if payload sent to a user who is already logged in - DOESN'T TRIGGER!
     error = request.args.get("error")
     return render_template("login.html", error=error)
 
@@ -127,73 +125,24 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-#@app.route("/feedback", methods=["GET","POST"])
 
-#@app.route('/search', methods=['GET', 'POST'])
-
-
-# ✅ https://github.com/deepmarketer666/DOM-XSS
-# ✅ https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-reflected
-@app.route("/quote")
-def quote():
+# serve the page
+@app.route("/colorture", methods=["GET"])
+def colorture():
     if not session.get("user_id"):
         return redirect(url_for("login"))
-    return render_template("quote.html")
+    return render_template("colorture.html")
 
-# ✅ Reflected DOM-XSS Via URL fragment
-@app.route("/color")
-def color():
+# echo endpoint (POST) - returns JSON echoing back the posted value
+@app.route("/api/echo_color", methods=["POST"])
+def api_echo_color():
     if not session.get("user_id"):
         return redirect(url_for("login"))
-    return render_template("color.html")
-
-
-
-# https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-stored
-@app.route("/notes")
-def notes():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    return render_template("notes.html")
-
-
-## ✅ Stored DOM-XSS
-#    This gets stored in DB, but fetched and appended by Javascript.
-@app.route('/comments', methods=['GET'])
-def get_comments():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.args.get('post_id', 'demo')
-    conn = get_db()
-    rows = conn.execute(
-        "SELECT id, post_id, author, body, created_at FROM comments WHERE post_id=? ORDER BY id ASC",
-        (post_id,)
-    ).fetchall()
-    conn.close()
-    comments = [{"id": r["id"], "post_id": r["post_id"], "author": r["author"],
-                 "body": r["body"], "date": r["created_at"]} for r in rows]
-    return jsonify(comments)
-
-@app.route('/post/comment', methods=['POST'])
-def post_comment():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.form.get('postId', 'demo')
-    author = request.form.get('name', '')
-    body = request.form.get('comment', '')
-    ts = int(time.time() * 1000)
-    conn = get_db()
-    conn.execute("INSERT INTO comments (post_id, author, body, created_at) VALUES (?,?,?,?)",
-                 (post_id, author, body, ts))
-    conn.commit(); conn.close()
-    return redirect(url_for('post', post_id=post_id))
-
-@app.route('/post')
-def post():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.args.get('post_id', request.args.get('postId', 'demo'))
-    return render_template('post.html', post_id=post_id)
+    v = request.form.get("value")
+    if v is None:
+        js = request.get_json(silent=True) or {}
+        v = js.get("value", "")
+    return jsonify({"value": v})
 
 
 @app.route("/reset", methods=["POST"])

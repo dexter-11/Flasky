@@ -96,10 +96,7 @@
     <b>|</b>
     <nav style="display:flex; gap:12px">
       {% if session.get('username') %}
-        <a href="{{ url_for('quote') }}">Quote</a>
-        <a href="{{ url_for('color') }}">Color</a>
-        <a href="{{ url_for('notes') }}">StickyNote</a>
-        <a href="{{ url_for('post') }}">Posts</a>
+        <a href="{{ url_for('colorture') }}">Color Picker</a>
         <b>|</b>
         <span class="muted">Welcome, {{ session['username'] }}</span>
         <a href="{{ url_for('logout') }}">Logout</a>

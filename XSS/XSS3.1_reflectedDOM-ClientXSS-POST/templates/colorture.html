@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Color Picker (⚠️ Client Reflected XSS via POST - DOM-based)</h2>
+<p>
+  Submit a value via POST. The server will echo it back and the page will reflect it into the dialog
+  using <code>innerHTML</code> and apply it as a CSS background.
+</p>
+
+<div style="display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap;">
+  <label for="valueSelect">Select a value (color or payload):</label>
+
+  <select id="valueSelect" style="min-width:240px;">
+    <option value="">-- choose --</option>
+    <option value="tomato">Tomato</option>
+    <option value="lightblue">Light Blue</option>
+    <option value="palegreen">Pale Green</option>
+    <option value="lavender">Lavender</option>
+    <option value="#ffdead">Peach Puff (hex)</option>
+  </select>
+
+  <button id="postBtn">Send via POST</button>
+  <button id="pushExample">Push example payload</button>
+</div>
+
+<div class="spacer"></div>
+
+<!-- display area updated unsafely -->
+<div id="dialog" class="card" style="padding:16px; border-radius:8px; max-width:680px;">
+  <strong id="dialogTitle">No value submitted</strong>
+  <div id="dialogBody" style="margin-top:8px;" class="muted">
+    The echoed value from the server will be injected here and used as a style.
+  </div>
+</div>
+
+<script>
+  const select = document.getElementById('valueSelect');
+  const postBtn = document.getElementById('postBtn');
+  const pushExample = document.getElementById('pushExample');
+  const dialog = document.getElementById('dialog');
+  const title = document.getElementById('dialogTitle');
+  const body = document.getElementById('dialogBody');
+
+  function reflectEchoedValue(v){
+    try { v = decodeURIComponent(v); } catch(e) { /* ignore if not encoded */ }
+
+    // UNSAFE: write into DOM using innerHTML
+    title.innerHTML = `Echoed: <code>${v}</code>`;
+    body.innerHTML = `Server echoed: <em>${v}</em>`;
+    try { dialog.style.background = v; } catch(e) { dialog.style.background = ''; }
+  }
+
+  async function postValue(val){
+    const form = new URLSearchParams();
+    form.append('value', val);
+
+    try {
+      const res = await fetch('/api/echo_color', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        credentials: 'same-origin',
+        body: form.toString()
+      });
+      const js = await res.json();
+      reflectEchoedValue(js.value || '');
+    } catch (e) {
+      console.error(e);
+      alert('Request failed: ' + e);
+    }
+  }
+
+  postBtn.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    const val = select.value || '';
+    postValue(val);
+  });
+
+  pushExample.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    const payload = '<img src=x onerror=alert("POST-DOM-XSS")>';
+    postValue(payload);
+  });
+
+  // optional: if page loaded with ?v=... in querystring, auto-send via POST to demonstrate flows
+  window.addEventListener('load', () => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('v');
+    if (q) postValue(q);
+  });
+</script>
+
+{% endblock %}

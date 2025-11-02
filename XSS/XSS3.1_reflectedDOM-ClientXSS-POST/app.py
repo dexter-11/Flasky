@@ -122,71 +122,15 @@ def login():
     error = request.args.get("error")
     return render_template("login.html", error=error)
 
-
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
-@app.route("/feedback", methods=["GET","POST"])
-def feedback():
-    if not session.get("username"):
-        return redirect(url_for("login"))
+#@app.route("/feedback", methods=["GET","POST"])
 
-    conn = get_db()
-    if request.method == "POST":
-        if "delete_id" in request.form:
-            fid = request.form.get("delete_id")
-            conn.execute("DELETE FROM feedbacks WHERE id=?", (fid,))
-        else:
-            content = request.form.get("content","")
-            conn.execute("INSERT INTO feedbacks (author, content) VALUES (?,?)",
-                         (session.get("username"), content))
-        conn.commit()
-        conn.close()
-        # ✅ Always redirect after POST to avoid duplicate/strange UI
-        return redirect(url_for("feedback"))
+#@app.route('/search', methods=['GET', 'POST'])
 
-    cur = conn.execute("SELECT * FROM feedbacks ORDER BY id DESC")
-    rows = cur.fetchall()
-    conn.close()
-    return render_template("feedback.html", items=rows, username=session['username'])
-
-# ✅ Two cases - GET and POST
-@app.route('/search', methods=['GET', 'POST'])
-def search():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-
-    search_term = None
-    method_used = None
-
-    if request.method == "POST":
-        search_term = request.form.get("q_post")
-        method_used = "POST"
-    elif request.method == "GET":
-        search_term = request.args.get("q_get")
-        method_used = "GET"
-
-    books, q_provided = None, False
-    if search_term:
-        q_provided = True
-        conn = get_db()
-        books = conn.execute(
-            "SELECT * FROM books WHERE name LIKE ? OR author LIKE ?",
-            (f'%{search_term}%', f'%{search_term}%')
-        ).fetchall()
-        conn.commit()
-        conn.close()
-
-    return render_template(
-        "search.html",
-        username=session['username'],
-        results=books,
-        q=search_term,
-        q_provided=q_provided,
-        method_used=method_used
-    )
 
 # ✅ https://github.com/deepmarketer666/DOM-XSS
 # ✅ https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-reflected
@@ -274,31 +218,5 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### SCENARIO 1.0 ###
-#   GET https://127.0.0.1:5000/login?error=
-
-### SCENARIO 1.1 ###
-#   GET https://127.0.0.1:5000/search
-
-### SCENARIO 1.2 ###
-#   GET https://127.0.0.1:5000/search + app.config['SESSION_COOKIE_HTTPONLY'] = True
-
-### SCENARIO 1.3 ###
-#   POST https://127.0.0.1:5000/search
-
-### SCENARIO 1.4 ###
-#   POST https://127.0.0.1:5000/search + Strong CSRF Protection
-
-### SCENARIO 2.0 ###
-#   POST https://127.0.0.1:5000/feedback
-
-### SCENARIO 3.0 ###
-#   https://127.0.0.1:5000/quote (in User input)
-#   https://127.0.0.1:5000/color (in URL element)
-
 ### SCENARIO 3.1 ###
 #
-
-### SCENARIO 4.0 ###
-#   https://127.0.0.1:5000/post (in DB)
-#   https://127.0.0.1:5000/notes (in Local Storage)

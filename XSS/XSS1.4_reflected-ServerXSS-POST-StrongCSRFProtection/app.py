@@ -122,35 +122,14 @@ def login():
     error = request.args.get("error")
     return render_template("login.html", error=error)
 
-
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
-@app.route("/feedback", methods=["GET","POST"])
-def feedback():
-    if not session.get("username"):
-        return redirect(url_for("login"))
 
-    conn = get_db()
-    if request.method == "POST":
-        if "delete_id" in request.form:
-            fid = request.form.get("delete_id")
-            conn.execute("DELETE FROM feedbacks WHERE id=?", (fid,))
-        else:
-            content = request.form.get("content","")
-            conn.execute("INSERT INTO feedbacks (author, content) VALUES (?,?)",
-                         (session.get("username"), content))
-        conn.commit()
-        conn.close()
-        # ✅ Always redirect after POST to avoid duplicate/strange UI
-        return redirect(url_for("feedback"))
+#@app.route("/feedback", methods=["GET","POST"])
 
-    cur = conn.execute("SELECT * FROM feedbacks ORDER BY id DESC")
-    rows = cur.fetchall()
-    conn.close()
-    return render_template("feedback.html", items=rows, username=session['username'])
 
 # ✅ Two cases - GET and POST
 @app.route('/search', methods=['GET', 'POST'])
@@ -188,68 +167,18 @@ def search():
         method_used=method_used
     )
 
-# ✅ https://github.com/deepmarketer666/DOM-XSS
-# ✅ https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-reflected
-@app.route("/quote")
-def quote():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    return render_template("quote.html")
 
-# ✅ Reflected DOM-XSS Via URL fragment
-@app.route("/color")
-def color():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    return render_template("color.html")
+#@app.route("/quote")
 
+#@app.route("/color")
 
+#@app.route("/notes")
 
-# https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-stored
-@app.route("/notes")
-def notes():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    return render_template("notes.html")
+#@app.route('/comments', methods=['GET'])
 
+#@app.route('/post/comment', methods=['POST'])
 
-## ✅ Stored DOM-XSS
-#    This gets stored in DB, but fetched and appended by Javascript.
-@app.route('/comments', methods=['GET'])
-def get_comments():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.args.get('post_id', 'demo')
-    conn = get_db()
-    rows = conn.execute(
-        "SELECT id, post_id, author, body, created_at FROM comments WHERE post_id=? ORDER BY id ASC",
-        (post_id,)
-    ).fetchall()
-    conn.close()
-    comments = [{"id": r["id"], "post_id": r["post_id"], "author": r["author"],
-                 "body": r["body"], "date": r["created_at"]} for r in rows]
-    return jsonify(comments)
-
-@app.route('/post/comment', methods=['POST'])
-def post_comment():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.form.get('postId', 'demo')
-    author = request.form.get('name', '')
-    body = request.form.get('comment', '')
-    ts = int(time.time() * 1000)
-    conn = get_db()
-    conn.execute("INSERT INTO comments (post_id, author, body, created_at) VALUES (?,?,?,?)",
-                 (post_id, author, body, ts))
-    conn.commit(); conn.close()
-    return redirect(url_for('post', post_id=post_id))
-
-@app.route('/post')
-def post():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.args.get('post_id', request.args.get('postId', 'demo'))
-    return render_template('post.html', post_id=post_id)
+#@app.route('/post')
 
 
 @app.route("/reset", methods=["POST"])
@@ -274,31 +203,5 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### SCENARIO 1.0 ###
-#   GET https://127.0.0.1:5000/login?error=
-
-### SCENARIO 1.1 ###
-#   GET https://127.0.0.1:5000/search
-
-### SCENARIO 1.2 ###
-#   GET https://127.0.0.1:5000/search + app.config['SESSION_COOKIE_HTTPONLY'] = True
-
-### SCENARIO 1.3 ###
-#   POST https://127.0.0.1:5000/search
-
 ### SCENARIO 1.4 ###
 #   POST https://127.0.0.1:5000/search + Strong CSRF Protection
-
-### SCENARIO 2.0 ###
-#   POST https://127.0.0.1:5000/feedback
-
-### SCENARIO 3.0 ###
-#   https://127.0.0.1:5000/quote (in User input)
-#   https://127.0.0.1:5000/color (in URL element)
-
-### SCENARIO 3.1 ###
-#
-
-### SCENARIO 4.0 ###
-#   https://127.0.0.1:5000/post (in DB)
-#   https://127.0.0.1:5000/notes (in Local Storage)

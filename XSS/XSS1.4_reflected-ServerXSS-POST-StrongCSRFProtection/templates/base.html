@@ -96,12 +96,7 @@
     <b>|</b>
     <nav style="display:flex; gap:12px">
       {% if session.get('username') %}
-        <a href="{{ url_for('feedback') }}">Feedback</a>
         <a href="{{ url_for('search') }}">SearchBooks</a>
-        <a href="{{ url_for('quote') }}">Quote</a>
-        <a href="{{ url_for('color') }}">Color</a>
-        <a href="{{ url_for('notes') }}">StickyNote</a>
-        <a href="{{ url_for('post') }}">Posts</a>
         <b>|</b>
         <span class="muted">Welcome, {{ session['username'] }}</span>
         <a href="{{ url_for('logout') }}">Logout</a>

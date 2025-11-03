@@ -19,7 +19,7 @@ import hashlib
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Strict'
 app.config['SESSION_COOKIE_SECURE'] = True
 #CORS(app,
 #      origins=["*"],

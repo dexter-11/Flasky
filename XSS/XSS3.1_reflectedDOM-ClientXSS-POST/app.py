@@ -166,6 +166,10 @@ if __name__ == '__main__':
 
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
+# Keep reloading in certain periods - Once data is already in API, it should fetch again in the page.
+#   Then we will be exploiting the request --> POST /api/echo_color
+#   ignore above
 
 ### SCENARIO 3.1 ###
-#
+# 1. First phish the victim
+# 2. Then trigger the JS on Submit button. Check?

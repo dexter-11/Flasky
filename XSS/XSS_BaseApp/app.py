@@ -288,19 +288,21 @@ if __name__ == '__main__':
 
 ### SCENARIO 1.4 ###
 # Created separately
-#   POST https://127.0.0.1:5000/search + Strong CSRF Protection
+#   POST https://127.0.0.1:5000/search + Strong CSRF Protection --> SAFE, MITIGATED
 
 ### SCENARIO 2.0 ###
 #   POST https://127.0.0.1:5000/feedback
 
 ### SCENARIO 3.0 ###
-#   https://127.0.0.1:5000/quote (in User input)
+#   https://127.0.0.1:5000/quote (in User input) - NOT PRACTICAL
 #   https://127.0.0.1:5000/color (in URL element)
 
 ### SCENARIO 3.1 ###
 # Created separately
+# Might not be practically possible. Both by design, and for exploitation.
 #
 
 ### SCENARIO 4.0 ###
 #   https://127.0.0.1:5000/post (in DB)
-#   https://127.0.0.1:5000/notes (in Local Storage)
+#       Fix the code. The JS code after submitting a POST request is split. Merge them to make sense of the call.
+#   https://127.0.0.1:5000/notes (in Local Storage) - NOT PRACTICAL

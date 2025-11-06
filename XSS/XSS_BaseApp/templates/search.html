@@ -22,7 +22,7 @@
 <div class="spacer"></div>
 {% if q_provided %}
     <hr>
-    <h4>Results for "{{ q }}" (Method: {{ method_used }})</h4>
+    <h4>Results for "{{ q | safe }}" (Method: {{ method_used }})</h4>
     {% if results %}
         <ul>
             {% for book in results %}

@@ -18,7 +18,7 @@ import time
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
 #app.config['SESSION_COOKIE_SECURE'] = True       # Only send over HTTPS
-#app.config['SESSION_COOKIE_HTTPONLY'] = True     # JavaScript cannot access cookie
+#app.config['SESSION_COOKIE_HTTPONLY'] = False     # JavaScript cannot access cookie
 #app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'    # None, Strict
 
 DB_PATH = "database.db"
@@ -300,6 +300,7 @@ if __name__ == '__main__':
 
 ### SCENARIO 1.0 ###
 #   GET https://127.0.0.1:5000/login?error=
+#   https://127.0.0.1:5000/login?error=%3Cimg%20src=x%20onerror=confirm(1)%3E
 
 ### SCENARIO 1.1 ###
 #   GET https://127.0.0.1:5000/search

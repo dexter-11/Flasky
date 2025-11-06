@@ -267,6 +267,30 @@ def reset():
     </script>
     """
 
+#set CSP header globally after every request
+#@app.after_request
+def add_csp_headers(response):
+    if request.path.startswith('/post'):
+        # Weak CSP for testing bypasses
+        response.headers['Content-Security-Policy'] = "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+    elif request.path.startswith('/color'):
+        # Moderate CSP
+        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline';"
+    else:
+        # Strict default CSP
+        response.headers['Content-Security-Policy'] = (
+            "default-src 'self'; "
+            "script-src 'self'; "
+            "style-src 'self' 'unsafe-inline'; "  # allow inline CSS for simplicity
+            "img-src 'self' data:; "
+            "object-src 'none'; "
+            "base-uri 'self'; "
+            "form-action 'self'; "
+            "frame-ancestors 'none'; "
+            "report-uri /csp-report"
+        )
+    return response
+
 if __name__ == '__main__':
     init_db()
     app.run(ssl_context=('../cert.pem', '../key.pem'), debug=True)

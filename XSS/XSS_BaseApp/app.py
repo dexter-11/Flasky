@@ -18,7 +18,7 @@ import time
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
 #app.config['SESSION_COOKIE_SECURE'] = True       # Only send over HTTPS
-#app.config['SESSION_COOKIE_HTTPONLY'] = False     # JavaScript cannot access cookie
+app.config['SESSION_COOKIE_HTTPONLY'] = False     # JavaScript can access cookie
 #app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'    # None, Strict
 
 DB_PATH = "database.db"
@@ -303,10 +303,10 @@ if __name__ == '__main__':
 #   https://127.0.0.1:5000/login?error=%3Cimg%20src=x%20onerror=confirm(1)%3E
 
 ### SCENARIO 1.1 ###
-#   GET https://127.0.0.1:5000/search
+#   GET https://127.0.0.1:5000/search + app.config['SESSION_COOKIE_HTTPONLY'] = False
 
 ### SCENARIO 1.2 ###
-#   GET https://127.0.0.1:5000/search + app.config['SESSION_COOKIE_HTTPONLY'] = True
+#   GET https://127.0.0.1:5000/search
 
 ### SCENARIO 1.3 ###
 #   POST https://127.0.0.1:5000/search
@@ -329,5 +329,4 @@ if __name__ == '__main__':
 
 ### SCENARIO 4.0 ###
 #   https://127.0.0.1:5000/post (in DB)
-#       Fix the code. The JS code after submitting a POST request is split. Merge them to make sense of the call.
 #   https://127.0.0.1:5000/notes (in Local Storage) - NOT PRACTICAL

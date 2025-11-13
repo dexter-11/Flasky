@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Color Selector (⚠️ Client-side Reflected XSS via URL '#' - DOM-based)</h2>
+
+<div style="display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap;">
+  <label for="colorSelect">Select Color:</label>
+  <select id="colorSelect">
+    <option value="">-- choose --</option>
+    <option value="lightblue">Light Blue</option>
+    <option value="palegreen">Pale Green</option>
+    <option value="peachpuff">Peach Puff</option>
+    <option value="lavender">Lavender</option>
+    <option value="tomato">Tomato</option>
+  </select>
+</div>
+<div class="spacer"></div>
+
+<button id="applyBtn">Apply (set fragment)</button>
+<button id="pushExample">Push example payload to #</button>
+
+<div class="spacer"></div>
+
+<!-- dialog box that will reflect the fragment value -->
+<div id="dialog" class="card" style="padding:16px; border-radius:8px; max-width:680px;">
+  <strong id="dialogTitle">No color selected</strong>
+  <div id="dialogBody" style="margin-top:8px;" class="muted">
+    The selected color (from the fragment) will appear here and change the dialog background.
+  </div>
+</div>
+
+<script>
+  const select = document.getElementById('colorSelect');
+  const applyBtn = document.getElementById('applyBtn');
+  const pushExample = document.getElementById('pushExample');
+  const dialog = document.getElementById('dialog');
+  const title = document.getElementById('dialogTitle');
+  const body = document.getElementById('dialogBody');
+
+  // helper: read fragment (strip leading #)
+  function readFragment() {
+    return location.hash ? location.hash.substring(1) : '';
+  }
+
+  // reflect fragment into dialog (UNSAFE)
+  function reflectFragment() {
+    let frag = readFragment();
+    if (!frag) {
+      title.innerHTML = 'No color selected';
+      body.innerHTML = 'The selected color (from the fragment) will appear here and change the dialog background.';
+      dialog.style.background = '';
+      dialog.style.color = '';
+      return;
+    }
+
+    // decode percent-encoded fragment so encoded HTML becomes raw HTML
+    try {
+      frag = decodeURIComponent(frag);
+    } catch (e) {
+      // keep the original if decode fails
+    }
+
+    // UNSAFE: directly insert user-controlled fragment into innerHTML
+    title.innerHTML = `Selected: <code>${frag}</code>`;
+    body.innerHTML = `This dialog was updated from <strong>location.hash</strong>. Value reflected: <em>${frag}</em>`;
+
+    try {
+      dialog.style.background = frag;
+    } catch (e) {
+      // ignore styling errors
+      dialog.style.background = '';
+    }
+  }
+
+  // update fragment when user selects a color
+  applyBtn.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    const val = select.value || '';
+    // set the URL fragment (encoded to mimic normal usage)
+    location.hash = encodeURIComponent(val);
+    reflectFragment();
+  });
+
+  // example: push a payload into fragment (for testing)
+  pushExample.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    const payload = encodeURIComponent('<img src=x onerror=alert("DOM-XSS")>');
+    location.hash = payload;
+    reflectFragment();
+  });
+
+  // reflect on load (in case user manually visited with a #fragment)
+  window.addEventListener('load', reflectFragment);
+
+  // reflect when fragment changes (back/forward etc.)
+  window.addEventListener('hashchange', reflectFragment);
+</script>
+{% endblock %}

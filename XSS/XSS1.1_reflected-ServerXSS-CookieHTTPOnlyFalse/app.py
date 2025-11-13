@@ -18,7 +18,7 @@ import time
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
 #app.config['SESSION_COOKIE_SECURE'] = True       # Only send over HTTPS
-#app.config['SESSION_COOKIE_HTTPONLY'] = False     # JavaScript can access cookie
+app.config['SESSION_COOKIE_HTTPONLY'] = False     # JavaScript can access cookie
 #app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'    # None, Strict
 
 DB_PATH = "database.db"

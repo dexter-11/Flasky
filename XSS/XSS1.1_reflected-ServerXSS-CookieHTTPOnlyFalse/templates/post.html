@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Posts (⚠️ Client-side Stored XSS via DB - DOM)</h2>
+
+<section class="card add-comment" style="padding:12px;margin-bottom:12px">
+  <h4>Leave a comment</h4>
+  <form id="commentForm" action="/post/comment" method="POST">
+    <input type="hidden" name="postId" value="{{ post_id }}">
+    <label>Name</label><br>
+    <input name="name" id="name" required style="width:320px"><br><br>
+    <label>Comment</label><br>
+    <textarea name="comment" id="comment" rows="6" required style="width:320px"></textarea><br><br>
+    <button type="submit">Post Comment</button>
+  </form>
+</section>
+
+<section id="user-comments" class="card" style="padding:12px">
+  <h4>Comments</h4>
+</section>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+{% endblock %}

@@ -173,3 +173,7 @@ if __name__ == '__main__':
 ### SCENARIO 3.1 ###
 # 1. First phish the victim
 # 2. Then trigger the JS on Submit button. Check?
+
+
+# Might not be practically possible. Both by design, and for exploitation.
+# Ignore

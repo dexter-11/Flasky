@@ -60,8 +60,8 @@
     }
 
     // UNSAFE: directly insert user-controlled fragment into innerHTML
-    title.innerHTML = `Selected: COLOR;
-    body.innerHTML = `This dialog was updated from <strong>location.hash</strong>. Value reflected: <em>${frag}</em>`;
+    title.innerHTML = `Selected: <code>${frag}</code>`;
+    body.innerHTML = `This dialog was updated from <strong>location.hash</strong>.;
 
     try {
       dialog.style.background = frag;

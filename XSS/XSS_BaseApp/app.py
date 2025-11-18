@@ -322,6 +322,7 @@ if __name__ == '__main__':
 ### SCENARIO 3.0 ###
 #   https://127.0.0.1:5000/quote (in User input) - NOT PRACTICAL
 #   https://127.0.0.1:5000/color (in URL element)
+# HTML5 specifies that a <script> tag inserted with innerHTML should not execute. Working Payload - <img src...>
 
 ### SCENARIO 3.1 ###
 # Created separately

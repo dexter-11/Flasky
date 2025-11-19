@@ -1,0 +1,37 @@
+<!-- search.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2></h2>
+<div class="mb-4">
+    <h3>Book Search via GET (⚠️ Server-side Reflected XSS)</h3>
+    <form action="/search" method="GET" class="d-flex gap-2">
+        <input type="text" name="q_get" placeholder="Search term (GET)" class="form-control" required>
+        <p><button class="btn btn-primary" type="submit">Search (GET)</button></p>
+    </form>
+</div>
+<div class="spacer"></div>
+<div class="spacer"></div>
+<div class="mb-4">
+    <h3>Book Search via POST (⚠️ Server-side Reflected XSS)</h3>
+    <form action="/search" method="POST" class="d-flex gap-2">
+        <input type="text" name="q_post" placeholder="Search term (POST)" class="form-control" required>
+        <p><button class="btn btn-success" type="submit">Search (POST)</button></p>
+    </form>
+</div>
+
+<div class="spacer"></div>
+{% if q_provided %}
+    <hr>
+    <h4>Results for "{{ q | safe }}" (Method: {{ method_used }})</h4>
+    {% if results %}
+        <ul>
+            {% for book in results %}
+                <li><b>{{ book['name'] }}</b> by {{ book['author'] }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+{% endif %}
+
+{% endblock %}

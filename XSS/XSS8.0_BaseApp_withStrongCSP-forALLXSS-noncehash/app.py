@@ -332,19 +332,3 @@ if __name__ == '__main__':
 ### SCENARIO 4.0 ###
 #   https://127.0.0.1:5000/post (in DB)
 #   https://127.0.0.1:5000/notes (in Local Storage) - NOT PRACTICAL
-
-### SCENARIO 5.0 ###
-# Implement CSP header which blocks all server xss payloads - standard CSP header.
-# Might not block DOM XSS payloads.
-
-### SCENARIO 6.0 ###
-# Research how to block DOM XSS too over the above
-
-### SCENARIO 7.0 ###
-# Borrow above app, Start relaxing above header via nonce and hash
-
-### SCENARIO 8.0 ###
-# DOMPurify implementation in the Base app.
-
-### SCENARIO 9.0 ###
-# Blocked at framework level. Context based encoding safe --> can this be bypassed?

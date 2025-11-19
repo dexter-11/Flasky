@@ -1,0 +1,23 @@
+<!-- login.html -->
+{% extends 'base.html' %}
+{% block content %}
+<h2>Login</h2>
+<form method="post">
+  <div style="margin-bottom:14px">
+    <label>Username</label>
+    <input name="username" autocomplete="off" />
+  </div>
+  <div style="margin-bottom:14px">
+    <label>Password</label>
+    <input name="password" type="password" />
+  </div>
+  <button>Sign in</button>
+</form>
+{% if error %}<div class="danger">{{ error | safe }}</div>{% endif %}
+<p class="muted">Try <code>admin</code> / <code>password</code>.</p>
+
+<!--default action for form submission is METHOD="GET" and ACTION="SELF"
+when we use a form without defined action, it redirects to self when submit happens.
+-->
+
+{% endblock %}

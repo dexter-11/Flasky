@@ -299,4 +299,5 @@ if __name__ == '__main__':
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
 ### SCENARIO 8.0 ###
-# DOMPurify implementation in the Base app.
+# Borrow above app, Start relaxing above header via nonce and hash
+

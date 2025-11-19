@@ -299,5 +299,5 @@ if __name__ == '__main__':
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
 ### SCENARIO 5.0 ###
-# Implement CSP header which blocks all server xss payloads - standard CSP header.
-# Might not block DOM XSS payloads.
+# DOMPurify implementation in the Base app.
+#

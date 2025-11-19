@@ -299,7 +299,7 @@ if __name__ == '__main__':
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
 ### SCENARIO 7.0 ###
-# Borrow above app, Start relaxing above header via nonce and hash
+# Research how to block DOM XSS too over the above
 
 # csp = (
 #   "default-src 'none'; "

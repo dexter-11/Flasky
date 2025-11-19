@@ -299,7 +299,8 @@ if __name__ == '__main__':
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
 ### SCENARIO 6.0 ###
-# Research how to block DOM XSS too over the above
+# Implement CSP header which blocks all server xss payloads - standard CSP header.
+# Might not block DOM XSS payloads.
 
 # Content-Security-Policy:
 #   default-src 'none';

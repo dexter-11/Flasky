@@ -54,7 +54,8 @@
 
     // decode percent-encoded fragment so encoded HTML becomes raw HTML
     try {
-      frag = decodeURIComponent(frag);
+       decodedPayload = decodeURIComponent(frag);
+       frag = eval(decodedPayload);                 // BAD PATTERN
     } catch (e) {
       // keep the original if decode fails
     }
@@ -83,7 +84,7 @@
   // example: push a payload into fragment (for testing)
   pushExample.addEventListener('click', (ev) => {
     ev.preventDefault();
-    const payload = encodeURIComponent('<img src=x onerror=alert("DOM-XSS")>');
+    const payload = encodeURIComponent('alert("DOM-XSS");');
     location.hash = payload;
     reflectFragment();
   });

@@ -298,3 +298,24 @@ if __name__ == '__main__':
     #             "script-src 'self' 'unsafe-inline';"
     #             "style-src 'self' 'unsafe-inline';"
     #         )
+
+
+    # if request.path.startswith('/post'):
+    #     # Weak CSP for testing bypasses
+    #     response.headers['Content-Security-Policy'] = "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
+    # elif request.path.startswith('/color'):
+    #     # Moderate CSP
+    #     response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline';"
+    # else:
+    #     # Strict default CSP
+    #     response.headers['Content-Security-Policy'] = (
+    #         "default-src 'self'; "
+    #         "script-src 'self'; "   # allow inline scripts via unsafe-inline
+    #         "style-src 'self' "  # allow inline CSS for simplicity via unsafe-inline
+    #         "img-src 'self' data:; "
+    #         "object-src 'none'; "
+    #         "base-uri 'self'; "
+    #         "form-action 'self'; "
+    #         "frame-ancestors 'none'; "
+    #         "report-uri /csp-report"
+    #     )

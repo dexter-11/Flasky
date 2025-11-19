@@ -268,26 +268,15 @@ def reset():
     """
 
 #set CSP header globally after every request
-#@app.after_request
+@app.after_request
 def add_csp_headers(response):
-    if request.path.startswith('/post'):
-        # Weak CSP for testing bypasses
-        response.headers['Content-Security-Policy'] = "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
-    elif request.path.startswith('/color'):
-        # Moderate CSP
-        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline';"
-    else:
-        # Strict default CSP
-        response.headers['Content-Security-Policy'] = (
-            "default-src 'self'; "
-            "script-src 'self'; "   # allow inline scripts via unsafe-inline
-            "style-src 'self' "  # allow inline CSS for simplicity via unsafe-inline
-            "img-src 'self' data:; "
-            "object-src 'none'; "
-            "base-uri 'self'; "
-            "form-action 'self'; "
-            "frame-ancestors 'none'; "
-            "report-uri /csp-report"
+    response.headers['Content-Security-Policy'] = (
+            "default-src 'self';"
+            "object-src 'none';"
+            "base-uri 'none';"
+            "frame-ancestors 'none';"
+            "script-src 'self';"
+            "style-src 'self' 'unsafe-inline';"
         )
     return response
 
@@ -299,5 +288,5 @@ if __name__ == '__main__':
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
 ### SCENARIO 7.0 ###
-# Borrow above app, Start relaxing above header via nonce and hash
+# Borrow XSS6.1, Start relaxing above CSP header via nonce and hash to make app's DOM functional and mitigated XSS.
 

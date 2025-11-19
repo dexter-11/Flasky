@@ -268,27 +268,16 @@ def reset():
     """
 
 #set CSP header globally after every request
-#@app.after_request
+@app.after_request
 def add_csp_headers(response):
-    if request.path.startswith('/post'):
-        # Weak CSP for testing bypasses
-        response.headers['Content-Security-Policy'] = "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
-    elif request.path.startswith('/color'):
-        # Moderate CSP
-        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline';"
-    else:
-        # Strict default CSP
-        response.headers['Content-Security-Policy'] = (
-            "default-src 'self'; "
-            "script-src 'self'; "
-            "style-src 'self' 'unsafe-inline'; "  # allow inline CSS for simplicity
-            "img-src 'self' data:; "
-            "object-src 'none'; "
-            "base-uri 'self'; "
-            "form-action 'self'; "
-            "frame-ancestors 'none'; "
-            "report-uri /csp-report"
-        )
+    response.headers['Content-Security-Policy'] = (
+                    "default-src 'self';"
+                    "object-src 'none';"
+                    "base-uri 'none';"
+                    "frame-ancestors 'none';"
+                    "script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+                    "style-src 'self' 'unsafe-inline';"
+                )
     return response
 
 if __name__ == '__main__':
@@ -296,32 +285,20 @@ if __name__ == '__main__':
     app.run(host="0.0.0.0", ssl_context=('../cert.pem', '../key.pem'), debug=True)
 
 
-# Mention real-world attack scenarios for each case + exploit code + Mitigation
 
+# Mention real-world attack scenarios for each case + exploit code + Mitigation
 
 ### Scenario 6.2 ###
 # DOM XSS via eval (no unsafe-inline needed)
-    # response.headers['Content-Security-Policy'] = (
-    #             "default-src 'self';"
-    #             "object-src 'none';"
-    #             "base-uri 'none';"
-    #             "frame-ancestors 'none';"
-    #             "script-src 'self' 'unsafe-inline';"
-    #             "script-src 'self' 'nonce-r4nd0m' 'unsafe-eval';';"
-    #         )
+#     response.headers['Content-Security-Policy'] = (
+#                     "default-src 'self';"
+#                     "object-src 'none';"
+#                     "base-uri 'none';"
+#                     "frame-ancestors 'none';"
+#                     "script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+#                     "style-src 'self' 'unsafe-inline';"
+#                 )
 
-# • Blocks most obvious inline script (<script>alert(1)</script>) because no 'unsafe-inline' in script-src.
-# • Blocks event-handler XSS like <img onerror=...> (those are inline scripts).
-# • Only scripts with the correct nonce (nonce-r4nd0m) or from self as external files can run.
-# • BUT it allows eval() and similar (new Function, etc.) inside trusted scripts via 'unsafe-eval'.
 
-# CLONE APP to create another code
-    # <script nonce="r4nd0m">
-    #   // Example: DOM gadget reading from the fragment
-    #   const payload = location.hash.slice(1); // everything after '#'
-
-    #   // “Bad” pattern: treat hash as JS
-    #   if (payload) {
-    #     eval(payload);
-    #   }
-    # </script>
+# "script-src 'self' 'unsafe-inline'" --> IS BLOCKING THE EVAL-BASED XSS ATTACKS.
+# We need to add 'unsafe-eval' to allow eval() and similar (new Function, etc.) inside trusted scripts via 'unsafe-eval'.

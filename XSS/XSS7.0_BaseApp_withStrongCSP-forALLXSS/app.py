@@ -298,37 +298,20 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### SCENARIO 1.0 ###
-#   GET https://127.0.0.1:5000/login?error=
-#   https://127.0.0.1:5000/login?error=%3Cimg%20src=x%20onerror=confirm(1)%3E
+### SCENARIO 7.0 ###
+# Borrow above app, Start relaxing above header via nonce and hash
 
-### SCENARIO 1.1 ###
-# Created separately
-#   GET https://127.0.0.1:5000/search + app.config['SESSION_COOKIE_HTTPONLY'] = False
-
-### SCENARIO 1.2 ###
-#   GET https://127.0.0.1:5000/search
-
-### SCENARIO 1.3 ###
-#   POST https://127.0.0.1:5000/search
-
-### SCENARIO 1.4 ###
-# Created separately
-#   POST https://127.0.0.1:5000/search + Strong CSRF Protection --> SAFE, MITIGATED
-
-### SCENARIO 2.0 ###
-#   POST https://127.0.0.1:5000/feedback
-
-### SCENARIO 3.0 ###
-#   https://127.0.0.1:5000/quote (in User input) - NOT PRACTICAL
-#   https://127.0.0.1:5000/color (in URL element)
-# HTML5 specifies that a <script> tag inserted with innerHTML should not execute. Working Payload - <img src...>
-
-### SCENARIO 3.1 ###
-# Created separately
-# Might not be practically possible. Both by design, and for exploitation.
-# Ignore
-
-### SCENARIO 4.0 ###
-#   https://127.0.0.1:5000/post (in DB)
-#   https://127.0.0.1:5000/notes (in Local Storage) - NOT PRACTICAL
+# csp = (
+#   "default-src 'none'; "
+#   "base-uri 'none'; "
+#   "frame-ancestors 'none'; "
+#   "object-src 'none'; "
+#   "connect-src 'self'; "
+#   "img-src 'self' data:; "
+#   "font-src 'self'; "
+#   "style-src 'self' "
+#   f"script-src 'nonce-{nonce}' 'strict-dynamic'; "
+#   "form-action 'self'; "
+#   "require-trusted-types-for 'script'; "
+#   "trusted-types default;"
+# )

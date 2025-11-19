@@ -280,8 +280,8 @@ def add_csp_headers(response):
         # Strict default CSP
         response.headers['Content-Security-Policy'] = (
             "default-src 'self'; "
-            "script-src 'self'; "
-            "style-src 'self' 'unsafe-inline'; "  # allow inline CSS for simplicity
+            "script-src 'self'; "   # allow inline scripts via unsafe-inline
+            "style-src 'self' "  # allow inline CSS for simplicity via unsafe-inline
             "img-src 'self' data:; "
             "object-src 'none'; "
             "base-uri 'self'; "

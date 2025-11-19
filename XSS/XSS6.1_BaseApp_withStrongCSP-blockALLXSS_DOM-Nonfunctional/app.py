@@ -276,11 +276,7 @@ def add_csp_headers(response):
             "base-uri 'none';"
             "frame-ancestors 'none';"
             "script-src 'self';"
-            "connect-src 'self';"
-            "img-src 'self';"
-            "style-src 'self';"
-            "font-src 'self';"
-            "form-action 'self';"
+            "style-src 'self' 'unsafe-inline';"
         )
     return response
 
@@ -290,6 +286,26 @@ if __name__ == '__main__':
 
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
+
+### SCENARIO 6.1 ###
+# Default CSP, everything blocked, Web UI works
+# DOM Functionalities not working! Server one's working.
+    # response.headers['Content-Security-Policy'] = (
+    #         "default-src 'none';"
+    #         "object-src 'none';"
+    #         "base-uri 'none';"
+    #         "frame-ancestors 'none';"
+    #         "style-src 'self' 'unsafe-inline';"
+    #     )
+
+# + "default-src 'self';"
+# Same resutls as above
+
+# + "script-src 'self';"
+# Same resutls as above
+
+
+
 
 # Implement CSP header which blocks all server xss payloads - standard CSP header.
 # Might not block DOM XSS payloads.
@@ -322,24 +338,3 @@ if __name__ == '__main__':
 #   "require-trusted-types-for 'script'; "
 #   "trusted-types default;"
 # )
-
-
-
-
-
-### SCENARIO 6.1 ###
-# Default CSP, everything blocked, Web UI works
-# DOM Functionalities not working! Server one's working.
-    # response.headers['Content-Security-Policy'] = (
-    #         "default-src 'none';"
-    #         "object-src 'none';"
-    #         "base-uri 'none';"
-    #         "frame-ancestors 'none';"
-    #         "style-src 'self' 'unsafe-inline';"
-    #     )
-
-# + "default-src 'self';"
-# Same resutls as above
-
-# + "script-src 'self';"
-# Same resutls as above

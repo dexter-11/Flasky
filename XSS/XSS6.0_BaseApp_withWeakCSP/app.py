@@ -271,17 +271,13 @@ def reset():
 @app.after_request
 def add_csp_headers(response):
     response.headers['Content-Security-Policy'] = (
-            "default-src 'self';"
-            "object-src 'none';"
-            "base-uri 'none';"
-            "frame-ancestors 'none';"
-            "script-src 'self';"
-            "connect-src 'self';"
-            "img-src 'self';"
-            "style-src 'self';"
-            "font-src 'self';"
-            "form-action 'self';"
-        )
+                "default-src 'self';"
+                "object-src 'none';"
+                "base-uri 'none';"
+                "frame-ancestors 'none';"
+                "script-src 'self' 'unsafe-inline';"
+                "style-src 'self' 'unsafe-inline';"
+            )
     return response
 
 if __name__ == '__main__':
@@ -290,42 +286,6 @@ if __name__ == '__main__':
 
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
-
-# Implement CSP header which blocks all server xss payloads - standard CSP header.
-# Might not block DOM XSS payloads.
-
-# FROM CHATGPT
-# Content-Security-Policy:
-#   default-src 'none';
-#   script-src 'strict-dynamic'; // might not work without nonce
-#   object-src 'none';
-#   base-uri 'none';
-#   frame-ancestors 'none';
-#   connect-src 'self';
-#   img-src 'self';
-#   style-src 'self';
-#   font-src 'self';
-#   form-action 'self';
-
-# Research how to block DOM XSS too over the above
-# csp = (
-#   "default-src 'none'; "
-#   "base-uri 'none'; "
-#   "frame-ancestors 'none'; "
-#   "object-src 'none'; "
-#   "connect-src 'self'; "
-#   "img-src 'self' data:; "
-#   "font-src 'self'; "
-#   "style-src 'self' "
-#   f"script-src 'nonce-{nonce}' 'strict-dynamic'; "
-#   "form-action 'self'; "
-#   "require-trusted-types-for 'script'; "
-#   "trusted-types default;"
-# )
-
-
-
-
 
 ### SCENARIO 6.0 ###
 # DOM Functionalities are working! Server one's also working.

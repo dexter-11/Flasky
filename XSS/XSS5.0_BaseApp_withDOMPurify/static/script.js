@@ -1,5 +1,20 @@
+// static/script.js — merged loader + submitter with DOMPurify toggle
 (() => {
-  // helper: load & render comments
+  // helper: sanitize if DomPurify available & toggle is on
+  function maybeSanitize(html) {
+    try {
+      if (window.__useDomPurify && window.DOMPurify && typeof DOMPurify.sanitize === 'function') {
+        // Use DOMPurify with default safe profile (can tune config)
+        return DOMPurify.sanitize(html, {USE_PROFILES: {html: true}});
+      }
+    } catch (e) {
+      console.warn('DOMPurify error', e);
+    }
+    // fallback: return original (vulnerable)
+    return html;
+  }
+
+  // helper: load & render comments (vulnerable unless sanitized)
   async function loadComments(path) {
     try {
       const r = await fetch(path, { credentials: 'same-origin' });
@@ -9,8 +24,8 @@
       comments.forEach(c => {
         const sec = document.createElement('section');
         sec.className = 'comment';
-        const meta = document.createElement('p');
-        if (c.author) meta.innerHTML = (meta.innerHTML || '') + c.author;
+        const meta = document.createElement('div');
+        if (c.author) meta.innerHTML = (meta.innerHTML || '') + maybeSanitize(c.author);
         if (c.date) {
           const d = new Date(c.date);
           const ds = [String(d.getDate()).padStart(2,'0'),
@@ -20,15 +35,16 @@
         }
         sec.appendChild(meta);
         if (c.body) {
-          const p = document.createElement('p');
-          // VULNERABLE: intentionally using innerHTML
-          p.innerHTML = c.body;
+          const p = document.createElement('div');
+          // previously vulnerable sink: p.innerHTML = c.body;
+          // now sanitize conditionally
+          p.innerHTML = maybeSanitize(c.body);
           sec.appendChild(p);
         }
-        sec.appendChild(document.createElement('p'));
+        sec.appendChild(document.createElement('div'));
         container.appendChild(sec);
       });
-    } catch (e) { /* ignore/load empty */ }
+    } catch (e) { /* ignore */ }
   }
 
   // submit form via fetch, then reload comments (preserve redirect behavior)

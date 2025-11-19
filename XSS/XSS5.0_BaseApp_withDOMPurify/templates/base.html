@@ -89,6 +89,26 @@
       word-wrap: break-word;
     }
   </style>
+
+  <!-- DOMPurify from jsDelivr CDN (client-side sanitizer) -->
+  <script src="{{ url_for('static', filename='purify.min.js') }}"></script>
+
+  <!-- Optional: small style for the sanitizer toggle badge -->
+  <style>
+    .dp-toggle {
+      position: fixed;
+      bottom: 12px;
+      left: 12px;
+      z-index: 99999;
+      background: #222;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .dp-toggle button { margin-left:8px; }
+  </style>
 </head>
 <body>
   <header>
@@ -122,6 +142,57 @@
       {% block content %}{% endblock %}
     </div>
   </div>
+
+  <!-- DOMPurify toggle UI (place near end of body in base.html) -->
+  <div class="dp-toggle" id="dpToggle" aria-live="polite">
+    DOMPurify: <span id="dpState">ON</span>
+    <button id="dpToggleBtn" type="button">Toggle</button>
+  </div>
+
+  <script>
+    // Use localStorage to persist the toggle across reloads/navigations
+    const DP_KEY = 'lab_use_dompurify';
+
+    // Read persisted value (default true if not present)
+    function readDP() {
+      try {
+        const v = localStorage.getItem(DP_KEY);
+        if (v === null) return true;            // default ON
+        return v === '1' || v === 'true';
+      } catch (e) { return true; }
+    }
+
+    // Persist new value
+    function writeDP(val) {
+      try {
+        localStorage.setItem(DP_KEY, val ? '1' : '0');
+      } catch (e) { /* ignore storage errors */ }
+    }
+
+    // Update UI elements to reflect current state
+    function updateDPUI(on) {
+      window.__useDomPurify = !!on; // used by your other scripts
+      const stateEl = document.getElementById('dpState');
+      stateEl.textContent = on ? 'ON' : 'OFF';
+      stateEl.style.color = on ? '#9f9' : '#f99';
+      // optional visual change on button
+      document.getElementById('dpToggleBtn').textContent = on ? 'Turn OFF' : 'Turn ON';
+      console.info('DOMPurify toggle set to', on);
+    }
+
+    // wire up
+    document.addEventListener('DOMContentLoaded', () => {
+      const initial = readDP();
+      updateDPUI(initial);
+
+      document.getElementById('dpToggleBtn').addEventListener('click', () => {
+        const current = !!window.__useDomPurify;
+        const next = !current;
+        writeDP(next);
+        updateDPUI(next);
+      });
+    });
+  </script>
 </body>
 </html>
 

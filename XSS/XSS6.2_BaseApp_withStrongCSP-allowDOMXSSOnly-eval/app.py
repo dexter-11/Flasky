@@ -298,18 +298,30 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### SCENARIO 6.0 ###
-# Implement CSP header which blocks all server xss payloads - standard CSP header.
-# Might not block DOM XSS payloads.
 
-# Content-Security-Policy:
-#   default-src 'none';
-#   script-src 'nonce-abc123' 'strict-dynamic';
-#   object-src 'none';
-#   base-uri 'none';
-#   frame-ancestors 'none';
-#   connect-src 'self';
-#   img-src 'self';
-#   style-src 'self';
-#   font-src 'self';
-#   form-action 'self';
+### Scenario 6.2 ###
+# DOM XSS via eval (no unsafe-inline needed)
+    # response.headers['Content-Security-Policy'] = (
+    #             "default-src 'self';"
+    #             "object-src 'none';"
+    #             "base-uri 'none';"
+    #             "frame-ancestors 'none';"
+    #             "script-src 'self' 'unsafe-inline';"
+    #             "script-src 'self' 'nonce-r4nd0m' 'unsafe-eval';';"
+    #         )
+
+# • Blocks most obvious inline script (<script>alert(1)</script>) because no 'unsafe-inline' in script-src.
+# • Blocks event-handler XSS like <img onerror=...> (those are inline scripts).
+# • Only scripts with the correct nonce (nonce-r4nd0m) or from self as external files can run.
+# • BUT it allows eval() and similar (new Function, etc.) inside trusted scripts via 'unsafe-eval'.
+
+# CLONE APP to create another code
+    # <script nonce="r4nd0m">
+    #   // Example: DOM gadget reading from the fragment
+    #   const payload = location.hash.slice(1); // everything after '#'
+
+    #   // “Bad” pattern: treat hash as JS
+    #   if (payload) {
+    #     eval(payload);
+    #   }
+    # </script>

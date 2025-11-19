@@ -298,5 +298,5 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### SCENARIO 9.0 ###
+### SCENARIO 8.0 ###
 # Blocked at framework level. Context based encoding `safe` --> can this be bypassed?

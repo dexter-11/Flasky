@@ -268,26 +268,19 @@ def reset():
     """
 
 #set CSP header globally after every request
-#@app.after_request
+@app.after_request
 def add_csp_headers(response):
-    if request.path.startswith('/post'):
-        # Weak CSP for testing bypasses
-        response.headers['Content-Security-Policy'] = "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;"
-    elif request.path.startswith('/color'):
-        # Moderate CSP
-        response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline';"
-    else:
-        # Strict default CSP
-        response.headers['Content-Security-Policy'] = (
-            "default-src 'self'; "
-            "script-src 'self'; "
-            "style-src 'self' 'unsafe-inline'; "  # allow inline CSS for simplicity
-            "img-src 'self' data:; "
-            "object-src 'none'; "
-            "base-uri 'self'; "
-            "form-action 'self'; "
-            "frame-ancestors 'none'; "
-            "report-uri /csp-report"
+    response.headers['Content-Security-Policy'] = (
+            "default-src 'self';"
+            "object-src 'none';"
+            "base-uri 'none';"
+            "frame-ancestors 'none';"
+            "script-src 'self';"
+            "connect-src 'self';"
+            "img-src 'self';"
+            "style-src 'self';"
+            "font-src 'self';"
+            "form-action 'self';"
         )
     return response
 
@@ -298,9 +291,23 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### SCENARIO 7.0 ###
-# Research how to block DOM XSS too over the above
+# Implement CSP header which blocks all server xss payloads - standard CSP header.
+# Might not block DOM XSS payloads.
 
+# FROM CHATGPT
+# Content-Security-Policy:
+#   default-src 'none';
+#   script-src 'strict-dynamic'; // might not work without nonce
+#   object-src 'none';
+#   base-uri 'none';
+#   frame-ancestors 'none';
+#   connect-src 'self';
+#   img-src 'self';
+#   style-src 'self';
+#   font-src 'self';
+#   form-action 'self';
+
+# Research how to block DOM XSS too over the above
 # csp = (
 #   "default-src 'none'; "
 #   "base-uri 'none'; "
@@ -315,3 +322,24 @@ if __name__ == '__main__':
 #   "require-trusted-types-for 'script'; "
 #   "trusted-types default;"
 # )
+
+
+
+
+
+### SCENARIO 6.1 ###
+# Default CSP, everything blocked, Web UI works
+# DOM Functionalities not working! Server one's working.
+    # response.headers['Content-Security-Policy'] = (
+    #         "default-src 'none';"
+    #         "object-src 'none';"
+    #         "base-uri 'none';"
+    #         "frame-ancestors 'none';"
+    #         "style-src 'self' 'unsafe-inline';"
+    #     )
+
+# + "default-src 'self';"
+# Same resutls as above
+
+# + "script-src 'self';"
+# Same resutls as above

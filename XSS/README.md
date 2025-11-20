@@ -15,45 +15,46 @@ python3 app.py
 ```
 
 - - -
-## INDEX
+## INDEX - Cross-Site Scripting (XSS) 
 
-### SCENARIO 1.0 ###
+### SCENARIO 1.0 - Unauthenticated Reflected XSS via GET ###
 - Part of BaseApp
 - `GET https://127.0.0.1:5000/login?error=`
 - PoC - https://127.0.0.1:5000/login?error=%3Cimg%20src=x%20onerror=confirm(1)%3E
 
-### SCENARIO 1.1 ###
+### SCENARIO 1.1 - Server-side Reflected XSS with Cookie fetchable ###
 - App - **[XSS1.1_reflected-ServerXSS-CookieHTTPOnlyFalse](XSS1.1_reflected-ServerXSS-CookieHTTPOnlyFalse)**
 - `GET https://127.0.0.1:5000/search` + `app.config['SESSION_COOKIE_HTTPONLY'] = False`
+- Default Flask behaviour - **SESSION_COOKIE_HTTPONLY = True**
 
-### SCENARIO 1.2 ###
+### SCENARIO 1.2 - Server-side Reflected XSS via GET ###
 - Part of BaseApp
 - `GET https://127.0.0.1:5000/search`
 
-### SCENARIO 1.3 ###
+### SCENARIO 1.3 - Server-side Reflected XSS via POST ###
 - Part of BaseApp
 - `POST https://127.0.0.1:5000/search`
 
-### SCENARIO 1.4 ### 
+### SCENARIO 1.4 - Server-side Reflected XSS - 100% Mitigation through Strong CSRF Protection ### 
 - App - **[XSS1.4_reflected-ServerXSS-POST-StrongCSRFProtection](XSS1.4_reflected-ServerXSS-POST-StrongCSRFProtection)**
-- `POST https://127.0.0.1:5000/search` + Strong CSRF Protection --> SAFE, MITIGATED
+- `POST https://127.0.0.1:5000/search` + + Strong CSRF Protection via Header verification ONLY. No Captcha.
 
-### SCENARIO 2.0 ###
+### SCENARIO 2.0 - Server-side Stored XSS ###
 - Part of BaseApp
 - `POST https://127.0.0.1:5000/feedback` 
 
-### SCENARIO 3.0 ###
+### SCENARIO 3.0 - Client-side Reflected XSS via GET (DOM) ###
 - Part of BaseApp
 - `https://127.0.0.1:5000/color` (in URL element)
 - `https://127.0.0.1:5000/quote` (in User input) - NOT PRACTICAL
 > HTML5 specifies that a `<script>` tag inserted with innerHTML should not execute. 
 - Working Payload - `<img src=x onerror=alert(1)/>`
 
-### ~~SCENARIO 3.1~~ - IGNORE ###
+#### ~~SCENARIO 3.1 - Client-side XSS via POST~~ - IGNORE ###
 - App - **[XSS3.1_reflectedDOM-ClientXSS-POST](XSS3.1_reflectedDOM-ClientXSS-POST)**
 - Might not be practically possible. Both by design, and for exploitation.
 
-### SCENARIO 4.0 ###
+### SCENARIO 4.0 - Client-side Stored XSS (DOM) ###
 - Part of BaseApp
 - `https://127.0.0.1:5000/post` (in DB)
 - `https://127.0.0.1:5000/notes` (in Local Storage) - NOT PRACTICAL
@@ -169,7 +170,7 @@ response.headers['Content-Security-Policy'] = (
     )
 ```
 
-### ~~SCENARIO 7.3 - Weak CSP with Nonce (allow DOM XSS Only)~~ - IGNORE ###
+#### ~~SCENARIO 7.3 - Weak CSP with Nonce (allow DOM XSS Only)~~ - IGNORE ###
 - App - **[XSS7.3_BaseApp_withWeakCSP-withNonce_allowDOMXSSOnly](XSS7.3_BaseApp_withWeakCSP-withNonce_allowDOMXSSOnly)**.
 - INCOMPLETE CODE. Not able to get it working as expected!! Later...
 ```python

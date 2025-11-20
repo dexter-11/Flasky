@@ -1,5 +1,5 @@
-flasky-venv/
-venv/
-.venv/
-.idea/
+flasky-venv/*
+venv/*
+.venv/*
+.idea/*
 */*/database.db

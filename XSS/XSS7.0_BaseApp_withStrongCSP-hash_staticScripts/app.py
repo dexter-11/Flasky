@@ -287,12 +287,12 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### SCENARIO 7.0 ###
+### SCENARIO 7.2 ###
 # Borrow XSS6.1, Start relaxing above CSP header via nonce and hash to make app's DOM functional and mitigated XSS.
 # dynamic nonce - MITIGATED
 
 ## CREATE A LAB 7.1
 #application uses static nonce - VULNERABLE
 
-## 7.2
+## 7.0
 # hash - STATIC SCRIPTS only

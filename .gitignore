@@ -1,3 +1,5 @@
 flasky-venv/
 venv/
+.venv/
+.idea/
 */*/database.db

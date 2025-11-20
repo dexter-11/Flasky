@@ -14,8 +14,8 @@
 {% if items %}
   {% for fb in items %}
     <div class="feedback">
-      <div class="muted">by {{ fb.author | safe }}</div>
-      <div>{{ fb.content | safe }}</div>
+      <div class="muted">by {{ fb.author }}</div>
+      <div>{{ fb.content }}</div>
       <form method="post">
         <input type="hidden" name="delete_id" value="{{ fb.id }}">
         <button>Delete</button>

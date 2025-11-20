@@ -10,10 +10,11 @@ Login:
 
 Uses template files under ./templates directory.
 """
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g
 import sqlite3
 import os
 import time
+import secrets
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
@@ -22,6 +23,9 @@ app.config['SESSION_COOKIE_SECURE'] = True       # Only send over HTTPS
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'    # None, Lax, Strict
 
 DB_PATH = "database.db"
+
+def generate_nonce():
+    return secrets.token_urlsafe(16)
 
 # ---------- DB helpers ----------
 def get_db():
@@ -270,15 +274,20 @@ def reset():
 #set CSP header globally after every request
 @app.after_request
 def add_csp_headers(response):
+    nonce = g.get("csp_nonce", "")
     response.headers['Content-Security-Policy'] = (
-                    "default-src 'self';"
-                    "object-src 'none';"
-                    "base-uri 'none';"
-                    "frame-ancestors 'none';"
-                    "script-src 'self' 'unsafe-inline' 'unsafe-eval';"
+                    "default-src 'self'; "
+                    f"script-src 'self' 'nonce-{nonce}' 'strict-dynamic';"
+                    "object-src 'none'; "
+                    "base-uri 'none'; "
+                    "frame-ancestors 'none'; "
                     "style-src 'self' 'unsafe-inline';"
                 )
     return response
+
+@app.before_request
+def set_nonce():
+    g.csp_nonce = generate_nonce()
 
 if __name__ == '__main__':
     init_db()

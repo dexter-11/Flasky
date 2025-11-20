@@ -26,7 +26,7 @@
     {% if results %}
         <ul>
             {% for book in results %}
-                <li><b>{{ book['name'] | safe }}</b> by {{ book['author'] | safe }}</li>
+                <li><b>{{ book['name'] }}</b> by {{ book['author'] }}</li>
             {% endfor %}
         </ul>
     {% else %}

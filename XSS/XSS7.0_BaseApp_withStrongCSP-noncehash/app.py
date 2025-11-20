@@ -289,4 +289,10 @@ if __name__ == '__main__':
 
 ### SCENARIO 7.0 ###
 # Borrow XSS6.1, Start relaxing above CSP header via nonce and hash to make app's DOM functional and mitigated XSS.
+# dynamic nonce - MITIGATED
 
+## CREATE A LAB 7.1
+#application uses static nonce - VULNERABLE
+
+## 7.2
+# hash - STATIC SCRIPTS only

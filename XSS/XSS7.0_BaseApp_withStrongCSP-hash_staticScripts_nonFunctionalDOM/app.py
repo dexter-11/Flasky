@@ -10,10 +10,10 @@ Login:
 
 Uses template files under ./templates directory.
 """
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g
 import sqlite3
 import os
-import time
+import hashlib, base64
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
@@ -128,30 +128,6 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-@app.route("/feedback", methods=["GET","POST"])
-def feedback():
-    if not session.get("username"):
-        return redirect(url_for("login"))
-
-    conn = get_db()
-    if request.method == "POST":
-        if "delete_id" in request.form:
-            fid = request.form.get("delete_id")
-            conn.execute("DELETE FROM feedbacks WHERE id=?", (fid,))
-        else:
-            content = request.form.get("content","")
-            conn.execute("INSERT INTO feedbacks (author, content) VALUES (?,?)",
-                         (session.get("username"), content))
-        conn.commit()
-        conn.close()
-        # ✅ Always redirect after POST to avoid duplicate/strange UI
-        return redirect(url_for("feedback"))
-
-    cur = conn.execute("SELECT * FROM feedbacks ORDER BY id DESC")
-    rows = cur.fetchall()
-    conn.close()
-    return render_template("feedback.html", items=rows, username=session['username'])
-
 # ✅ Two cases - GET and POST
 @app.route('/search', methods=['GET', 'POST'])
 def search():
@@ -188,13 +164,6 @@ def search():
         method_used=method_used
     )
 
-# ✅ https://github.com/deepmarketer666/DOM-XSS
-# ✅ https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-reflected
-@app.route("/quote")
-def quote():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    return render_template("quote.html")
 
 # ✅ Reflected DOM-XSS Via URL fragment
 @app.route("/color")
@@ -202,54 +171,6 @@ def color():
     if not session.get("user_id"):
         return redirect(url_for("login"))
     return render_template("color.html")
-
-
-
-# https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-stored
-@app.route("/notes")
-def notes():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    return render_template("notes.html")
-
-
-## ✅ Stored DOM-XSS
-#    This gets stored in DB, but fetched and appended by Javascript.
-@app.route('/comments', methods=['GET'])
-def get_comments():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.args.get('post_id', 'demo')
-    conn = get_db()
-    rows = conn.execute(
-        "SELECT id, post_id, author, body, created_at FROM comments WHERE post_id=? ORDER BY id ASC",
-        (post_id,)
-    ).fetchall()
-    conn.close()
-    comments = [{"id": r["id"], "post_id": r["post_id"], "author": r["author"],
-                 "body": r["body"], "date": r["created_at"]} for r in rows]
-    return jsonify(comments)
-
-@app.route('/post/comment', methods=['POST'])
-def post_comment():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.form.get('postId', 'demo')
-    author = request.form.get('name', '')
-    body = request.form.get('comment', '')
-    ts = int(time.time() * 1000)
-    conn = get_db()
-    conn.execute("INSERT INTO comments (post_id, author, body, created_at) VALUES (?,?,?,?)",
-                 (post_id, author, body, ts))
-    conn.commit(); conn.close()
-    return redirect(url_for('post', post_id=post_id))
-
-@app.route('/post')
-def post():
-    if not session.get("user_id"):
-        return redirect(url_for("login"))
-    post_id = request.args.get('post_id', request.args.get('postId', 'demo'))
-    return render_template('post.html', post_id=post_id)
 
 
 @app.route("/reset", methods=["POST"])
@@ -267,6 +188,30 @@ def reset():
     </script>
     """
 
+# The single allowed inline script content (exact bytes matter)
+# Keep this string identical to the inline <script> content in the template below.
+ALLOWED_INLINE_SCRIPT = "confirm('Allowed script running here! Cannot XSS');"
+ALLOWED_RESET_SCRIPT = """
+      localStorage.clear();
+      sessionStorage.clear();
+      alert("App has been reset. Local & Session storage cleared.");
+      window.location = "/";
+    """
+
+def sha256_b64(s: str) -> str:
+    h = hashlib.sha256()
+    h.update(s.encode('utf-8'))
+    return base64.b64encode(h.digest()).decode('ascii')
+
+ALLOWED_INLINE_HASH = sha256_b64(ALLOWED_INLINE_SCRIPT)  # computed once on startup
+ALLOWED_RESET_HASH = sha256_b64(ALLOWED_RESET_SCRIPT)  # computed once on startup
+
+@app.before_request
+def attach_hash():
+    # make the hash available to templates
+    g.allowed_script_hash = ALLOWED_INLINE_HASH
+    g.allowed_script_hash = ALLOWED_RESET_HASH
+
 #set CSP header globally after every request
 @app.after_request
 def add_csp_headers(response):
@@ -275,7 +220,7 @@ def add_csp_headers(response):
             "object-src 'none';"
             "base-uri 'none';"
             "frame-ancestors 'none';"
-            "script-src 'self';"
+            f"script-src 'sha256-{ALLOWED_INLINE_HASH}' 'sha256-{ALLOWED_RESET_HASH}'; "
             "style-src 'self' 'unsafe-inline';"
         )
     return response
@@ -285,14 +230,7 @@ if __name__ == '__main__':
     app.run(host="0.0.0.0", ssl_context=('../cert.pem', '../key.pem'), debug=True)
 
 
-# Mention real-world attack scenarios for each case + exploit code + Mitigation
-
-### SCENARIO 7.2 ###
-# Borrow XSS6.1, Start relaxing above CSP header via nonce and hash to make app's DOM functional and mitigated XSS.
-# dynamic nonce - MITIGATED
-
-## CREATE A LAB 7.1
-#application uses static nonce - VULNERABLE
-
-## 7.0
-# hash - STATIC SCRIPTS only
+### SCENARIO 7.0 ###
+# Hash-based CSP implementation - STATIC SCRIPTS only
+# No XSS will work here. Not even DOM is functional because no inline scripts allowed except the one with the correct hash.
+# Real-world scenario: Static websites.

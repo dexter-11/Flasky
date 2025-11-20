@@ -10,10 +10,11 @@ Login:
 
 Uses template files under ./templates directory.
 """
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, g
 import sqlite3
 import os
 import time
+import secrets
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
@@ -188,8 +189,6 @@ def search():
         method_used=method_used
     )
 
-# ✅ https://github.com/deepmarketer666/DOM-XSS
-# ✅ https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-reflected
 @app.route("/quote")
 def quote():
     if not session.get("user_id"):
@@ -204,8 +203,6 @@ def color():
     return render_template("color.html")
 
 
-
-# https://portswigger.net/web-security/cross-site-scripting/dom-based/lab-dom-xss-stored
 @app.route("/notes")
 def notes():
     if not session.get("user_id"):
@@ -258,8 +255,9 @@ def reset():
         os.remove(DB_PATH)
     init_db()
     session.clear()
-    return """
-    <script>
+    nonce = g.get("csp_nonce", "")
+    return f"""
+    <script nonce="{nonce}">
       localStorage.clear();
       sessionStorage.clear();
       alert("App has been reset. Local & Session storage cleared.");
@@ -267,17 +265,30 @@ def reset():
     </script>
     """
 
+# Inject a dynamic nonce into every request and template
+def generate_nonce():
+    return secrets.token_urlsafe(16)
+
+@app.before_request
+def set_nonce():
+    g.csp_nonce = generate_nonce()
+
+@app.context_processor
+def inject_nonce():
+    return dict(nonce=g.get("csp_nonce", ""))
+
 #set CSP header globally after every request
 @app.after_request
 def add_csp_headers(response):
+    nonce = g.get("csp_nonce", "")
     response.headers['Content-Security-Policy'] = (
-            "default-src 'self';"
-            "object-src 'none';"
-            "base-uri 'none';"
-            "frame-ancestors 'none';"
-            "script-src 'self';"
-            "style-src 'self' 'unsafe-inline';"
-        )
+        f"default-src 'self';"
+        f"object-src 'none';"
+        f"base-uri 'none';"
+        f"frame-ancestors 'none';"
+        f"script-src 'self' 'nonce-{nonce}' 'strict-dynamic';"
+        f"style-src 'self' 'unsafe-inline';"
+    )
     return response
 
 if __name__ == '__main__':
@@ -288,11 +299,5 @@ if __name__ == '__main__':
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
 ### SCENARIO 7.2 ###
-# Borrow XSS6.1, Start relaxing above CSP header via nonce and hash to make app's DOM functional and mitigated XSS.
-# dynamic nonce - MITIGATED
-
-## CREATE A LAB 7.1
-#application uses static nonce - VULNERABLE
-
-## 7.0
-# hash - STATIC SCRIPTS only
+# Start relaxing above CSP header via dynamic nonce to make app's DOM functional and mitigated XSS.
+# NO XSS PAYLOADS WORK! But complete app is functioning as expected.

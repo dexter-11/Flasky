@@ -34,4 +34,7 @@
     {% endif %}
 {% endif %}
 
+<!-- ALLOWED inline script: must match ALLOWED_INLINE_SCRIPT exactly (no extra whitespace/newlines) -->
+<script>confirm('Allowed script running here! Cannot XSS');</script>
+
 {% endblock %}

@@ -24,9 +24,6 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'None'    # None, Lax, Strict
 
 DB_PATH = "database.db"
 
-def generate_nonce():
-    return secrets.token_urlsafe(16)
-
 # ---------- DB helpers ----------
 def get_db():
     conn = sqlite3.connect(DB_PATH)
@@ -271,6 +268,14 @@ def reset():
     </script>
     """
 
+
+def generate_nonce():
+    return secrets.token_urlsafe(16)
+
+@app.before_request
+def set_nonce():
+    g.csp_nonce = generate_nonce()
+
 #set CSP header globally after every request
 @app.after_request
 def add_csp_headers(response):
@@ -285,9 +290,6 @@ def add_csp_headers(response):
                 )
     return response
 
-@app.before_request
-def set_nonce():
-    g.csp_nonce = generate_nonce()
 
 if __name__ == '__main__':
     init_db()
@@ -297,7 +299,9 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### Scenario 6.2 ###
+## INCOMPLETE CODE. NOT ABLE TO GET IT WORKING!! Later...
+
+### Scenario 7.3 ###
 # DOM XSS via eval (no unsafe-inline needed)
 #     response.headers['Content-Security-Policy'] = (
 #                     "default-src 'self';"

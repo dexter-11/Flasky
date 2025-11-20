@@ -18,6 +18,6 @@
   <h4>Comments</h4>
 </section>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+<script nonce="{{ nonce }}" src="{{ url_for('static', filename='script.js') }}"></script>
 
 {% endblock %}

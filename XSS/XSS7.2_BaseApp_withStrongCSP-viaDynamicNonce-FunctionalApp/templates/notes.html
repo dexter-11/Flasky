@@ -12,7 +12,7 @@
 <h3>Your Saved Note:</h3>
 <div id="noteOutput"></div>
 
-<script>
+<script nonce="{{ nonce }}">
   const saved = localStorage.getItem("note");
   if (saved) {
     document.getElementById("noteOutput").innerHTML = saved;

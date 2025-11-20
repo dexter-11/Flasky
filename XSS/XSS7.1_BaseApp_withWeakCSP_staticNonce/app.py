@@ -14,6 +14,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 import sqlite3
 import os
 import time
+import base64
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Secret key for session management
@@ -21,6 +22,7 @@ app.config['SESSION_COOKIE_SECURE'] = True       # Only send over HTTPS
 #app.config['SESSION_COOKIE_HTTPONLY'] = False     # JavaScript can access cookie
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'    # None, Lax, Strict
 
+STATIC_NONCE = base64.b64encode(os.urandom(16)).decode()
 DB_PATH = "database.db"
 
 # ---------- DB helpers ----------
@@ -258,16 +260,20 @@ def reset():
         os.remove(DB_PATH)
     init_db()
     session.clear()
-    return """
-    <script>
-      localStorage.clear();
-      sessionStorage.clear();
-      alert("App has been reset. Local & Session storage cleared.");
-      window.location = "/";
-    </script>
-    """
+    return f"""
+        <script nonce="{STATIC_NONCE}">
+          localStorage.clear();
+          sessionStorage.clear();
+          alert("App has been reset. Local & Session storage cleared.");
+          window.location = "/";
+        </script>
+        """
 
 #set CSP header globally after every request
+@app.context_processor
+def inject_nonce():
+    return dict(nonce=STATIC_NONCE)
+
 @app.after_request
 def add_csp_headers(response):
     response.headers['Content-Security-Policy'] = (
@@ -275,7 +281,7 @@ def add_csp_headers(response):
             "object-src 'none';"
             "base-uri 'none';"
             "frame-ancestors 'none';"
-            "script-src 'self';"
+            f"script-src 'self' 'nonce-{STATIC_NONCE}' strict-dynamic;"
             "style-src 'self' 'unsafe-inline';"
         )
     return response
@@ -287,12 +293,8 @@ if __name__ == '__main__':
 
 # Mention real-world attack scenarios for each case + exploit code + Mitigation
 
-### SCENARIO 7.2 ###
-# Borrow XSS6.1, Start relaxing above CSP header via nonce and hash to make app's DOM functional and mitigated XSS.
-# dynamic nonce - MITIGATED
-
 ## CREATE A LAB 7.1
-#application uses static nonce - VULNERABLE
+# Application uses static nonce - VULNERABLE
 
-## 7.0
-# hash - STATIC SCRIPTS only
+# Exploit --> <script nonce="...">alert(1)</script>
+# Real world scenario: An attacker manages to inject a script tag with the known static nonce into a vulnerable input field, allowing the script to execute despite the CSP.

